@@ -50,7 +50,7 @@ export function getSessionsByUserId(userId: string) {
   // GET /sessions/user/:userId
   // 성공시
   // response: 200 OK
-  // body: Session[]
+  // body: Omit<Session, "participants" | "likedUsers" | "reviews">[]
   // 실패시
   // response: 404 Not Found
   // body: { error.message: "<에러 메시지>" }

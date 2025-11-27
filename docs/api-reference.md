@@ -103,7 +103,6 @@
     "name": "string",
     "description": "string",
     "city": "string",
-    "district": "string",
     "image": "string"
   }
   ```
@@ -138,31 +137,11 @@
     }
     ```
 
-### GET /crews/:crewId/sessions
-
-- **Description**: 특정 크루의 세션들을 조회합니다.
-- **Query Parameters**:
-  - `page`: number
-  - `limit`: number
-- **Success Response**:
-  - **Code**: 200 OK
-  - **Body**: `Omit<Session, "participants" | "likedUsers" | "reviews">[]`
-- **Error Response**:
-  - **Code**: 404 Not Found
-  - **Body**:
-    ```json
-    {
-      "error": {
-        "message": "크루를 찾을 수 없습니다."
-      }
-    }
-    ```
-
 ### GET /crews/:crewId/members
 
 - **Description**: 특정 크루의 멤버들을 조회합니다.
 - **Query Parameters**:
-  - `role`: 'leader' | 'staff' | 'member'
+  - `role`: 'leader' | 'staff' | 'general'
   - `page`: number
   - `limit`: number
 - **Success Response**:
@@ -256,7 +235,7 @@
   {
     "description": "string",
     "rating": "number",
-    "image": "string"
+    "image": "string (optional)"
   }
   ```
 - **Success Response**:
@@ -345,7 +324,7 @@
   - `district`: string
   - `dateRange`: { from: string; to: string }
   - `timeRange`: { from: string; to: string }
-  - `level`: '초급' | '중급' | '고급'
+  - `level`: 'beginner' | 'intermediate' | 'advanced'
   - `status`: any
 - **Success Response**:
   - **Code**: 200 OK
@@ -362,7 +341,8 @@
     "name": "string",
     "description": "string",
     "image": "string",
-    "location": "string",
+    "city": "string",
+    "district": "string",
     "sessionAt": "string",
     "registerBy": "string",
     "level": "'초급' | '중급' | '고급'",
@@ -397,7 +377,7 @@
 - **Description**: 세션 상세 정보를 조회합니다.
 - **Success Response**:
   - **Code**: 200 OK
-  - **Body**: `Session`
+  - **Body**: `Omit<Session, 'reviews'>`
 - **Error Response**:
   - **Code**: 404 Not Found
   - **Body**:
@@ -405,6 +385,43 @@
     {
       "error": {
         "message": "세션을 찾을 수 없습니다."
+      }
+    }
+    ```
+
+### GET /sessions/:userId
+
+- **Description**: 사용자가 생성한 세션 목록을 조회합니다.
+- **Success Response**:
+  - **Code**: 200 OK
+  - **Body**: `Omit<Session, "participants" | "likedUsers" | "reviews">[]`
+- **Error Response**:
+  - **Code**: 404 Not Found
+  - **Body**:
+    ```json
+    {
+      "error": {
+        "message": "세션을 찾을 수 없습니다."
+      }
+    }
+    ```
+
+### GET /sessions/:crewId
+
+- **Description**: 특정 크루의 세션들을 조회합니다.
+- **Query Parameters**:
+  - `page`: number
+  - `limit`: number
+- **Success Response**:
+  - **Code**: 200 OK
+  - **Body**: `Omit<Session, "participants" | "likedUsers" | "reviews">[]`
+- **Error Response**:
+  - **Code**: 404 Not Found
+  - **Body**:
+    ```json
+    {
+      "error": {
+        "message": "크루를 찾을 수 없습니다."
       }
     }
     ```
@@ -574,15 +591,9 @@
     }
     ```
 
-### PUT /user/leave/
+### PUT /user/leave/:crewId
 
 - **Description**: 크루를 탈퇴합니다.
-- **Request Body**:
-  ```json
-  {
-    "crewId": "string"
-  }
-  ```
 - **Success Response**:
   - **Code**: 200 OK
   - **Body**:

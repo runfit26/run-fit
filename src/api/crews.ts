@@ -19,13 +19,10 @@ export function getCrews(queryParams?: GetCrewsQueryParams) {
   // body: Member[]
 }
 
-type CreateCrewBody = Pick<
-  Crew,
-  'name' | 'description' | 'city' | 'district' | 'image'
->;
+type CreateCrewBody = Pick<Crew, 'name' | 'description' | 'city' | 'image'>;
 export function createCrew(body: CreateCrewBody) {
   // POST /crews
-  // body: { name, description, city, district, image }
+  // body: { name, description, city, image }
   // 성공시
   // response: 201 Created
   // body: Crew
@@ -43,7 +40,6 @@ export function getCrewById(crewId: string) {
   // response: 404 Not Found
   // body: { error.message: "<에러 메시지>" }
 }
-
 
 type GetCrewMembersQueryParams = {
   role?: 'leader' | 'staff' | 'general';
@@ -79,10 +75,7 @@ export function getCrewMembersById(crewId: string) {
 }
 */
 
-type PostCrewsBody = Pick<
-  Crew,
-  'name' | 'description' | 'city' | 'district' | 'image'
->;
+type PostCrewsBody = Pick<Crew, 'name' | 'description' | 'city' | 'image'>;
 export function updateCrewDetail(crewId: string, body: PostCrewsBody) {
   // PATCH /crews/:crewId
   // 권한: 크루장 또는 관리자 권한 필요

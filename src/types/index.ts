@@ -25,7 +25,6 @@ export interface Crew {
   name: string;
   description: string;
   city: string;
-  district: string;
   image: string;
   members: Member[];
   sessions: Session[];
