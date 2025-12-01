@@ -1,5 +1,5 @@
-import { http } from 'msw';
+import { http, passthrough } from 'msw';
 
 export const bypassHandlers = [
-  http.post('https://telemetry.nextjs.org/api/v1/record', () => {}),
+  http.post('https://telemetry.nextjs.org/api/v1/record', () => passthrough()),
 ];
