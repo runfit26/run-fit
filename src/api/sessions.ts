@@ -1,4 +1,9 @@
-import { PaginationQueryParams, Session } from '@/types';
+import {
+  PaginationQueryParams,
+  ResponseData,
+  ResponseError,
+  Session,
+} from '@/types';
 
 export async function getSessions(
   queryParams?: {

@@ -1,4 +1,4 @@
-export type Response<T, E extends ResponseError> =
+export type ResponseData<T, E extends ResponseError> =
   | {
       success: true;
       data: T;

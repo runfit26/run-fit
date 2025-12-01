@@ -1,4 +1,4 @@
-import { Response, ResponseError, User } from '@/types';
+import { ResponseData, ResponseError, User } from '@/types';
 
 type UserCredentials = {
   email: string;
@@ -14,7 +14,7 @@ export async function postSignup(body: UserCredentials & { name: string }) {
     body: JSON.stringify(body),
   });
 
-  const data: Response<User, SignupError> = await response.json();
+  const data: ResponseData<User, SignupError> = await response.json();
   return data;
 }
 
@@ -39,7 +39,7 @@ export async function postSignin(body: UserCredentials) {
     body: JSON.stringify(body),
   });
 
-  const data: Response<
+  const data: ResponseData<
     {
       accessToken: string;
       tokenType: 'Bearer';
@@ -64,7 +64,7 @@ export async function postRefresh() {
     },
   });
 
-  const data: Response<
+  const data: ResponseData<
     {
       token: string;
     },
@@ -86,7 +86,7 @@ export async function postSignout() {
     },
   });
 
-  const data: Response<
+  const data: ResponseData<
     {
       message: '로그아웃 되었습니다.';
     },
