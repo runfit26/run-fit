@@ -18,17 +18,16 @@ export interface ResponseError {
 export interface User {
   id: number;
   name: string;
-  profileImage?: string;
   createdAt: string;
 }
 
 export interface Profile extends User {
+  image?: string; // profileImage
   introduction: string;
   city: string;
-  district: string;
-  level: '초급' | '중급' | '상급';
   pace: number;
   styles?: string[];
+  updatedAt: string;
 }
 
 type Role = 'leader' | 'staff' | 'member';
@@ -52,8 +51,7 @@ export interface Session {
   id: string;
   crewId: string;
   userId: string;
-  status: 'upcoming' | 'completed' | 'cancelled';
-  // 취소, 마감, 예정 / 모집 중, 마감
+  status: 'OPEN' | 'CLOSED';
 
   name: string;
   description: string;
@@ -63,9 +61,8 @@ export interface Session {
   createdAt: string;
   sessionAt: string;
   registerBy: string;
-
   level: 'beginner' | 'intermediate' | 'advanced'; // 초급, 중급, 고급
-  // minParticipantCount: number;
+
   maxParticipantCount: number;
 
   participants: Member[];
@@ -85,5 +82,5 @@ export interface Review {
 
 export type PaginationQueryParams = {
   page?: number;
-  limit?: number;
+  size?: number;
 };
