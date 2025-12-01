@@ -1,61 +1,68 @@
-// TODO: 실패 시나리오 별 다른 에러 메시지 필요
-export function getUserProfileById(userId: string) {
-  // GET /user/:userId
-  // 성공시
-  // response: 200 OK
-  // body: Profile
-  // 실패시
-  // response: 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
+import { Profile, Response, ResponseError } from '@/types';
+
+export async function getCurrentUserProfile() {
+  const response = await fetch('/api/user', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data: Response<Profile, ResponseError> = await response.json();
+  return data;
 }
 
-export function updateUserProfileById(userId: string, body: any) {
-  // PATCH /user/:userId
-  // body: { name, email, image, introduction, city, district, level }
-  // 권한 필요: 본인만 가능
-  // 성공시
-  // response: 200 OK
-  // body: Profile
-  // 실패시
-  // response: 400 Bad Request | 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
+export async function updateUserProfile(
+  body: Pick<
+    Profile,
+    'name' | 'image' | 'introduction' | 'city' | 'pace' | 'styles'
+  >
+) {
+  const response = await fetch('/api/user', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data: Response<Profile, ResponseError> = await response.json();
+  return data;
 }
 
-export function leaveCrew(crewId: string) {
-  // PUT /user/leave/:crewId
-  // 권한: 본인만 가능
-  // 성공시
-  // response: 200 OK
-  // body: { message: "Successfully left the crew" }
-  // 실패시
-  // response: 400 Bad Request | 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
+type UserProfileResponseError = ResponseError & {
+  code: 'USER_NOT_FOUND';
+  message: '사용자를 찾을 수 없습니다.';
+};
+export async function getUserProfileById(userId: string) {
+  const response = await fetch(`/api/user/${userId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data: Response<
+    Omit<Profile, 'updatedAt'>,
+    UserProfileResponseError
+  > = await response.json();
+  return data;
 }
 
-export function expelMember(body: { crewId: string; userId: string }) {
-  // PUT /user/expel/
-  // body: { crewId, userId }
-  // 권한: user가 crew의 leader일 때만 가능
-  // 성공시
-  // response: 200 OK
-  // body: { message: "Successfully expelled the member" }
-  // 실패시
-  // response: 400 Bad Request | 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
-}
+// export async function leaveCrew(crewId: string) {
+//   // PUT /crew/:crewId/leave/
+// }
 
-export function updateMemberRole(body: {
-  crewId: string;
-  userId: string;
-  role: string;
-}) {
-  // PATCH /user/update/
-  // body: { crewId, userId, role }
-  // user가 crew의 leader일 때만 가능
-  // 성공시
-  // response: 200 OK
-  // body: { message: "Successfully updated the member role" }
-  // 실패시
-  // response: 400 Bad Request | 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
-}
+// export async function expelMember(body: { crewId: string; userId: string }) {
+//   // PUT /crew/member/
+//   // body: { crewId, userId }
+// }
+
+// export async function updateMemberRole(body: {
+//   crewId: string;
+//   userId: string;
+//   role: string;
+// }) {
+//   // PATCH /crew/role/
+//   // body: { crewId, userId, role }
+// }

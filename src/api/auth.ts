@@ -1,4 +1,3 @@
-import { Flatten } from '@/lib/type';
 import { Response, ResponseError, User } from '@/types';
 
 type UserCredentials = {
@@ -7,7 +6,6 @@ type UserCredentials = {
 };
 
 export async function postSignup(body: UserCredentials & { name: string }) {
-  // POST /auth/signup
   const response = await fetch('/api/auth/signup', {
     method: 'POST',
     headers: {
@@ -33,7 +31,6 @@ type SignupError = ResponseError &
   );
 
 export async function postSignin(body: UserCredentials) {
-  // POST /auth/signin
   const response = await fetch('/api/auth/signin', {
     method: 'POST',
     headers: {
@@ -60,7 +57,6 @@ type SigninError = ResponseError & {
 };
 
 export async function postRefresh() {
-  // POST /api/auth/refresh
   const response = await fetch('/api/auth/refresh', {
     method: 'POST',
     headers: {
@@ -83,7 +79,6 @@ type RefreshError = ResponseError & {
 };
 
 export async function postSignout() {
-  // POST /auth/signout
   const response = await fetch('/api/auth/signout', {
     method: 'POST',
     headers: {

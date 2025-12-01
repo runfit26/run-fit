@@ -1,14 +1,15 @@
 import { PaginationQueryParams, Session } from '@/types';
 
-type GetSessionsQueryParams = {
-  city?: string;
-  district?: string;
-  dateRange?: { from: string; to: string };
-  timeRange?: { from: string; to: string };
-  level?: 'beginner' | 'intermediate' | 'advanced';
-  status?: string; // TODO: 이 부분은 잘 정의해야 할 듯
-} & PaginationQueryParams;
-export function getSessions(queryParams?: GetSessionsQueryParams) {
+export async function getSessions(
+  queryParams?: {
+    city?: string;
+    district?: string;
+    dateRange?: { from: string; to: string };
+    timeRange?: { from: string; to: string };
+    level?: 'beginner' | 'intermediate' | 'advanced';
+    status?: string;
+  } & PaginationQueryParams
+) {
   // 전체 세션 목록 페이지에서 필터링 및 페이징 처리된 세션 목록을 위한 API
   // GET /sessions?queryParams
   // queryParams: {
@@ -22,11 +23,10 @@ export function getSessions(queryParams?: GetSessionsQueryParams) {
   //   status?: TODO: 이 부분은 잘 정의해야 할 듯
   // }
   // 성공시
-  // response: 200 OK
   // body: Session[]
 }
 
-export function getSessionsByCrewId(
+export async function getSessionsByCrewId(
   crewId: string,
   queryParams?: PaginationQueryParams
 ) {
@@ -37,40 +37,33 @@ export function getSessionsByCrewId(
   //   limit?: number
   // }
   // 성공시
-  // response: 200 OK
   // body: Omit<Session, "participants" | "likedUsers" | "reviews">[]
   // // participants, likedUsers, reviews 제외 해도 되지 않을까?
-  // 실패시
-  // response: 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
 }
 
-export function getSessionsByUserId(userId: string) {
+export async function getSessionsByUserId(userId: string) {
   // (마이페이지) 사용자가 생성한 세션 목록을 위한 API
   // GET /sessions/user/:userId
   // 성공시
-  // response: 200 OK
   // body: Omit<Session, "participants" | "likedUsers" | "reviews">[]
-  // 실패시
-  // response: 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
 }
 
-type CreateSessionBody = Pick<
-  Session,
-  | 'crewId'
-  | 'userId'
-  | 'name'
-  | 'description'
-  | 'image'
-  | 'city'
-  | 'district'
-  | 'sessionAt'
-  | 'registerBy'
-  | 'level'
-  | 'maxParticipantCount'
->;
-export function createSession(body: CreateSessionBody) {
+export async function createSession(
+  body: Pick<
+    Session,
+    | 'crewId'
+    | 'userId'
+    | 'name'
+    | 'description'
+    | 'image'
+    | 'city'
+    | 'district'
+    | 'sessionAt'
+    | 'registerBy'
+    | 'level'
+    | 'maxParticipantCount'
+  >
+) {
   // POST /sessions
   // body: {
   //   crewId: number;
@@ -85,16 +78,11 @@ export function createSession(body: CreateSessionBody) {
   //   level: '초급' | '중급' | '고급';
   //   maxParticipantCount: number;
   // }
-  // 권한: 크루장 또는 관리자 권한 필요
   // 성공시
-  // response: 201 Created
   // body: Session
-  // 실패시
-  // response: 400 Bad Request | 403 Forbidden
-  // body: { error.message: "<에러 메시지>" }
 }
 
-export function getSessionDetail(sessionId: string) {
+export async function getSessionDetail(sessionId: string) {
   // GET /sessions/:sessionId
   // 성공시
   // response: 200 OK
@@ -115,7 +103,7 @@ type UpdateSessionDetailBody = Pick<
   | 'registerBy'
   | 'level'
 >;
-export function updateSessionDetail(
+export async function updateSessionDetail(
   sessionId: string,
   body: UpdateSessionDetailBody
 ) {
@@ -132,30 +120,22 @@ export function updateSessionDetail(
   // }
   // 권한: 크루장 또는 관리자 권한 필요 <- 또는 생성한 크루장/관리자만?
   // 성공시
-  // response: 200 OK
   // body: Session
-  // 실패시
-  // response: 400 Bad Request | 404 Not Found | 403 Forbidden
-  // body: { error.message: "<에러 메시지>" }
 }
 
-export function deleteSession(sessionId: string) {
+export async function deleteSession(sessionId: string) {
   // DELETE /sessions/:sessionId
   // 권한: 크루장 또는 관리자 권한 필요
   // 성공시
   // response: 204 No Content
-  // 실패시
-  // response: 404 Not Found | 403 Forbidden
-  // body: { error.message: "<에러 메시지>" }
 }
 
-// MEMO: 명세에 빠진 것 같아 추가
-export function registerForSession(sessionId: string) {
+export async function registerForSession(sessionId: string) {
   // POST /sessions/:sessionId/register
   // 권한: 크루에 가입한 사용자
 }
 
-export function unregisterFromSession(sessionId: string) {
+export async function unregisterFromSession(sessionId: string) {
   // DELETE /sessions/:sessionId/register
   // 권한: 크루에 가입한 사용자
 }
