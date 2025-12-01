@@ -1,3 +1,18 @@
-// 인증이 필요한 루트와 그렇지 않은 루트를 어떻게 구분?
-// 그냥 항상 access token을 보내면 되려나?
-// 그거에 따라서 server action을 쓸지 여부로 나누는 것도 방법일 듯
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ slug: string[] }> }
+) {
+  const { slug } = await params;
+  const pathname = slug.join('/');
+  const proxyURL = new URL(pathname, 'https://nextjs.org');
+  const proxyRequest = new Request(proxyURL, request);
+
+  try {
+    return fetch(proxyRequest);
+  } catch (reason) {
+    const message =
+      reason instanceof Error ? reason.message : 'Unexpected exception';
+
+    return new Response(message, { status: 500 });
+  }
+}
