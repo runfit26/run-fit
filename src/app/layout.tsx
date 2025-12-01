@@ -14,6 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <header>
+        {/* GNB */}
+        {/* 왼쪽: 로고, 세션 목록, 크루 목록 */}
+        {/* 오른쪽: (로그인 상태에 따라) 프로필 / 로그인 & 회원 가입  */}
+      </header>
       <body className="antialiased">{children}</body>
     </html>
   );
