@@ -57,34 +57,28 @@ export async function createSession(
   body: Pick<
     Session,
     | 'crewId'
-    | 'userId'
     | 'name'
     | 'description'
     | 'image'
-    | 'city'
-    | 'district'
+    | 'location'
     | 'sessionAt'
     | 'registerBy'
     | 'level'
     | 'maxParticipantCount'
+    | 'pace'
   >
 ) {
   // POST /sessions
-  // body: {
-  //   crewId: number;
-  //   userId: number;
-  //   name: string;
-  //   description: string;
-  //   image?: string;
-  //   city: string; // 지역(시)
-  //   district: string; // 지역(구)
-  //   sessionAt: string; // ISO 8601 - 세션 시간
-  //   registerBy: string; // ISO 8601 - 신청 마감
-  //   level: '초급' | '중급' | '고급';
-  //   maxParticipantCount: number;
-  // }
-  // 성공시
-  // body: Session
+  const response = await fetch('/api/sessions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data: ResponseData<Session, ResponseError> = await response.json();
+  return data;
 }
 
 export async function getSessionDetail(sessionId: string) {
@@ -97,50 +91,29 @@ export async function getSessionDetail(sessionId: string) {
   // body: { error.message: "<에러 메시지>" }
 }
 
-type UpdateSessionDetailBody = Pick<
-  Session,
-  | 'name'
-  | 'description'
-  | 'image'
-  | 'city'
-  | 'district'
-  | 'sessionAt'
-  | 'registerBy'
-  | 'level'
->;
+// 이 부분 미 구현
 export async function updateSessionDetail(
   sessionId: string,
-  body: UpdateSessionDetailBody
+  body: Pick<
+    Session,
+    'name' | 'description'
+    // | 'image'
+    // | 'sessionAt'
+    // | 'registerBy'
+    // | 'level'
+  >
 ) {
   // PATCH /sessions/:sessionId
-  // body: {
-  //  name?: string;
-  //  description?: string;
-  //  image?: string;
-  //  city?: string; // 지역(시)
-  //  district?: string; // 지역(구)
-  //  sessionAt?: string; // ISO 8601 - 세션 시간
-  //  registerBy?: string; // ISO 8601 - 신청 마감
-  //  level?: '초급' | '중급' | '고급';
-  // }
-  // 권한: 크루장 또는 관리자 권한 필요 <- 또는 생성한 크루장/관리자만?
-  // 성공시
-  // body: Session
 }
 
 export async function deleteSession(sessionId: string) {
   // DELETE /sessions/:sessionId
-  // 권한: 크루장 또는 관리자 권한 필요
-  // 성공시
-  // response: 204 No Content
 }
 
 export async function registerForSession(sessionId: string) {
   // POST /sessions/:sessionId/register
-  // 권한: 크루에 가입한 사용자
 }
 
 export async function unregisterFromSession(sessionId: string) {
   // DELETE /sessions/:sessionId/register
-  // 권한: 크루에 가입한 사용자
 }

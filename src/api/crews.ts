@@ -69,24 +69,53 @@ export async function getCrewMembersById(
   // body: Member[] <- leader라도 배열로 반환 // TODO: 이 부분 확인 필요
 }
 
-/**
- * 아래 함수들은 getCrewMembersById로 대체 가능
-export async function getCrewLeadersById(crewId: string) {
-  // GET /crews/:crewId/members/leaders
-}
-export async function getCrewStaffsById(crewId: string) {
-  // GET /crews/:crewId/members/staffs
-}
-export async function getCrewMembersById(crewId: string) {
-  // GET /crews/:crewId/members/general
-}
-*/
-
-type PostCrewsBody = Pick<Crew, 'name' | 'description' | 'city' | 'image'>;
-export async function updateCrewDetail(crewId: string, body: PostCrewsBody) {
+export async function updateCrewDetail(
+  crewId: string,
+  body: Pick<Crew, 'name' | 'description' | 'city' | 'image'>
+) {
   // PATCH /crews/:crewId
   // 성공시
   // body: Crew
+}
+
+export async function expelMember(crewId: string, userId: string) {
+  // DELETE /crews/expel/:crewId/:userId
+  const response = await fetch(`/api/crews/expel/${crewId}/${userId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  type ExpelMemberData = { message: '멤버를 추방했습니다.' };
+  type ExpelMemberError = {
+    code: 'CREW_LEADER_ONLY';
+    message: '크루장만 멤버를 추방할 수 있습니다.';
+  };
+  const data: ResponseData<ExpelMemberData, ExpelMemberError> =
+    await response.json();
+
+  return data;
+}
+
+export async function leaveCrew(crewId: string, userId: string) {
+  // DELETE /crews/:crewId/:userId
+  const response = await fetch(`/api/crews/leave/${crewId}/${userId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  type LeaveCrewData = { message: '크루를 탈퇴했습니다.' };
+  type LeaveCrewError = {
+    code: 'CREW_ROLE_FORBIDDEN';
+    message: '크루장은 탈퇴 전에 리더 권한을 위임해야 합니다.';
+  };
+  const data: ResponseData<LeaveCrewData, LeaveCrewError> =
+    await response.json();
+
+  return data;
 }
 
 export async function deleteCrew(crewId: string) {
@@ -94,3 +123,12 @@ export async function deleteCrew(crewId: string) {
   // 성공시
   // body: { message: "Crew deleted successfully" }
 }
+
+// export async function updateMemberRole(body: {
+//   crewId: string;
+//   userId: string;
+//   role: string;
+// }) {
+//   // PATCH /crew/role/
+//   // body: { crewId, userId, role }
+// }
