@@ -5,7 +5,7 @@ export interface User {
 }
 
 export interface Profile extends User {
-  image?: string; // profileImage
+  image?: string;
   introduction: string;
   city: string;
   pace: number;

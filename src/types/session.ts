@@ -7,15 +7,15 @@ export interface Session {
   description: string;
   image?: string;
 
-  location: string;
-  // TODO: 이 부분은 지도 관련 결정이 나면 수정 필요
-  // city: string;
-  // district: string;
+  // 위치 관련한 필드 - location은 실제 세션 장소, city 와 district는 필터링
+  location: string; // 실제 세션 장소
+  city: string; // 시
+  district: string; // 군구
 
   createdAt: string;
   sessionAt: string;
   registerBy: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 
   status: 'OPEN' | 'CLOSED';
   pace: number; // 분/km

@@ -5,6 +5,4 @@ export interface Crew {
   city: string;
   image: string;
   createdAt: string;
-  // members: Member[];
-  // sessions: Session[];
 }
