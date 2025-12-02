@@ -56,6 +56,7 @@ export default function DateTimePicker({
         <PopoverContent className="p-4">
           <div className="flex flex-col items-center">
             <DatePicker
+              inline
               value={currentDate}
               onChange={handleDate}
               label="날짜"
