@@ -24,18 +24,19 @@ export default function DateTimePicker({
   const [time, setTime] = useState<TimeValue>(
     value?.time ?? { hour: '10', minute: '30', ampm: 'AM' }
   );
-  const currentDate = value?.date ?? date;
-  const currentTime = value?.time ?? time;
+  const isControlled = value !== undefined;
+  const currentDate = isControlled ? value?.date : date;
+  const currentTime = isControlled ? (value?.time ?? time) : time;
 
   const today = useMemo(() => new Date(), []);
   const displayDate = currentDate ?? today;
 
   const handleDate = (next?: Date) => {
-    setDate(next);
+    if (!isControlled) setDate(next);
     onChange?.({ date: next, time: currentTime });
   };
   const handleTime = (next: TimeValue) => {
-    setTime(next);
+    if (!isControlled) setTime(next);
     onChange?.({ date: currentDate, time: next });
   };
 
