@@ -1,56 +1,38 @@
+import { get } from 'http';
 import {
   PaginationQueryParams,
   ResponseData,
-  ResponseError,
+  ResponseErrorData,
   Session,
+  User,
 } from '@/types';
 
 export async function getSessions(
   queryParams?: {
-    city?: string;
-    district?: string;
-    dateRange?: { from: string; to: string };
-    timeRange?: { from: string; to: string };
-    level?: 'beginner' | 'intermediate' | 'advanced';
-    status?: string;
+    // TODO: 이 부분은 세션 조회 시 필요한 필터링 옵션에 따라 수정 필요
+    // 결정 후 백앤드와 협의 필요
+    // city?: string;
+    // district?: string;
+    // dateRange?: { from: string; to: string };
+    // timeRange?: { from: string; to: string };
+    // level?: 'beginner' | 'intermediate' | 'advanced';
+    // status?: string;
   } & PaginationQueryParams
 ) {
-  // 전체 세션 목록 페이지에서 필터링 및 페이징 처리된 세션 목록을 위한 API
-  // GET /sessions?queryParams
-  // queryParams: {
-  //   page?: number,
-  //   limit?: number,
-  //   city?: string,
-  //   district?: string
-  //   dateRange?: { from: string; to: string };
-  //   timeRange?: { from: string; to: string };
-  //   level?: '초급' | '중급' | '고급';
-  //   status?: TODO: 이 부분은 잘 정의해야 할 듯
-  // }
-  // 성공시
-  // body: Session[]
-}
+  const accessToken = '';
+  const query = new URLSearchParams(
+    queryParams as Record<string, string>
+  ).toString();
+  const response = await fetch(`/api/sessions?${query}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
 
-export async function getSessionsByCrewId(
-  crewId: string,
-  queryParams?: PaginationQueryParams
-) {
-  // 크루 상세 페이지에서
-  // GET /sessions/:crewId/
-  // queryParams: {
-  //   page?: number,
-  //   limit?: number
-  // }
-  // 성공시
-  // body: Omit<Session, "participants" | "likedUsers" | "reviews">[]
-  // // participants, likedUsers, reviews 제외 해도 되지 않을까?
-}
-
-export async function getSessionsByUserId(userId: string) {
-  // (마이페이지) 사용자가 생성한 세션 목록을 위한 API
-  // GET /sessions/user/:userId
-  // 성공시
-  // body: Omit<Session, "participants" | "likedUsers" | "reviews">[]
+  const { data }: ResponseData<Session[]> = await response.json();
+  return data;
 }
 
 export async function createSession(
@@ -68,52 +50,160 @@ export async function createSession(
     | 'pace'
   >
 ) {
-  // POST /sessions
+  const accessToken = '';
   const response = await fetch('/api/sessions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
     },
     body: JSON.stringify(body),
   });
 
-  const data: ResponseData<Session, ResponseError> = await response.json();
+  const data: ResponseData<Session> = await response.json();
   return data;
 }
 
-export async function getSessionDetail(sessionId: string) {
-  // GET /sessions/:sessionId
+export async function deleteSession(sessionId: string) {
+  const accessToken = '';
+  const response = await fetch(`/api/sessions/${sessionId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<null> = await response.json();
+  return data;
+}
+
+// TODO: getSessionsByCrewId는 백엔드 문서화 후 구현 필요
+export async function getSessionsByCrewId(
+  crewId: string,
+  queryParams?: {} & PaginationQueryParams
+) {
+  // 크루 상세 페이지에서
+  // GET /sessions/:crewId/
+  // queryParams: {
+  //   page?: number,
+  //   limit?: number
+  // }
   // 성공시
-  // response: 200 OK
-  // body: Omit<Session, 'reviews'>;
-  // 실패시
-  // response: 404 Not Found
-  // body: { error.message: "<에러 메시지>" }
+  // body: Omit<Session, "participants" | "likedUsers" | "reviews">[]
+  // // participants, likedUsers, reviews 제외 해도 되지 않을까?
+}
+
+// TODO: getSessionsByUserId는 백엔드 문서화 후 구현 필요
+export async function getSessionsByUserId(userId: string) {
+  // (마이페이지) 사용자가 생성한 세션 목록을 위한 API
+  // GET /sessions/user/:userId
+  // 성공시
+  // body: Omit<Session, "participants" | "likedUsers" | "reviews">[]
+}
+
+export async function getSessionDetail(sessionId: string) {
+  const response = await fetch(`/api/sessions/${sessionId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<Session> = await response.json();
+  return data;
+}
+
+export async function registerForSession(sessionId: string) {
+  const accessToken = '';
+  const response = await fetch(`/api/sessions/${sessionId}/join`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<null> = await response.json();
+
+  return data;
+}
+
+export async function unregisterFromSession(sessionId: string) {
+  const accessToken = '';
+  const response = await fetch(`/api/sessions/${sessionId}/join`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<null> = await response.json();
+
+  return data;
+}
+
+export async function getSessionParticipants(sessionId: string) {
+  const accessToken = '';
+  const response = await fetch(`/api/sessions/${sessionId}/participants`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<User[]> = await response.json();
+
+  return data;
 }
 
 // 이 부분 미 구현
 export async function updateSessionDetail(
   sessionId: string,
-  body: Pick<
-    Session,
-    'name' | 'description'
-    // | 'image'
-    // | 'sessionAt'
-    // | 'registerBy'
-    // | 'level'
-  >
+  body: Pick<Session, 'name' | 'description' | 'image'>
 ) {
-  // PATCH /sessions/:sessionId
-}
+  const accessToken = '';
+  const response = await fetch(`/api/sessions/${sessionId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(body),
+  });
 
-export async function deleteSession(sessionId: string) {
-  // DELETE /sessions/:sessionId
-}
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
 
-export async function registerForSession(sessionId: string) {
-  // POST /sessions/:sessionId/register
-}
-
-export async function unregisterFromSession(sessionId: string) {
-  // DELETE /sessions/:sessionId/register
+  const { data }: ResponseData<null> = await response.json();
+  return data;
 }

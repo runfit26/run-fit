@@ -25,3 +25,41 @@ export async function getLikedSessions(queryParams: PaginationQueryParams) {
   const { data }: ResponseData<PageData<Session>> = await response.json();
   return data;
 }
+
+export async function likeSession(sessionId: string) {
+  const accessToken = '';
+  const response = await fetch(`/api/sessions/${sessionId}/like`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<null> = await response.json();
+  return data;
+}
+
+export async function unlikeSession(sessionId: string) {
+  const accessToken = '';
+  const response = await fetch(`/api/sessions/${sessionId}/like`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<null> = await response.json();
+  return data;
+}
