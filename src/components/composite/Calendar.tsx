@@ -10,6 +10,10 @@ import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
 import Button, { buttonVariants } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+  buttonVariant?: React.ComponentProps<typeof Button>['variant'];
+};
+
 export default function Calendar({
   className,
   classNames,
@@ -19,9 +23,7 @@ export default function Calendar({
   formatters,
   components,
   ...props
-}: React.ComponentProps<typeof DayPicker> & {
-  buttonVariant?: React.ComponentProps<typeof Button>['variant'];
-}) {
+}: CalendarProps) {
   const { fromYear, toYear, ...restProps } = props;
   const defaultClassNames = getDefaultClassNames();
   const now = React.useMemo(() => new Date(), []);
