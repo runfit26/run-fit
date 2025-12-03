@@ -194,7 +194,7 @@ export async function getSessionParticipants(sessionId: string) {
   return data;
 }
 
-// 이 부분 미 구현
+// TODO: updateSessionDetail는 백엔드 문서화 후 수정 필요
 export async function updateSessionDetail(
   sessionId: string,
   body: Pick<Session, 'name' | 'description' | 'image'>

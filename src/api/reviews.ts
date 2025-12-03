@@ -97,6 +97,7 @@ export async function getReviewsByCrewId(
 }
 
 export async function getMyReviews(queryParams: PaginationQueryParams) {
+  const accessToken = '';
   const query = new URLSearchParams(
     queryParams as Record<string, string>
   ).toString();
@@ -104,6 +105,7 @@ export async function getMyReviews(queryParams: PaginationQueryParams) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${accessToken}`,
     },
   });
 
