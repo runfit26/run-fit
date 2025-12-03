@@ -2,7 +2,7 @@
 
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import * as React from 'react';
-import { formatSecondsToPace } from '@/lib/pace';
+import { formatSecondsToMinutes } from '@/lib/pace';
 import { cn } from '@/lib/utils';
 
 export default function PaceSlider({
@@ -23,10 +23,12 @@ export default function PaceSlider({
   return (
     <div className="w-full">
       <div className="pt-3 pb-3.5 text-center text-[16px]/[24px] font-semibold text-white">
-        {formatSecondsToPace(currentValue)}
+        {`${formatSecondsToMinutes(currentValue)}/km`}
       </div>
       <div className="flex items-center justify-between gap-2">
-        <div className="shrink-0 text-[14px]/[20px] text-[#5D616F]">4분</div>
+        <div className="shrink-0 text-[14px]/[20px] text-[#5D616F]">
+          {formatSecondsToMinutes(min)}
+        </div>
         <SliderPrimitive.Root
           data-slot="slider"
           defaultValue={defaultValue}
@@ -65,7 +67,9 @@ export default function PaceSlider({
             className="block size-6 shrink-0 rounded-full border-2 border-[#6C6BE2] bg-white shadow-sm ring-[#6C6BE2]/50 transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
           />
         </SliderPrimitive.Root>
-        <div className="shrink-0 text-[14px]/[20px] text-[#5D616F]">10분</div>
+        <div className="shrink-0 text-[14px]/[20px] text-[#5D616F]">
+          {formatSecondsToMinutes(max)}
+        </div>
       </div>
     </div>
   );
