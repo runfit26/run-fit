@@ -1,4 +1,4 @@
-import { ResponseData, ResponseError, User } from '@/types';
+import { ResponseData, ResponseErrorData, User } from '@/types';
 
 type UserCredentials = {
   email: string;
@@ -14,18 +14,12 @@ export async function postSignup(body: UserCredentials & { name: string }) {
     body: JSON.stringify(body),
   });
 
-  type SignupError = ResponseError &
-    (
-      | {
-          code: 'DUPLICATE_EMAIL';
-          message: '이미 사용 중인 이메일입니다.';
-        }
-      | {
-          code: 'VALIDATION_ERROR';
-          message: '요청 데이터가 유효하지 않습니다.';
-        }
-    );
-  const data: ResponseData<User, SignupError> = await response.json();
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<User> = await response.json();
 
   return data;
 }
@@ -39,12 +33,13 @@ export async function postSignin(body: UserCredentials) {
     body: JSON.stringify(body),
   });
 
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
   type SigninData = { token: string };
-  type SigninError = ResponseError & {
-    code: 'INVALID_CREDENTIALS';
-    message: '올바르지 않은 요청입니다.';
-  };
-  const data: ResponseData<SigninData, SigninError> = await response.json();
+  const { data }: ResponseData<SigninData> = await response.json();
 
   return data;
 }
@@ -59,12 +54,13 @@ export async function postRefresh() {
     },
   });
 
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
   type RefreshData = { token: string };
-  type RefreshError = ResponseError & {
-    code: 'REFRESH_TOKEN_INVALID';
-    message: '유효하지 않은 리프레시 토큰입니다.';
-  };
-  const data: ResponseData<RefreshData, RefreshError> = await response.json();
+  const { data }: ResponseData<RefreshData> = await response.json();
 
   return data;
 }
@@ -79,8 +75,12 @@ export async function postSignout() {
     },
   });
 
-  type SignoutData = { message: '로그아웃 되었습니다.' };
-  const data: ResponseData<SignoutData, ResponseError> = await response.json();
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<null> = await response.json();
 
   return data;
 }

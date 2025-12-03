@@ -1,21 +1,31 @@
-export type ResponseData<T, E extends ResponseError> =
-  | {
-      success: true;
-      data: T;
-      error: null;
-    }
-  | {
-      success: false;
-      data: null;
-      error: E;
-    };
+export interface ResponseData<T> {
+  success: true;
+  data: T;
+  error: null;
+}
+
+export interface PageData<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
+
+export interface ResponseErrorData {
+  success: false;
+  data: null;
+  error: ResponseError;
+}
 
 export interface ResponseError {
   code: string;
   message: string;
 }
 
-export type PaginationQueryParams = {
+export interface PaginationQueryParams {
   page?: number;
   size?: number;
-};
+}
