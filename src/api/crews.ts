@@ -1,10 +1,10 @@
 import {
   Crew,
-  PageData,
   PaginationQueryParams,
   Profile,
   ResponseData,
   ResponseErrorData,
+  SliceData,
 } from '@/types';
 
 export async function createCrew(
@@ -53,7 +53,7 @@ export async function getCrews(
     return errorData.error;
   }
 
-  const { data }: ResponseData<PageData<Crew>> = await response.json();
+  const { data }: ResponseData<SliceData<Crew>> = await response.json();
   return data;
 }
 
@@ -146,11 +146,10 @@ export async function getCrewMemberDetailById(crewId: string, userId: string) {
 
 export async function delegateCrewLeader(
   crewId: string,
-  userId: string,
   body: { newLeaderId: number }
 ) {
   const accessToken = '';
-  const response = await fetch(`/api/crews/delegate/${crewId}/${userId}`, {
+  const response = await fetch(`/api/crews/${crewId}/leader`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -196,8 +195,20 @@ export async function updateMemberRole(
     return errorData.error;
   }
 
-  const data: ResponseData<{ role: 'STAFF' | 'MEMBER' }> =
-    await response.json();
+  type RoleUpdateResponseData =
+    | {
+        userId: string;
+        previousRole: 'MEMBER';
+        newRole: 'STAFF';
+        message: '운영진으로 등록되었습니다.';
+      }
+    | {
+        userId: string;
+        previousRole: 'STAFF';
+        newRole: 'MEMBER';
+        message: '운영진에서 해제되었습니다.';
+      };
+  const { data }: ResponseData<RoleUpdateResponseData> = await response.json();
 
   return data;
 }
@@ -211,7 +222,12 @@ export async function expelMember(crewId: string, userId: string) {
     },
   });
 
-  const data: ResponseData<null> = await response.json();
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<null> = await response.json();
 
   return data;
 }

@@ -6,9 +6,6 @@ import {
   Review,
 } from '@/types';
 
-// - [x] 세션 리뷰 작성
-// - [x] 리뷰 삭제
-
 export async function createSessionReview(
   sessionId: string,
   body: Pick<Review, 'description' | 'ranks' | 'image'>
@@ -53,11 +50,6 @@ export async function deleteSessionReview(reviewId: string) {
   return data;
 }
 
-// - [x] 특정 세션 리뷰 목록 (Page)
-// - [x] 내가 작성한 리뷰 목록 (Page)
-// - [x] 특정 크루의 리뷰 목록 (Page)
-
-// api/sessions/{sessionId}/reviews?page=0&size=10
 export async function getReviewsBySessionId(
   sessionId: string,
   queryParams: PaginationQueryParams
@@ -81,7 +73,6 @@ export async function getReviewsBySessionId(
   return data;
 }
 
-// api/crews/{crewId}/reviews?page=0&size=10
 export async function getReviewsByCrewId(
   crewId: string,
   queryParams: PaginationQueryParams
@@ -105,7 +96,6 @@ export async function getReviewsByCrewId(
   return data;
 }
 
-// /api/user/me/reviews?page=0&size=4
 export async function getMyReviews(queryParams: PaginationQueryParams) {
   const query = new URLSearchParams(
     queryParams as Record<string, string>

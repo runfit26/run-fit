@@ -14,6 +14,11 @@ export interface PageData<T> {
   hasPrevious: boolean;
 }
 
+export interface SliceData<T> {
+  content: T[];
+  hasNext: boolean;
+}
+
 export interface ResponseErrorData {
   success: false;
   data: null;

@@ -1,9 +1,9 @@
-import { get } from 'http';
 import {
   PaginationQueryParams,
   ResponseData,
   ResponseErrorData,
   Session,
+  SliceData,
   User,
 } from '@/types';
 
@@ -31,7 +31,12 @@ export async function getSessions(
     },
   });
 
-  const { data }: ResponseData<Session[]> = await response.json();
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<SliceData<Session[]>> = await response.json();
   return data;
 }
 
@@ -60,7 +65,12 @@ export async function createSession(
     body: JSON.stringify(body),
   });
 
-  const data: ResponseData<Session> = await response.json();
+  if (!response.ok) {
+    const errorData: ResponseErrorData = await response.json();
+    return errorData.error;
+  }
+
+  const { data }: ResponseData<Session> = await response.json();
   return data;
 }
 
