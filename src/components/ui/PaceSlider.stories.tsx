@@ -4,7 +4,6 @@ import PaceSlider from './PaceSlider';
 
 /**
  * PaceSlider 컴포넌트는 사용자가 달리기 페이스(분/킬로미터)를 조절할 수 있는 슬라이더입니다.
- * Default 스토리에서 슬라이더를 움직여볼 수 있습니다. (Interactive)
  */
 const meta: Meta<typeof PaceSlider> = {
   title: 'UI/PaceSlider',
@@ -19,23 +18,51 @@ const meta: Meta<typeof PaceSlider> = {
       description: '현재 페이스 값 (초 단위 배열)',
       table: {
         category: 'State',
+        type: { summary: 'number[]' }, // 타입 명시
       },
     },
     min: {
-      control: { type: 'number' },
+      control: 'number',
+      type: { name: 'number', required: false },
       description: '최소값 (기본: 240)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '240' },
+      },
     },
     max: {
-      control: { type: 'number' },
+      control: 'number',
+      type: { name: 'number', required: false },
       description: '최대값 (기본: 600)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '600' },
+      },
     },
     step: {
-      control: { type: 'number' },
+      control: 'number',
+      type: { name: 'number', required: false },
       description: '증감 단위 (기본: 10)',
+      table: {
+        type: { summary: 'number' },
+        defaultValue: { summary: '10' },
+      },
     },
     disabled: {
       control: 'boolean',
       description: '슬라이더 비활성화 여부',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    defaultValue: {
+      control: 'object',
+      description: '초기값 (기본: [420])',
+      table: {
+        type: { summary: 'number[]' },
+        defaultValue: { summary: '[420]' },
+      },
     },
   },
   decorators: [
@@ -50,10 +77,9 @@ const meta: Meta<typeof PaceSlider> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 1. Default (Controlled)
 export const Default: Story = {
   args: {
-    value: [420], // 초기값 (7분)
+    value: [420],
     min: 240,
     max: 600,
     step: 10,
