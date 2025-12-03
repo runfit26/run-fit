@@ -36,7 +36,7 @@ export async function getSessions(
     return errorData.error;
   }
 
-  const { data }: ResponseData<SliceData<Session[]>> = await response.json();
+  const { data }: ResponseData<SliceData<Session>> = await response.json();
   return data;
 }
 
