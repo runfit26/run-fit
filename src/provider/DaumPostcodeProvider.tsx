@@ -57,7 +57,7 @@ export function DaumPostcodeProvider({
         src={DAUM_POSTCODE_SCRIPT_SRC}
         strategy="afterInteractive"
         onLoad={() => {
-          if (window.daum?.Postcode) {
+          if (!loaded || window.daum?.Postcode) {
             setLoaded(true);
           } else {
             setError(
