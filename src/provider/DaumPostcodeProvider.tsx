@@ -22,7 +22,7 @@ export function DaumPostcodeProvider({
   children: React.ReactNode;
 }) {
   const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [, setError] = useState<Error | null>(null);
 
   const openAddressSearch = ({
     onSelectComplete,
@@ -44,32 +44,37 @@ export function DaumPostcodeProvider({
     });
   };
 
-  // 오류 처리를 위한 useEffect는 주석 처리했습니다.
-  // useEffect(() => {
-  //   if (error) {
-  //     throw error;
-  //   }
-  // }, [error]);
+  const handleLoad = () => {
+    if (window.daum?.Postcode) {
+      setLoaded(true);
+    } else {
+      setError(
+        new Error(
+          'Daum Postcode script loaded, but window.daum.Postcode is not available.'
+        )
+      );
+    }
+  };
+
+  const handleError = () => {
+    setError(new Error('Failed to load Daum Postcode script'));
+  };
+
+  /*
+    useEffect(() => {
+      if (error) {
+        throw error;
+      }
+    }, [error]);
+  */
 
   return (
     <>
       <Script
         src={DAUM_POSTCODE_SCRIPT_SRC}
         strategy="afterInteractive"
-        onLoad={() => {
-          if (!loaded || window.daum?.Postcode) {
-            setLoaded(true);
-          } else {
-            setError(
-              new Error(
-                'Daum Postcode script loaded, but window.daum.Postcode is not available.'
-              )
-            );
-          }
-        }}
-        onError={() =>
-          setError(new Error('Failed to load Daum Postcode script'))
-        }
+        onLoad={() => handleLoad()}
+        onError={() => handleError()}
       />
       <DaumPostcodeContext.Provider value={{ loaded, openAddressSearch }}>
         {children}
