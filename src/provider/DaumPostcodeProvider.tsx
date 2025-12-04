@@ -5,13 +5,13 @@ import React, { createContext, useContext, useState } from 'react';
 
 const DAUM_POSTCODE_SCRIPT_SRC = `${process.env.NEXT_PUBLIC_DAUM_POSTCODE_URL || '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}`;
 
-type DaumPostcodeContextValue = {
+interface DaumPostcodeContextValue {
   loaded: boolean;
   error: Error | null;
   openAddressSearch: (options: {
     onSelectComplete: (address: string) => void;
   }) => void;
-};
+}
 
 const DaumPostcodeContext = createContext<DaumPostcodeContextValue | null>(
   null
