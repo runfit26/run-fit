@@ -9,16 +9,21 @@ export type TimeValue = {
   ampm: 'AM' | 'PM';
 };
 
-type TimePickerProps = {
+export interface TimePickerProps {
+  label?: string;
   value: TimeValue;
   onChange: (value: TimeValue) => void;
-};
+}
 
-export default function TimePicker({ value, onChange }: TimePickerProps) {
+export default function TimePicker({
+  label,
+  value,
+  onChange,
+}: TimePickerProps) {
   return (
     <div className="flex flex-col gap-3">
       <Label htmlFor="time-picker" className="px-1">
-        시간
+        {label || '시간'}
       </Label>
       <div className="flex gap-2">
         {/* Hour */}
@@ -26,7 +31,7 @@ export default function TimePicker({ value, onChange }: TimePickerProps) {
           value={value.hour}
           onValueChange={(nextHour) => onChange({ ...value, hour: nextHour })}
         >
-          <Select.Trigger className="w-20">
+          <Select.Trigger id="time-picker" className="w-20">
             <Select.Value placeholder="hh" />
           </Select.Trigger>
           <Select.Content>
