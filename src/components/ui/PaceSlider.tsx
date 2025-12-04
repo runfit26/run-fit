@@ -5,6 +5,12 @@ import * as React from 'react';
 import { formatSecondsToMinutes } from '@/lib/pace';
 import { cn } from '@/lib/utils';
 
+const CIRCLE_COUNT = 9;
+const GAP_COUNT = CIRCLE_COUNT + 1;
+const CIRCLE_SIZE = 6;
+const PERCENT_PER_STEP = 100 / GAP_COUNT;
+const OFFSET_PX = CIRCLE_SIZE - (CIRCLE_COUNT * CIRCLE_SIZE) / GAP_COUNT;
+
 interface PaceSliderProps
   extends Omit<
     React.ComponentProps<typeof SliderPrimitive.Root>,
@@ -70,8 +76,7 @@ export default function PaceSlider({
                   key={index}
                   className="absolute top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#2B2D3A]"
                   style={{
-                    // Left = (index+1)*10% + (0.6*index - 5.4)px
-                    left: `calc(${index + 1}*10% + ${0.6 * index}px - 5.4px)`,
+                    left: `calc(${(index + 1) * PERCENT_PER_STEP}% + ${(index + 1) * (CIRCLE_SIZE - OFFSET_PX)}px - ${CIRCLE_SIZE}px)`,
                   }}
                 />
               );
