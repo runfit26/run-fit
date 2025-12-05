@@ -14,7 +14,7 @@ const OFFSET_PX = CIRCLE_SIZE - (CIRCLE_COUNT * CIRCLE_SIZE) / GAP_COUNT;
 interface PaceSliderProps
   extends Omit<
     React.ComponentProps<typeof SliderPrimitive.Root>,
-    'value' | 'onValueChange'
+    'value' | 'onValueChange' | 'defalutValue'
   > {
   // Radix의 배열 타입을 number로 재정의
   value: number;
@@ -46,6 +46,7 @@ export default function PaceSlider({
         </div>
         <SliderPrimitive.Root
           data-slot="slider"
+          aria-label="러닝 페이스 선택"
           value={radixValue}
           min={min}
           max={max}
@@ -59,7 +60,6 @@ export default function PaceSlider({
         >
           <SliderPrimitive.Track
             data-slot="slider-track"
-            aria-label="러닝 페이스 선택"
             className={cn(
               'relative grow overflow-hidden rounded-full bg-[#181820] data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:w-full'
             )}
