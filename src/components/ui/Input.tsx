@@ -5,7 +5,7 @@ import { useId, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const inputVariants = cva(
-  'text-white file:text-foreground placeholder:text-muted-foreground selection:text-purple-400-foreground h-9 w-full min-w-0 rounded-md border border-gray-800 bg-gray-800 px-3 py-1 text-base shadow-xs transition-all outline-none selection:bg-purple-400 md:text-sm',
+  'focus:ring-brand-400 h-10 w-[460px] min-w-0 rounded-xl bg-gray-800 px-4 py-2 text-base text-white shadow-xs transition-all outline-none file:text-white placeholder:text-gray-500 focus:ring-1 disabled:cursor-not-allowed md:text-sm',
   {
     variants: {
       variant: {
@@ -17,10 +17,8 @@ const inputVariants = cva(
         sm: 'h-8',
       },
       tone: {
-        default:
-          'focus:border-purple-400 focus-visible:border-purple-400 focus-visible:placeholder:text-white',
-        error:
-          'border-destructive focus:border-destructive focus-visible:border-destructive',
+        default: '',
+        error: 'focus:ring-2 focus:ring-warning focus-visible:ring-warning',
       },
     },
     defaultVariants: {
@@ -111,16 +109,16 @@ export default function Input({
             aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
             {showPassword ? (
-              <EyeOff className="size-4" />
+              <EyeOff className="size-4 text-gray-300" />
             ) : (
-              <Eye className="size-4" />
+              <Eye className="size-4 text-gray-300" />
             )}
           </button>
         )}
       </div>
 
       {hasError && errorMessage && (
-        <p id={errorId} className="text-destructive mt-0.5 text-xs">
+        <p id={errorId} className="text-warning mt-0.5 text-xs">
           {errorMessage}
         </p>
       )}
