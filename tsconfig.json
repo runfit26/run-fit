@@ -30,16 +30,18 @@
       "@provider/*": ["provider/*"],
       "@stores/*": ["stores/*"],
       "@types/*": ["types/*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": [
-    "svgr.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "src/types/svgr.d.ts",
+    "kakao.maps.d.ts"
   ],
   "exclude": ["node_modules"]
 }
