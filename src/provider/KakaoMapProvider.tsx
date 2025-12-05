@@ -2,14 +2,10 @@
 
 import Script from 'next/script';
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { Coords } from '@/types/kakaoMap';
 
 const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 const KAKAO_MAP_SCRIPT_SRC = `${process.env.NEXT_PUBLIC_KAKAO_MAP_URL}?appkey=${KAKAO_JS_KEY}&autoload=false`;
-
-interface Coords {
-  lat: number;
-  lng: number;
-}
 
 type CreateMapFn = (
   container: HTMLElement,
@@ -47,6 +43,8 @@ export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
       );
 
       const mapOptions = {
+        draggable: false,
+        scrollwheel: false,
         ...options,
         center: center,
       };
