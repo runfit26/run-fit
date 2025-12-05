@@ -25,8 +25,6 @@ export default function UserAvatar({
         'relative size-10 overflow-hidden rounded-full bg-gray-200',
         className
       )}
-      role="img"
-      aria-label={alt}
     >
       {showImage ? (
         <Image
@@ -37,14 +35,14 @@ export default function UserAvatar({
           onError={() => setImageError(true)}
         />
       ) : (
-        <Profile />
+        <Profile role="img" aria-label={alt} />
       )}
     </div>
   );
 }
 
 function isValidImageUrl(url: string | null | undefined): url is string {
-  if (!url || typeof url !== 'string') return false;
+  if (typeof url !== 'string') return false;
 
   if (url.trim() === '') return false;
 
