@@ -1,8 +1,23 @@
 'use client';
 
 import Script from 'next/script';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { Coords } from '@/types/kakaoMap';
+
+if (
+  !process.env.NEXT_PUBLIC_KAKAO_JS_KEY ||
+  !process.env.NEXT_PUBLIC_KAKAO_MAP_URL
+) {
+  throw new Error(
+    '카카오 맵 환경 변수(NEXT_PUBLIC_KAKAO_JS_KEY, NEXT_PUBLIC_KAKAO_MAP_URL)가 설정되지 않았습니다.'
+  );
+}
 
 const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 const KAKAO_MAP_SCRIPT_SRC = `${process.env.NEXT_PUBLIC_KAKAO_MAP_URL}?appkey=${KAKAO_JS_KEY}&autoload=false`;
@@ -41,7 +56,7 @@ const KakaoMapContext = createContext<KakaoMapContextValue | null>(null);
 
 export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
   const [loaded, setLoaded] = useState(false);
-  const [, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const createMap: CreateMapFn = useCallback(
     (container, options) => {
@@ -124,16 +139,14 @@ export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
   };
 
   const handleError = () => {
-    setError(new Error('Failed to load Daum Postcode script'));
+    setError(new Error('Failed to load Kakao Map script'));
   };
 
-  /*
-    useEffect(() => {
-      if (error) {
-        throw error;
-      }
-    }, [error]);
-  */
+  useEffect(() => {
+    if (error) {
+      console.error('Kakao Map Provider Error:', error);
+    }
+  }, [error]);
 
   return (
     <>
