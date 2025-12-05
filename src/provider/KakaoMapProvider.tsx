@@ -25,7 +25,7 @@ type CreateMarkerFn = (
   position: Coords
 ) => kakao.maps.Marker | undefined;
 
-type GeocodeAddressFn = (
+type ConvertAddressToCoordsFn = (
   address: string,
   onComplete: (coords: Coords | null) => void
 ) => void;
@@ -34,7 +34,7 @@ interface KakaoMapContextValue {
   loaded: boolean;
   createMap: CreateMapFn;
   createMarker: CreateMarkerFn;
-  geocodeAddress: GeocodeAddressFn;
+  convertAddressToCoords: ConvertAddressToCoordsFn;
 }
 
 const KakaoMapContext = createContext<KakaoMapContextValue | null>(null);
@@ -83,7 +83,7 @@ export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
     [loaded]
   );
 
-  const geocodeAddress: GeocodeAddressFn = useCallback(
+  const convertAddressToCoords: ConvertAddressToCoordsFn = useCallback(
     (address, onComplete) => {
       if (!loaded || !window.kakao?.maps) {
         onComplete(null);
@@ -144,7 +144,7 @@ export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
         onError={() => handleError()}
       />
       <KakaoMapContext.Provider
-        value={{ loaded, createMap, createMarker, geocodeAddress }}
+        value={{ loaded, createMap, createMarker, convertAddressToCoords }}
       >
         {children}
       </KakaoMapContext.Provider>
