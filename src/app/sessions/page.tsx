@@ -4,7 +4,7 @@ import SessionCard from '@/components/session/SessionCard';
 
 export default function Page() {
   return (
-    <div className="tablet:mx-8 laptop:mx-100 mx-4 flex h-screen flex-col items-center gap-12 **:font-['Pretendard']">
+    <div className="tablet:mx-8 laptop:mx-100 mx-4 flex h-screen flex-col items-center gap-12">
       <div>
         <span className="tablet:hidden text-white">mobile</span>
         <span className="tablet:inline-flex laptop:hidden hidden text-white">

@@ -28,7 +28,7 @@ export const badgeVariants = cva(
 type BaseBadgeProps = React.ComponentProps<'span'> & {
   children?: React.ReactNode;
   variant?: VariantProps<typeof badgeVariants>['variant'];
-  size?: VariantProps<typeof badgeVariants>['size'];
+  size: NonNullable<VariantProps<typeof badgeVariants>['size']>;
 };
 
 type LevelBadgeProps = BaseBadgeProps & {
@@ -84,6 +84,11 @@ export function LevelBadge({
   level,
   size,
 }: Omit<LevelBadgeProps, 'variant'>) {
+  const iconSize = {
+    sm: 'size-3',
+    md: 'size-3',
+    lg: 'size-4',
+  };
   const fillColor = {
     easy: 'fill-gray-200',
     medium: 'fill-[#F2B48A]',
@@ -101,7 +106,7 @@ export function LevelBadge({
   };
   return (
     <Badge variant="level" level={level} size={size} className={className}>
-      <Level className={`size-3 ${fillColor[level]}`} />
+      <Level className={`${iconSize[size]} ${fillColor[level]}`} />
       <span className={`${textColor[level]}`}>{text[level]}</span>
     </Badge>
   );
@@ -110,46 +115,47 @@ export function LevelBadge({
 export function DdayBadge({
   className,
   size,
+  children,
 }: Omit<DdayBadgeProps, 'variant'>) {
   return (
     <Badge variant="dday" size={size} className={className}>
-      마감 D-3
+      {children}
     </Badge>
   );
 }
 
-export const DdayBadges = (
-  <>
-    <div
-      className={cn(
-        'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
-        'px-2 py-1 text-[14px] font-semibold'
-      )}
-    >
-      D-day lg
-    </div>
-    <div
-      className={cn(
-        'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
-        'px-1.5 py-0.5 text-[10px] font-semibold'
-      )}
-    >
-      <span>D-day sm</span>
-    </div>
-  </>
-);
+// export const DdayBadges = (
+//   <>
+//     <div
+//       className={cn(
+//         'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
+//         'px-2 py-1 text-[14px] font-semibold'
+//       )}
+//     >
+//       D-day lg
+//     </div>
+//     <div
+//       className={cn(
+//         'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
+//         'px-1.5 py-0.5 text-[10px] font-semibold'
+//       )}
+//     >
+//       <span>D-day sm</span>
+//     </div>
+//   </>
+// );
 
-export const PaceBadges = () => (
-  <>
-    <PaceBadge pace={300} size="sm" />
-    <PaceBadge pace={325} size="md" />
-    <PaceBadge pace={375} size="lg" />
-  </>
-);
-export const LevelBadges = () => (
-  <>
-    <LevelBadge level="hard" size="sm" />
-    <LevelBadge level="medium" size="md" />
-    <LevelBadge level="easy" size="lg" />
-  </>
-);
+// export const PaceBadges = () => (
+//   <>
+//     <PaceBadge pace={300} size="sm" />
+//     <PaceBadge pace={325} size="md" />
+//     <PaceBadge pace={375} size="lg" />
+//   </>
+// );
+// export const LevelBadges = () => (
+//   <>
+//     <LevelBadge level="hard" size="sm" />
+//     <LevelBadge level="medium" size="md" />
+//     <LevelBadge level="easy" size="lg" />
+//   </>
+// );
