@@ -5,20 +5,21 @@ import { useId, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 const inputVariants = cva(
-  'focus:ring-brand-400 h-10 w-[460px] min-w-0 rounded-xl bg-gray-800 px-4 py-2 text-base text-white shadow-xs transition-all outline-none file:text-white placeholder:text-gray-500 focus:ring-1 disabled:cursor-not-allowed md:text-sm',
+  'h-10 w-[460px] min-w-0 rounded-xl bg-gray-800 px-4 py-2 text-base text-white outline-none file:text-white placeholder:text-gray-300',
   {
     variants: {
       variant: {
         default: '',
-        disabled: 'cursor-not-allowed opacity-50',
+        disabled: 'placeholder:text-gray-500 cursor-not-allowed',
       },
       size: {
         md: 'h-9',
         sm: 'h-8',
       },
       tone: {
-        default: '',
-        error: 'focus:ring-2 focus:ring-warning focus-visible:ring-warning',
+        default:
+          'focus:ring-1 focus:ring-brand-400 focus-visible:ring-brand-400',
+        error: 'border-warning border-2',
       },
     },
     defaultVariants: {
