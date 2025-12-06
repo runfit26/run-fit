@@ -10,7 +10,7 @@ export default function Header() {
   const { isLoggedIn, user } = { isLoggedIn: true, user: { image: null } };
 
   return (
-    <header className="tablet:h-15 tablet:px-6 h-14 w-full px-4">
+    <header className="tablet:h-15 tablet:px-6 z-50 h-14 w-full border-b border-b-gray-600 bg-gray-800 px-4">
       <div className="tablet:gap-5 mx-auto flex h-full max-w-[1198px] items-center justify-between gap-3">
         <Link
           href={ROUTES.home}

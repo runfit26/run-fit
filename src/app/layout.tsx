@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="bg-gray-800 text-white antialiased">
+      <body className="bg-gray-900 text-white antialiased">
         <QueryProvider>
           <Header />
           {children}
