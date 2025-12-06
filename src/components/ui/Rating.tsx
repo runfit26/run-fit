@@ -48,7 +48,7 @@ export default function Rating({
             <Star
               width={size}
               height={size}
-              fill={active ? '#D8E2EE' : '#2B2D3A'}
+              fill={active ? 'var(--color-gray-100)' : 'var(--color-gray-600)'}
             />
           </button>
         );
