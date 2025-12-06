@@ -61,7 +61,7 @@ export default function TimeSlider({
           <SliderPrimitive.Range
             data-slot="slider-range"
             className={cn(
-              'absolute bg-blue-400 data-[orientation=horizontal]:h-full'
+              'absolute bg-brand-400 data-[orientation=horizontal]:h-full'
             )}
           />
         </SliderPrimitive.Track>
@@ -69,7 +69,7 @@ export default function TimeSlider({
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
             key={index}
-            className="block size-6 shrink-0 rounded-full border-2 border-blue-400 bg-white shadow-sm ring-[#6C6BE2]/50 transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+            className="block size-6 shrink-0 rounded-full border-2 border-brand-400 bg-white shadow-sm ring-[#6C6BE2]/50 transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
           />
         ))}
       </SliderPrimitive.Root>
