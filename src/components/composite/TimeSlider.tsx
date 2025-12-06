@@ -5,16 +5,22 @@ import * as React from 'react';
 import { formatMinutesToKoreanTime } from '@/lib/time';
 import { cn } from '@/lib/utils';
 
+interface TimeSliderProps
+  extends Omit<
+    React.ComponentProps<typeof SliderPrimitive.Root>,
+    'defaultValue' | 'min' | 'max' | 'value' | 'onValueChange'
+  > {
+  value: [number, number];
+  onValueChange: (value: [number, number]) => void;
+}
+
 export default function TimeSlider({
   className,
   value,
   step = 10,
   onValueChange,
   ...props
-}: Omit<
-  React.ComponentProps<typeof SliderPrimitive.Root>,
-  'defaultValue' | 'min' | 'max'
->) {
+}: TimeSliderProps) {
   const isAllDay = value[0] === 0 && value[1] === 1440;
   return (
     <div className="w-full">
