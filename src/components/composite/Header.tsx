@@ -51,13 +51,6 @@ export default function Header() {
         </nav>
         <div>
           {isLoggedIn ? (
-            <Link
-              href={ROUTES.signIn}
-              className="text-body3-semibold tablet:text-body2-semibold mx-2"
-            >
-              로그인
-            </Link>
-          ) : (
             <>
               <Link href={ROUTES.my}>
                 {/* @TODO: UserAvatar 추가 시 아래 줄 삭제 */}
@@ -66,6 +59,13 @@ export default function Header() {
               </Link>
               <Hamburger className="tablet:hidden size-6" />
             </>
+          ) : (
+            <Link
+              href={ROUTES.signIn}
+              className="text-body3-semibold tablet:text-body2-semibold mx-2"
+            >
+              로그인
+            </Link>
           )}
         </div>
       </div>
