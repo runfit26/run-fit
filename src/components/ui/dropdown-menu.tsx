@@ -65,3 +65,30 @@ export function DropdownMenuContent({
     </DropdownMenuPrimitive.Portal>
   );
 }
+
+export function DropdownMenuItem({
+  className,
+  size,
+  selected = false,
+  children,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {
+  size?: 'sm' | 'lg';
+  selected?: boolean;
+}) {
+  return (
+    <DropdownMenuPrimitive.Item
+      data-slot="dropdown-menu-item"
+      className={cn(
+        size === 'lg' ? 'text-body2-regular' : 'text-body3-regular',
+        'cursor-pointer bg-gray-600 px-4 py-3 text-gray-100 outline-none',
+        'transition-colors duration-150 hover:bg-gray-700',
+        selected && 'bg-gray-800 text-white',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </DropdownMenuPrimitive.Item>
+  );
+}
