@@ -24,7 +24,7 @@ export default function ProgressBar({
         <Label className="text-sm">{numericValue}명</Label>
         <div className="flex items-center gap-0.5">
           <span>/</span>
-          <Label className="text-sm">{max}명 모집</Label>
+          <Label className="text-sm">{safeMax}명 모집</Label>
         </div>
       </div>
       <ProgressPrimitive.Root
@@ -34,7 +34,7 @@ export default function ProgressBar({
           className
         )}
         value={value}
-        max={max}
+        max={safeMax}
         {...props}
       >
         <ProgressPrimitive.Indicator
