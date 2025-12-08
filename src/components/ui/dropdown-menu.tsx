@@ -7,26 +7,26 @@ import { cn } from '@/lib/utils';
 
 type DropdownSize = 'sm' | 'lg';
 
-const DropdownMenuSizeContext = React.createContext<DropdownSize>('sm');
+const DropdownSizeContext = React.createContext<DropdownSize>('sm');
 
 function useDropdownSize() {
-  return React.useContext(DropdownMenuSizeContext);
+  return React.useContext(DropdownSizeContext);
 }
 
-export function DropdownMenu({
+export function Dropdown({
   size = 'sm',
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Root> & {
   size?: DropdownSize;
 }) {
   return (
-    <DropdownMenuSizeContext.Provider value={size}>
+    <DropdownSizeContext.Provider value={size}>
       <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />
-    </DropdownMenuSizeContext.Provider>
+    </DropdownSizeContext.Provider>
   );
 }
 
-export function DropdownMenuTrigger({
+export function DropdownTrigger({
   className,
   children,
   ...props
@@ -60,7 +60,7 @@ export function DropdownMenuTrigger({
   );
 }
 
-export function DropdownMenuTriggerNoArrow({
+export function DropdownTriggerNoArrow({
   children,
 }: {
   children: React.ReactNode;
@@ -72,7 +72,7 @@ export function DropdownMenuTriggerNoArrow({
   );
 }
 
-export function DropdownMenuContent({
+export function DropdownContent({
   className,
   sideOffset = 4,
   align = 'end',
@@ -94,7 +94,7 @@ export function DropdownMenuContent({
   );
 }
 
-export function DropdownMenuItem({
+export function DropdownItem({
   className,
   selected = false,
   children,
