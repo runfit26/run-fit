@@ -6,13 +6,15 @@ const config: StorybookConfig = {
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
   framework: {
     name: '@storybook/nextjs-vite',
-    options: {
-      image: {},
-    },
+    options: {},
   },
   staticDirs: ['../public'],
   viteFinal: (config) => {
-    config?.plugins?.push(svgr());
+    config?.plugins?.push(
+      svgr({
+        include: '**/*.svg?react',
+      })
+    );
     return config;
   },
 };

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Image from 'next/image';
-import LevelIcon from '../../assets/icons/level.svg?icon';
+import LevelIcon from '@/assets/icons/level.svg?react';
+import { cn } from '@/lib/utils';
 import Badge, { DdayBadge, LevelBadge, PaceBadge } from './Badge';
 
 const meta: Meta<typeof Badge> = {
@@ -37,28 +37,37 @@ export const Level: StoryObj<typeof LevelBadge> = {
       md: 'size-3',
       lg: 'size-4',
     };
-    const color = {
-      easy: '--color-gray-200',
-      medium: '--color-[#F2B48A]',
-      hard: '--color-[#FF819E]',
+    const fillColor = {
+      easy: 'fill-gray-200',
+      medium: 'fill-[#F2B48A]',
+      hard: 'fill-[#FF819E]',
+    };
+    const textColor = {
+      easy: 'text-gray-200',
+      medium: 'text-[#F2B48A]',
+      hard: 'text-[#FF819E]',
     };
     const text = {
       easy: '초급',
       medium: '중급',
       hard: '고급',
     };
+
     return (
-      <Badge variant="level" {...args}>
-        <Image
-          src={LevelIcon}
-          alt="Level Icon"
-          className={`${iconSize[args.size]}`}
-          style={{ color: `var(${color[args.level]})` }}
-        />
-        <span className={`text-[var(${color[args.level]})]`}>
-          {text[args.level]}
-        </span>
-      </Badge>
+      <div className="flex items-center gap-4">
+        <Badge variant="level" {...args}>
+          <LevelIcon className={cn(iconSize[args.size], fillColor.easy)} />
+          <span className={textColor.easy}>{text.easy}</span>
+        </Badge>
+        <Badge variant="level" {...args}>
+          <LevelIcon className={cn(iconSize[args.size], fillColor.medium)} />
+          <span className={textColor.medium}>{text.medium}</span>
+        </Badge>
+        <Badge variant="level" {...args}>
+          <LevelIcon className={cn(iconSize[args.size], fillColor.hard)} />
+          <span className={textColor.hard}>{text.hard}</span>
+        </Badge>
+      </div>
     );
   },
   args: {
