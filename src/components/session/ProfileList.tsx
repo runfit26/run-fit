@@ -28,7 +28,7 @@ export default function ProfileList({ participants }: ProfileListProps) {
   // };
 
   return (
-    <div className="flex -space-x-1 *:size-4 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-gray-900">
+    <div className="tablet:*:size-6 flex -space-x-1 *:size-4 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-gray-900">
       {participants.map((participant) => (
         <Avatar key={participant.id} title={participant.name}>
           <Avatar.Image src={participant.image} alt={participant.name} />

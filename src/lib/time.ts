@@ -20,3 +20,15 @@ export function formatMinutesToKoreanTime(totalMinutes: number): string {
 
   return `${ampm} ${paddedHour}:${paddedMinute}`;
 }
+
+export function formatTimeInKorean(hour: number, minutes: number): string {
+  const isAM = hour < 12;
+  const ampm = isAM ? '오전' : '오후';
+
+  const hour12: number = isAM ? hour : hour - 12;
+
+  const paddedHour = hour12.toString().padStart(2, '0');
+  const paddedMinute = minutes.toString().padStart(2, '0');
+
+  return `${ampm} ${paddedHour}:${paddedMinute}`;
+}
