@@ -82,6 +82,7 @@ function DropdownContent({
         sideOffset={sideOffset}
         className={cn(
           'overflow-hidden rounded-xl border border-gray-500',
+          'min-w-(--radix-dropdown-menu-trigger-width)',
           className
         )}
         {...props}
