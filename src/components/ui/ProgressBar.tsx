@@ -14,14 +14,17 @@ export default function ProgressBar({
   ...props
 }: ProgressBarProps) {
   const safeMax = typeof max === 'number' && max > 0 ? max : 1;
-  const numericValue = typeof value === 'number' ? value : 0;
-  const ratio = Math.min(1, Math.max(0, numericValue / safeMax));
-  const translateX = 100 - ratio * 100;
+
+  const rawValue = typeof value === 'number' ? value : 0;
+  const clampedValue = Math.min(Math.max(rawValue, 0), safeMax);
+
+  const progressRatio = clampedValue / safeMax;
+  const translateX = 100 - progressRatio * 100;
 
   return (
     <div className="flex h-[38px] flex-col">
       <div className="flex justify-between">
-        <Label className="text-sm">{numericValue}명</Label>
+        <Label className="text-sm">{clampedValue}명</Label>
         <div className="flex items-center gap-0.5">
           <span>/</span>
           <Label className="text-sm">{safeMax}명 모집</Label>
@@ -33,7 +36,7 @@ export default function ProgressBar({
           'relative h-2.5 w-[319px] overflow-hidden rounded-md bg-gray-500',
           className
         )}
-        value={value}
+        value={clampedValue}
         max={safeMax}
         {...props}
       >
