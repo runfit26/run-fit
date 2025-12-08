@@ -16,7 +16,7 @@ export default function ProgressBar({
   const safeMax = typeof max === 'number' && max > 0 ? max : 1;
 
   const rawValue = typeof value === 'number' ? value : 0;
-  const clampedValue = Math.min(Math.max(rawValue, 0), safeMax);
+  const clampedValue = Math.round(Math.min(Math.max(rawValue, 0), safeMax));
 
   const progressRatio = clampedValue / safeMax;
   const translateX = 100 - progressRatio * 100;
