@@ -30,11 +30,10 @@ const inputVariants = cva(
 );
 
 export interface InputProps
-  extends Omit<React.ComponentProps<'input'>, 'size'>,
-    VariantProps<typeof inputVariants> {
+  extends Omit<React.ComponentProps<'input'>, 'size'> {
   label?: string;
   errorMessage?: string;
-  size?: 'md' | 'sm';
+  size?: VariantProps<typeof inputVariants>['size'];
 }
 
 export default function Input({
@@ -106,7 +105,7 @@ export default function Input({
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors hover:text-white"
+            className="text-muted-foreground focus-visible:ring-brand-400 absolute top-1/2 right-3 -translate-y-1/2 transition-colors hover:text-white focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 focus-visible:outline-none"
             aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
             {showPassword ? (
