@@ -46,7 +46,7 @@ export default function SessionLevelCard({
   label,
   description,
   size = 'md',
-  checked = false,
+  checked,
   disabled = false,
   onClick,
   ...rest

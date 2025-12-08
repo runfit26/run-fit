@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { useArgs } from 'storybook/internal/preview-api';
 import Checkbox from './Checkbox';
 
 /**
