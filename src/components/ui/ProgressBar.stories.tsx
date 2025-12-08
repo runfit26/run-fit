@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { useArgs } from 'storybook/internal/preview-api';
 import ProgressBar from './ProgressBar';
 
 /**
@@ -25,21 +26,23 @@ const meta: Meta<typeof ProgressBar> = {
       defaultValue: 25,
     },
   },
+  args: {
+    value: 0,
+    max: 25,
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => <ProgressBar value={8} max={16} />,
-};
+  render: () => {
+    const [{ value, max }] = useArgs();
 
-export const Variants: Story = {
-  render: () => (
-    <div className="flex flex-wrap gap-4">
-      <ProgressBar value={1} max={16} />
-      <ProgressBar value={4} max={16} />
-      <ProgressBar value={16} max={16} />
-    </div>
-  ),
+    return (
+      <div className="flex flex-wrap gap-4">
+        <ProgressBar value={value} max={max} />
+      </div>
+    );
+  },
 };
