@@ -4,10 +4,7 @@ import svgr from 'vite-plugin-svgr';
 const config: StorybookConfig = {
   stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y'],
-  framework: {
-    name: '@storybook/nextjs-vite',
-    options: {},
-  },
+  framework: '@storybook/nextjs-vite',
   staticDirs: ['../public'],
   viteFinal: (config) => {
     config?.plugins?.push(
