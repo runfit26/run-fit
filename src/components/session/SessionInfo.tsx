@@ -1,15 +1,16 @@
+import { Dot } from 'lucide-react';
 import Image from 'next/image';
-import { formatTimeInKorean } from '@/lib/time';
+import { formatTimeToKorean } from '@/lib/time';
+import { Session } from '@/types';
 
 interface SessionInfPropsProps {
-  // eslint-disable-next-line
-  data: any; // Session;
+  data: Session;
 }
 
 export default function SessionInfo({ data }: SessionInfPropsProps) {
   const sessionAt = new Date(data.sessionAt);
   const sessionDate = `${sessionAt.getFullYear()}년 ${sessionAt.getMonth() + 1}월 ${sessionAt.getDate()}일`;
-  const sessionTime = formatTimeInKorean(
+  const sessionTime = formatTimeToKorean(
     sessionAt.getHours(),
     sessionAt.getMinutes()
   );
@@ -27,7 +28,9 @@ export default function SessionInfo({ data }: SessionInfPropsProps) {
       <div className="flex flex-col justify-end">
         <div className="text-caption-semibold text-gray-50">{data.name}</div>
         <div className="text-caption-regular text-gray-300">
-          {`${sessionDate} • ${sessionTime}`}
+          {`${sessionDate}`}
+          <Dot />
+          {`${sessionTime}`}
         </div>
       </div>
     </div>
