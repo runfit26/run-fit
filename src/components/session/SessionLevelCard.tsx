@@ -16,7 +16,7 @@ interface SessionLevelCardProps {
 
 const sessionLevelCardVariants = cva(
   [
-    'relative flex w-[327px] items-start gap-2 rounded-lg border-1 bg-gray-800 border-gray-750',
+    'relative flex w-[327px] items-start gap-2 rounded-lg outline-1 bg-gray-800 outline-gray-750',
     'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400/40',
   ].join(' '),
   {
@@ -26,11 +26,11 @@ const sessionLevelCardVariants = cva(
         sm: 'min-h-[64px] py-3 px-3',
       },
       checked: {
-        true: 'border-brand-400 border-2',
-        false: 'border-gray-750 hover:border-brand-900',
+        true: 'outline-brand-400 outline-2',
+        false: 'outline-gray-750 hover:outline-brand-900',
       },
       disabled: {
-        true: 'cursor-not-allowed opacity-60 hover:border-gray-750',
+        true: 'cursor-not-allowed opacity-60 hover:outline-gray-750',
         false: 'cursor-pointer',
       },
     },
