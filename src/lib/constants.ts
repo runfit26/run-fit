@@ -127,6 +127,28 @@ export const QUERY_KEYS = {
   },
 };
 
+/**
+ * 앱 내 라우팅 경로 상수
+ */
+export const ROUTES = {
+  home: '/',
+  signIn: '/signin',
+  signUp: '/signup',
+
+  sessions: {
+    list: '/sessions',
+    detail: (sessionId: number | string) => `/sessions/${sessionId}`,
+    likes: '/sessions/likes',
+  },
+
+  crews: {
+    list: '/crews',
+    detail: (crewId: number | string) => `/crews/${crewId}`,
+  },
+
+  my: '/my',
+} as const;
+
 // prettier-ignore
 export const location = {
   서울특별시: ['강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'],
