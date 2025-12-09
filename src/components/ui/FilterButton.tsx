@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 interface FilterButtonProps {
   count?: number;
   onClick?: () => void;
+  className?: string;
 }
 
 export default function FilterButton({
