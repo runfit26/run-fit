@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import Hamburger from '@/assets/icons/hamburger.svg';
-import { ROUTES } from '@/lib/constants';
 
 // import Logo from '@/assets/icons/logo.svg';
 
@@ -13,7 +12,7 @@ export default function Header() {
     <header className="tablet:h-15 tablet:px-6 sticky top-0 z-50 h-14 w-full border-b border-b-gray-600 bg-gray-800 px-4">
       <div className="tablet:gap-5 mx-auto flex h-full max-w-[1198px] items-center justify-between gap-3">
         <Link
-          href={ROUTES.home}
+          href="/"
           className="tablet:w-[73px] tablet:h-[35px] relative flex h-[27px] w-[56px] items-center justify-center"
         >
           <svg
@@ -37,14 +36,14 @@ export default function Header() {
           </svg>
         </Link>
         <nav className="text-body3-semibold tablet:text-body2-semibold tablet:gap-6 flex h-full flex-1 items-stretch gap-3">
-          <Link href={ROUTES.sessions.list} className="flex items-center">
+          <Link href="/sessions" className="flex items-center">
             세션 목록
           </Link>
-          <Link href={ROUTES.crews.list} className="flex items-center">
+          <Link href="/crews" className="flex items-center">
             크루 찾기
           </Link>
           {isLoggedIn && (
-            <Link href={ROUTES.sessions.likes} className="flex items-center">
+            <Link href="/sessions/likes" className="flex items-center">
               찜한 세션
             </Link>
           )}
@@ -52,7 +51,7 @@ export default function Header() {
         <div>
           {isLoggedIn ? (
             <>
-              <Link href={ROUTES.my}>
+              <Link href="/my">
                 {/* @TODO: UserAvatar 추가 시 아래 줄 삭제 */}
                 <div className="tablet:block hidden size-10 rounded-full bg-white"></div>
                 {/* <UserAvatar src={user.image} className="size-10" /> */}
@@ -61,7 +60,7 @@ export default function Header() {
             </>
           ) : (
             <Link
-              href={ROUTES.signIn}
+              href="/signin"
               className="text-body3-semibold tablet:text-body2-semibold mx-2"
             >
               로그인
