@@ -15,7 +15,7 @@ export default function ReviewCard({ data: review }: ReviewCardProps) {
   const userProfile = mockProfiles[0];
 
   const createdAt = new Date(review.createdAt);
-  const createdAtText = `${createdAt.getFullYear()}.${createdAt.getMonth()}.${createdAt.getDay()}`;
+  const createdAtText = `${createdAt.getFullYear()}.${createdAt.getMonth() + 1}.${createdAt.getDate()}`;
   return (
     <li className="flex flex-col gap-2">
       <Rating value={review.ranks} disabled onChange={() => {}} />
