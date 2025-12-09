@@ -3,8 +3,3 @@ declare module '*.svg' {
   const SVG: React.FC<React.SVGProps<SVGSVGElement>>;
   export default SVG;
 }
-
-declare module '*.svg?icon' {
-  const content: any;
-  export default content;
-}
