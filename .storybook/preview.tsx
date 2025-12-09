@@ -20,9 +20,8 @@ const preview: Preview = {
     },
     backgrounds: {
       options: {
-        default: { name: 'default', value: '#0F1014' },
-        light: { name: 'light', value: '#FFFFFF' },
-        dark: { name: 'dark', value: '#000000' },
+        default: { name: 'default', value: 'var(--color-gray-900)' },
+        light: { name: 'light', value: 'var(--color-gray-50)' },
       },
     },
     viewport: {
@@ -32,7 +31,7 @@ const preview: Preview = {
 
   initialGlobals: {
     backgrounds: { value: 'default' },
-    viewport: { value: 'mobile1', isRotated: false },
+    viewport: { value: 'desktop', isRotated: false },
   },
 };
 
