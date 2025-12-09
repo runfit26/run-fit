@@ -78,7 +78,7 @@ export default function PaceSlider({
           </SliderPrimitive.Track>
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
-            className="block size-6 shrink-0 rounded-full border-2 border-brand-400 bg-white shadow-sm ring-brand-400/50 transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+            className="border-brand-400 ring-brand-400/50 block size-6 shrink-0 rounded-full border-2 bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
           />
         </SliderPrimitive.Root>
         <div className="text-body3-regular shrink-0 text-gray-300">
