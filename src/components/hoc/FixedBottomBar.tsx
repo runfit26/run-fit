@@ -23,18 +23,28 @@ export default function FixedBottomBar({ children, ref }: FixedBottomBarProps) {
 export function useFixedBottomBar() {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(0);
+  const blockSize = useRef(0);
   const extraPadding = 30;
 
   useEffect(() => {
-    const element = ref.current;
-    if (element) {
-      setHeight(element.offsetHeight + extraPadding);
+    let timeoutId: NodeJS.Timeout;
 
-      const observer = new ResizeObserver(() => {
-        setHeight(element.offsetHeight + extraPadding);
-      });
+    const observer = new ResizeObserver(([entry]) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        const newBlockSize = entry.borderBoxSize[0].blockSize;
+        if (blockSize.current !== newBlockSize) {
+          blockSize.current = newBlockSize;
+          setHeight(newBlockSize + extraPadding);
+        }
+      }, 1000);
+    });
 
-      observer.observe(element);
+    const currentRef = ref.current;
+    if (currentRef) {
+      blockSize.current = currentRef.offsetHeight;
+      setHeight(blockSize.current + extraPadding);
+      observer.observe(currentRef);
       return () => observer.disconnect();
     }
   }, []);
