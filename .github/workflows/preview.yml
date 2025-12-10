@@ -1,0 +1,40 @@
+name: Preview 배포
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Github 레포지토리 불러오기
+        uses: actions/checkout@v6
+
+      - name: pnpm 10 설치
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: 의존성 라이브러리 설치
+        run: pnpm install --frozen-lockfile
+
+      - name: Vercel CLI 설치
+        run: pnpm add -g vercel
+
+      - name: Vercel 환경 변수 불러오기
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 프로젝트 빌드
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Preview에 배포
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
