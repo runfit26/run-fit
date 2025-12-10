@@ -55,7 +55,7 @@ export async function getCrews(
   return data;
 }
 
-export async function getCrewDetail(crewId: string) {
+export async function getCrewDetail(crewId: number) {
   const response = await fetch(`/api/crews/${crewId}`);
 
   if (!response.ok) {
@@ -72,7 +72,7 @@ export async function getCrewDetail(crewId: string) {
 }
 
 export async function getCrewMembers(
-  crewId: string,
+  crewId: number,
   queryParams?: { role?: 'leader' | 'staff' | 'member' }
 ) {
   const query = new URLSearchParams(
@@ -98,7 +98,7 @@ export async function getCrewMembers(
   return data;
 }
 
-export async function getCrewMemberCount(crewId: string) {
+export async function getCrewMemberCount(crewId: number) {
   const response = await fetch(`/api/crews/${crewId}/members/count`);
 
   if (!response.ok) {
@@ -120,7 +120,7 @@ export async function getCrewMemberCount(crewId: string) {
   return data;
 }
 
-export async function getCrewMemberDetailById(crewId: string, userId: string) {
+export async function getCrewMemberDetailById(crewId: number, userId: number) {
   const response = await fetch(`/api/crews/${crewId}/members/${userId}/role`);
 
   if (!response.ok) {
@@ -137,7 +137,7 @@ export async function getCrewMemberDetailById(crewId: string, userId: string) {
 }
 
 export async function delegateCrewLeader(
-  crewId: string,
+  crewId: number,
   body: { newLeaderId: number }
 ) {
   // const accessToken = '';
@@ -165,8 +165,8 @@ export async function delegateCrewLeader(
 }
 
 export async function updateMemberRole(
-  crewId: string,
-  userId: string,
+  crewId: number,
+  userId: number,
   body: { role: 'STAFF' | 'MEMBER' }
 ) {
   // const accessToken = '';
@@ -186,13 +186,13 @@ export async function updateMemberRole(
 
   type RoleUpdateResponseData =
     | {
-        userId: string;
+        userId: number;
         previousRole: 'MEMBER';
         newRole: 'STAFF';
         message: '운영진으로 등록되었습니다.';
       }
     | {
-        userId: string;
+        userId: number;
         previousRole: 'STAFF';
         newRole: 'MEMBER';
         message: '운영진에서 해제되었습니다.';
@@ -201,7 +201,7 @@ export async function updateMemberRole(
   return data;
 }
 
-export async function expelMember(crewId: string, userId: string) {
+export async function expelMember(crewId: number, userId: number) {
   // const accessToken = '';
   const response = await fetch(`/api/crews/${crewId}/members/${userId}`, {
     method: 'DELETE',
@@ -221,7 +221,7 @@ export async function expelMember(crewId: string, userId: string) {
 }
 
 export async function updateCrewDetail(
-  crewId: string,
+  crewId: number,
   body: Pick<Crew, 'name' | 'description' | 'city' | 'image'>
 ) {
   // const accessToken = '';
@@ -243,7 +243,7 @@ export async function updateCrewDetail(
   return data;
 }
 
-export async function deleteCrew(crewId: string) {
+export async function deleteCrew(crewId: number) {
   // const accessToken = '';
   const response = await fetch(`/api/crews/${crewId}`, {
     method: 'DELETE',
