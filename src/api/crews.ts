@@ -73,7 +73,7 @@ export async function getCrewDetail(crewId: number) {
 
 export async function getCrewMembers(
   crewId: number,
-  queryParams?: { role?: 'leader' | 'staff' | 'member' }
+  queryParams?: { role?: 'leader' | 'staff' | 'general' }
 ) {
   const query = new URLSearchParams(
     queryParams as Record<string, string>
