@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import Star from '@/assets/icons/star.svg?react';
 import Button from './Button';
 
 /**
