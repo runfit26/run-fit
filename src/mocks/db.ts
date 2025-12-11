@@ -123,7 +123,7 @@ export async function seedMockDb() {
       password: faker.internet.password(),
       image: faker.image.avatar(),
       introduction: faker.lorem.sentence(),
-      city: faker.helpers.arrayElement(['Seoul', 'Busan', 'Incheon', 'Daegu']),
+      city: faker.helpers.arrayElement(SIDO_LIST),
       pace: faker.number.int({ min: 300, max: 480 }),
       styles: faker.helpers.arrayElements(
         ['조깅', '러닝크루', '인터벌', '장거리', '마라톤'],
@@ -142,7 +142,7 @@ export async function seedMockDb() {
       id: i,
       name: `${faker.company.name()}`,
       description: faker.lorem.paragraph(),
-      city: faker.helpers.arrayElement(['Seoul', 'Busan', 'Incheon', 'Daegu']),
+      city: faker.helpers.arrayElement(SIDO_LIST),
       image: faker.image.urlPicsumPhotos({ width: 640, height: 480 }),
       createdAt: faker.date.past().toISOString(),
       updatedAt: new Date().toISOString(),

@@ -143,15 +143,21 @@ export const crewHandlers = [
     const paginatedCrews = filteredCrews.slice(startIndex, endIndex);
     const hasNext = endIndex < filteredCrews.length;
 
-    const data = paginatedCrews.map((crew) => ({
-      id: crew.id,
-      name: crew.name,
-      description: crew.description,
-      city: crew.city,
-      image: crew.image,
-      memberCount: 24,
-      createdAt: crew.createdAt,
-    }));
+    const data = paginatedCrews.map((crew) => {
+      const memberCount = memberships
+        .all()
+        .filter((m) => m.crewId === crew.id).length;
+
+      return {
+        id: crew.id,
+        name: crew.name,
+        description: crew.description,
+        city: crew.city,
+        image: crew.image,
+        memberCount,
+        createdAt: crew.createdAt,
+      };
+    });
 
     return HttpResponse.json(
       successResponse({
