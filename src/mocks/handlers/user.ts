@@ -93,41 +93,4 @@ export const userHandlers = [
 
     return HttpResponse.json(ret, { status: 200 });
   }),
-
-  // 내가 작성한 리뷰 목록
-  http.get(path('/api/user/me/reviews'), ({ request }) => {
-    const user = getAuthenticatedUser(request);
-
-    if (!user) {
-      return HttpResponse.json(
-        errorResponse({ code: 'NOT_FOUND', message: 'Crew not found' }),
-        { status: 404 }
-      );
-    }
-
-    const data = {
-      content: [
-        {
-          id: 10,
-          sessionId: 12,
-          crewId: 3,
-          userId: 1,
-          userName: '홍길동',
-          userImage: 'https://.../profile.jpg',
-          description: '좋은 분위기에서 즐겁게 뛰었습니다.',
-          ranks: 5,
-          image: 'https://.../review1.jpg',
-          createdAt: '2025-11-20T12:00:00+09:00',
-        },
-      ],
-      page: 0,
-      size: 4,
-      totalElements: 12,
-      totalPages: 3,
-      hasNext: true,
-      hasPrevious: false,
-    };
-
-    return HttpResponse.json(successResponse(data), { status: 200 });
-  }),
 ];
