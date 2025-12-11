@@ -1,17 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { getAccessToken } from '@/lib/auth';
 import { proxyUrl } from '@/lib/constants';
 
-export async function POST(request: NextRequest) {
-  const apiUrl = proxyUrl('/auth/signin');
-  const body = await request.json();
+export async function POST() {
+  const apiUrl = proxyUrl('/auth/signout');
+
+  const accessToken = getAccessToken();
 
   try {
     const proxyResponse = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(body),
       cache: 'no-cache',
     });
 
@@ -29,21 +31,11 @@ export async function POST(request: NextRequest) {
     }
 
     const { message, data } = await proxyResponse.json();
-    const { token } = data;
 
     // Get Set-Cookie headers from backend (includes refreshToken)
     const proxySetCookies = proxyResponse.headers.getSetCookie();
 
     const response = NextResponse.json({ message, data });
-
-    // Set accessToken cookie from response body
-    response.cookies.set('accessToken', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      path: 'api/auth',
-      maxAge: 1000 * 60 * 60, // 1 hour
-    });
 
     // Forward refreshToken cookie from backend to client
     proxySetCookies.forEach((cookie) => {
