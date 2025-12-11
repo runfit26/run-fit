@@ -15,22 +15,6 @@ import {
   successResponse,
 } from '../utils';
 
-// 세션 생성용 타입 (crew, hostUser, id, status 제외)
-export type CreateSessionInput = Pick<
-  Session,
-  | 'name'
-  | 'description'
-  | 'image'
-  | 'location'
-  | 'sessionAt'
-  | 'registerBy'
-  | 'level'
-  | 'pace'
-  | 'maxParticipantCount'
-> & {
-  crewId: number;
-};
-
 export const sessionHandlers = [
   // 세션 생성
   http.post(path('/api/sessions'), async ({ request }) => {
@@ -43,7 +27,20 @@ export const sessionHandlers = [
       );
     }
 
-    const reqBody = (await request.json()) as CreateSessionInput;
+    const reqBody = (await request.json()) as Pick<
+      Session,
+      | 'name'
+      | 'description'
+      | 'image'
+      | 'location'
+      | 'sessionAt'
+      | 'registerBy'
+      | 'level'
+      | 'pace'
+      | 'maxParticipantCount'
+    > & {
+      crewId: number;
+    };
 
     const crew = crews.findFirst((q) => q.where({ id: reqBody.crewId }));
 
@@ -100,72 +97,78 @@ export const sessionHandlers = [
     const isLoggedIn = !!user;
     const url = new URL(request.url);
 
-    const city = url.searchParams.get('city');
-    const crewId = url.searchParams.get('crewId');
-    const level = url.searchParams.get('level');
-    const date = url.searchParams.get('date'); // 2025-12-01~2025-12-08
-    const time = url.searchParams.get('time'); // 12:00~14:30
-    const sort = url.searchParams.get('sort') || 'recent'; // recent, sessionAt, registerBy
     const page = parseInt(url.searchParams.get('page') || '0', 10);
-    const size = parseInt(url.searchParams.get('size') || '10', 10);
+    const size = parseInt(url.searchParams.get('size') || '20', 10);
+    const city = url.searchParams.get('city'); // 복수 선택 가능
+    const district = url.searchParams.get('district'); // 복수 선택 가능
+    const crewId = parseInt(url.searchParams.get('crewId') || '', 10);
+    const level = url.searchParams.get('level'); // BEGINNER, INTERMEDIATE, ADVANCED
+    const dateFrom = url.searchParams.get('dateFrom'); // 2025-12-01
+    const dateTo = url.searchParams.get('dateTo'); // 2025-12-08
+    const timeFrom = url.searchParams.get('timeFrom'); // 12:00
+    const timeTo = url.searchParams.get('timeTo'); // 14:30
+    const sort = url.searchParams.get('sort') || 'createdAtDesc'; // createdAtDesc, sessionAtAsc, registerByAsc
 
     let filteredSessions = sessions.all();
 
     if (city) {
-      filteredSessions = filteredSessions.filter((s) => {
-        const crew = crews.findFirst((q) => q.where({ id: s.crewId }));
-        return crew?.city === city;
-      });
+      filteredSessions = filteredSessions.filter((s) => s.city === city);
+    }
+
+    if (district) {
+      filteredSessions = filteredSessions.filter(
+        (s) => s.district === district
+      );
     }
 
     if (crewId) {
-      filteredSessions = filteredSessions.filter(
-        (s) => s.crewId === parseInt(crewId, 10)
-      );
+      filteredSessions = filteredSessions.filter((s) => s.crewId === crewId);
     }
 
     if (level) {
       filteredSessions = filteredSessions.filter((s) => s.level === level);
     }
 
-    if (date) {
-      // date: YYYY-MM-DD~YYYY-MM-DD 형식 (범위)
-      const [startDate, endDate] = date.split('~');
-      if (startDate && endDate) {
-        filteredSessions = filteredSessions.filter((s) => {
-          const sessionDate = s.sessionAt.split('T')[0];
-          return sessionDate >= startDate && sessionDate <= endDate;
-        });
-      }
+    if (dateFrom) {
+      filteredSessions = filteredSessions.filter((s) => {
+        const sessionDate = s.sessionAt.split('T')[0];
+        return sessionDate >= dateFrom;
+      });
     }
 
-    if (time) {
-      // time: HH:MM~HH:MM 형식 (범위, 예: 12:00~14:30)
-      const [startTime, endTime] = time.split('~');
-      if (startTime && endTime) {
-        filteredSessions = filteredSessions.filter((s) => {
-          const sessionTime = s.sessionAt.split('T')[1]?.substring(0, 5);
-          return (
-            sessionTime && sessionTime >= startTime && sessionTime <= endTime
-          );
-        });
-      }
+    if (dateTo) {
+      filteredSessions = filteredSessions.filter((s) => {
+        const sessionDate = s.sessionAt.split('T')[0];
+        return sessionDate <= dateTo;
+      });
+    }
+
+    if (timeFrom) {
+      filteredSessions = filteredSessions.filter((s) => {
+        const sessionTime = s.sessionAt.split('T')[1].slice(0, 5); // "HH:MM"
+        return sessionTime >= timeFrom;
+      });
+    }
+
+    if (timeTo) {
+      filteredSessions = filteredSessions.filter((s) => {
+        const sessionTime = s.sessionAt.split('T')[1].slice(0, 5); // "HH:MM"
+        return sessionTime <= timeTo;
+      });
     }
 
     // 정렬
-    if (sort === 'recent') {
-      // 최근 생성순 (createdAt 내림차순)
+    if (sort === 'createdAtDesc') {
       filteredSessions.sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
-    } else if (sort === 'sessionAt') {
-      // 모임 시작일순 (sessionAt 오름차순)
+    } else if (sort === 'sessionAtAsc') {
       filteredSessions.sort(
         (a, b) =>
           new Date(a.sessionAt).getTime() - new Date(b.sessionAt).getTime()
       );
-    } else if (sort === 'registerBy') {
+    } else if (sort === 'registerByAsc') {
       // 마감 임박순 (registerBy 오름차순)
       filteredSessions.sort(
         (a, b) =>
@@ -210,7 +213,7 @@ export const sessionHandlers = [
         data: data,
         hasNext: hasNext,
       }),
-      { status: 201 }
+      { status: 200 }
     );
   }),
 
@@ -502,7 +505,7 @@ export const sessionHandlers = [
       q.where({ id: sessionId })
     );
 
-    const responseBody = {
+    const data = {
       id: updatedSession!.id,
       crewId: updatedSession!.crewId,
       hostUserId: updatedSession!.hostUserId,
@@ -511,7 +514,7 @@ export const sessionHandlers = [
       image: updatedSession!.image,
     };
 
-    return HttpResponse.json(responseBody, { status: 200 });
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 세션 리뷰 목록 조회
@@ -526,12 +529,34 @@ export const sessionHandlers = [
       );
     }
 
-    // For simplicity, returning an empty list
-    return HttpResponse.json({ reviews: [] }, { status: 200 });
+    const data = {
+      content: [
+        {
+          id: 10,
+          sessionId: 12,
+          crewId: 3,
+          userId: 1,
+          userName: '홍길동',
+          userImage: 'https://.../profile.jpg',
+          description: '분위기가 좋았어요!',
+          ranks: 5,
+          image: 'https://.../review1.jpg',
+          createdAt: '2025-11-20T12:00:00+09:00',
+        },
+      ],
+      page: 0,
+      size: 10,
+      totalElements: 5,
+      totalPages: 1,
+      hasNext: false,
+      hasPrevious: false,
+    };
+
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 세션 리뷰 작성
-  http.post(path('/api/sessions/:id/reviews'), ({ params }) => {
+  http.post(path('/api/sessions/:id/reviews'), async ({ request, params }) => {
     const sessionId = Number(params.id);
     const session = sessions.findFirst((q) => q.where({ id: sessionId }));
 
@@ -542,9 +567,27 @@ export const sessionHandlers = [
       );
     }
 
-    return HttpResponse.json(
-      { message: `Successfully created review for session ID: ${sessionId}` },
-      { status: 201 }
-    );
+    const reqBody = (await request.json()) as {
+      description: string;
+      ranks: number;
+      image?: string;
+    };
+
+    const data = {
+      success: true,
+      data: {
+        id: 10,
+        sessionId: 12,
+        crewId: 3,
+        userId: 1,
+        description: reqBody.description,
+        ranks: reqBody.ranks,
+        image: reqBody.image,
+        createdAt: Date.now().toString(),
+      },
+      error: null,
+    };
+
+    return HttpResponse.json(successResponse(data), { status: 201 });
   }),
 ];

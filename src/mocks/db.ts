@@ -1,6 +1,7 @@
 import { base, en, Faker, ko } from '@faker-js/faker';
 import { Collection } from '@msw/data';
 import z from 'zod';
+import { SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
 
 export const faker = new Faker({
   locale: [ko, en, base],
@@ -54,6 +55,8 @@ const sessionSchema = z.object({
   description: z.string().nullable().optional(),
   image: z.string().nullable().optional(),
   location: z.string().nullable().optional(),
+  city: z.string().nullable().optional(),
+  district: z.string().nullable().optional(),
   sessionAt: z.iso.datetime(),
   registerBy: z.iso.datetime(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
@@ -177,6 +180,11 @@ export async function seedMockDb() {
     const crew = faker.helpers.arrayElement(createdCrews);
     const hostUser = faker.helpers.arrayElement(createdUsers);
 
+    const city = faker.helpers.arrayElement(SIDO_LIST);
+    const districts = SIGUNGU_MAP[city] || [];
+    const district =
+      districts.length > 0 ? faker.helpers.arrayElement(districts) : null;
+
     const session = await sessions.create({
       id: i,
       crewId: crew.id,
@@ -184,6 +192,8 @@ export async function seedMockDb() {
       name: faker.lorem.words(3),
       description: faker.lorem.sentence(),
       image: faker.image.urlPicsumPhotos(),
+      city: city,
+      district: district,
       location: faker.location.streetAddress(),
       sessionAt: faker.date.future().toISOString(),
       registerBy: faker.date.soon().toISOString(),
