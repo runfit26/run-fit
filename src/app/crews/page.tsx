@@ -46,6 +46,7 @@ export default function Page() {
           <Share className="size-6 stroke-[#9CA3AF]" />
         </button>
         <Button
+          type="button"
           className="bg-brand-500 text-body2-semibold flex-1 px-6 py-3"
           onClick={handleClick}
         >

@@ -38,7 +38,7 @@ export function useFixedBottomBar() {
           blockHeight.current = newBlockHeight;
           setHeight(newBlockHeight + extraPadding);
         }
-      }, 1000);
+      }, 100);
     });
 
     const currentRef = ref.current;
@@ -48,8 +48,14 @@ export function useFixedBottomBar() {
 
       observer.observe(currentRef);
 
-      return () => observer.unobserve(currentRef);
+      return () => {
+        clearTimeout(timeoutId);
+        observer.disconnect();
+      };
     }
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   return { ref, height };
