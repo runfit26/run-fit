@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { parseIdParam, path } from '../utils';
+import { path } from '../utils';
 
 const MOCK_ACCESS_TOKEN = '1';
 const MOCK_REFRESH_TOKEN = 'mock-refresh-token';
