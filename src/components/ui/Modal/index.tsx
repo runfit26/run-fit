@@ -17,6 +17,12 @@ function ModalTrigger({
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
+function ModalClose({
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Close>) {
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+}
+
 function ModalPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
@@ -50,7 +56,7 @@ function ModalContent({
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 translate-x-[-50%] translate-y-[-50%] shadow-[0_10px_30px_-5px_rgba(0,0,0,0.2)] duration-200',
+          'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex translate-x-[-50%] translate-y-[-50%] flex-col items-center gap-6 rounded-[20px] border border-gray-600 bg-gray-700 p-6 shadow-[0_10px_30px_-5px_rgba(0,0,0,0.2)] duration-200',
           className
         )}
         {...props}
@@ -61,15 +67,15 @@ function ModalContent({
   );
 }
 
-function ModalClose({
+function ModalCloseButton({
   className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return (
     <DialogPrimitive.Close
-      data-slot="dialog-close"
+      data-slot="dialog-close-button"
       className={cn(
-        "absolute top-4 right-4 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "absolute top-4 right-4 outline-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
@@ -84,7 +90,7 @@ function ModalHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn('flex flex-col gap-2 text-center sm:text-left', className)}
+      className={cn('flex flex-col gap-2 self-start', className)}
       {...props}
     />
   );
@@ -131,6 +137,7 @@ function ModalDescription({
 
 const Modal = Object.assign(ModalRoot, {
   Close: ModalClose,
+  CloseButton: ModalCloseButton,
   Content: ModalContent,
   Description: ModalDescription,
   Footer: ModalFooter,
