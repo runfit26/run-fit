@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import { DateRange, DayPicker } from 'react-day-picker';
-import Calendar from './Calendar';
+import Calendar from '.';
 
 /**
  * Calendar 컴포넌트는 사용자가 날짜를 선택할 수 있는 캘린더 UI 요소입니다.

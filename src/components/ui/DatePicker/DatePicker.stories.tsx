@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/nextjs-vite';
-import DatePicker from './DatePicker';
+import DatePicker from '.';
 
 const meta: Meta = {
   title: 'Composite/DatePicker',

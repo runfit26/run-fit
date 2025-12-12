@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Calendar, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
-import Input from './Input';
+import Input from '.';
 
 /**
  * Input 컴포넌트는 단일 라인의 텍스트를 입력하는 필드를 제공합니다.
