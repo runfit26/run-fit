@@ -22,6 +22,7 @@ interface DatePickerSingleProps {
   mode: 'single';
   label: string;
   placeholder: string;
+  id?: string;
   value?: Date;
   onChange: (value: Date) => void;
 }
@@ -30,6 +31,7 @@ interface DatePickerRangeProps {
   mode: 'range';
   label: string;
   placeholder: string;
+  id?: string;
   value?: DateRange;
   onChange: (value: DateRange) => void;
 }
@@ -40,19 +42,22 @@ export default function DatePicker({
   mode,
   label,
   placeholder,
+  id,
   value,
   onChange,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
+  const autoId = React.useId();
+  const inputId = id ?? autoId;
 
   const displayValue =
     mode === 'single' ? formatSingle(value) : formatRange(value);
 
   return (
     <div className="flex flex-col gap-1">
-      <Label htmlFor="date">{label}</Label>
+      <Label htmlFor={inputId}>{label}</Label>
       <Input
-        id="date"
+        id={inputId}
         value={displayValue}
         placeholder={placeholder}
         readOnly
@@ -67,7 +72,7 @@ export default function DatePicker({
           <Popover.Root open={open} onOpenChange={setOpen}>
             <Popover.Trigger asChild>
               <button
-                tabIndex={-1}
+                type="button"
                 onMouseDown={(e) => e.preventDefault()}
                 className="flex size-5 items-center justify-center"
               >
