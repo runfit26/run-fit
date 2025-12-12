@@ -53,6 +53,7 @@ export default function Input({
           size === 'sm' && 'text-body3-medium placeholder:text-body3-medium'
         )}
         aria-invalid={ariaInvalid}
+        disabled={disabled}
         {...restProps}
       />
 
