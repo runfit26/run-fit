@@ -62,6 +62,7 @@ export default function DatePicker({
         placeholder={placeholder}
         readOnly
         onFocus={() => setOpen(true)}
+        onMouseDown={() => setOpen(true)}
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown') {
             e.preventDefault();
