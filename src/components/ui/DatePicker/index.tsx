@@ -6,27 +6,38 @@ import Label from '@components/ui/Label';
 import * as Popover from '@radix-ui/react-popover';
 import { CalendarIcon } from 'lucide-react';
 import * as React from 'react';
+import { DateRange } from 'react-day-picker';
 
-function formatDate(date: Date | undefined) {
-  if (!date) {
-    return '';
-  }
-
-  return date.toLocaleDateString('ko-KR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
+function formatSingle(date?: Date) {
+  if (!date) return '';
+  return date.toLocaleDateString('ko-KR');
 }
 
-interface DatePickerProps {
+function formatRange(range?: DateRange) {
+  if (!range?.from) return '';
+  if (!range.to) return formatSingle(range.from);
+  return `${formatSingle(range.from)} ~ ${formatSingle(range.to)}`;
+}
+interface DatePickerSingleProps {
+  mode: 'single';
   label: string;
   placeholder: string;
   value?: Date;
   onChange: (value: Date) => void;
 }
 
+interface DatePickerRangeProps {
+  mode: 'range';
+  label: string;
+  placeholder: string;
+  value?: DateRange;
+  onChange: (value: DateRange) => void;
+}
+
+type DatePickerProps = DatePickerSingleProps | DatePickerRangeProps;
+
 export default function DatePicker({
+  mode,
   label,
   placeholder,
   value,
@@ -34,7 +45,8 @@ export default function DatePicker({
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
-  const displayValue = formatDate(value);
+  const displayValue =
+    mode === 'single' ? formatSingle(value) : formatRange(value);
 
   return (
     <div className="flex flex-col gap-1">
@@ -63,15 +75,27 @@ export default function DatePicker({
               </button>
             </Popover.Trigger>
             <Popover.Content>
-              <Calendar
-                mode="single"
-                selected={value}
-                onSelect={(nextDate) => {
-                  if (!nextDate) return;
-                  onChange(nextDate);
-                  setOpen(false);
-                }}
-              />
+              {mode === 'single' ? (
+                <Calendar.Single
+                  selected={value}
+                  onSelect={(nextDate) => {
+                    if (!nextDate) return;
+                    onChange(nextDate);
+                    setOpen(false);
+                  }}
+                />
+              ) : (
+                <Calendar.Range
+                  selected={value}
+                  onSelect={(nextRange) => {
+                    if (!nextRange) return;
+                    onChange(nextRange);
+                    if (nextRange.from && nextRange.to) {
+                      setOpen(false);
+                    }
+                  }}
+                />
+              )}
             </Popover.Content>
           </Popover.Root>
         }
