@@ -3,9 +3,9 @@ import { proxyUrl } from '@/lib/constants';
 
 export async function POST(request: NextRequest) {
   const apiUrl = proxyUrl('/auth/signup');
-  const body = await request.json();
 
   try {
+    const body = await request.json();
     const proxyResponse = await fetch(apiUrl, {
       method: 'POST',
       headers: {

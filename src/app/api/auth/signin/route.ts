@@ -3,9 +3,9 @@ import { proxyUrl } from '@/lib/constants';
 
 export async function POST(request: NextRequest) {
   const apiUrl = proxyUrl('/auth/signin');
-  const body = await request.json();
 
   try {
+    const body = await request.json();
     const proxyResponse = await fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -31,21 +31,17 @@ export async function POST(request: NextRequest) {
     const { message, data } = await proxyResponse.json();
     const { token } = data;
 
-    // Get Set-Cookie headers from backend (includes refreshToken)
-    const proxySetCookies = proxyResponse.headers.getSetCookie();
-
     const response = NextResponse.json({ message, data });
 
-    // Set accessToken cookie from response body
     response.cookies.set('accessToken', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      path: 'api/auth',
-      maxAge: 1000 * 60 * 60, // 1 hour
+      path: '/api/auth',
+      maxAge: 60 * 60, // 1 hour (3600 seconds)
     });
 
-    // Forward refreshToken cookie from backend to client
+    const proxySetCookies = proxyResponse.headers.getSetCookie();
     proxySetCookies.forEach((cookie) => {
       response.headers.append('Set-Cookie', cookie);
     });
@@ -53,7 +49,11 @@ export async function POST(request: NextRequest) {
     return response;
   } catch (error) {
     return NextResponse.json(
-      { code: 'SERVER_ERROR', message: error },
+      {
+        code: 'SERVER_ERROR',
+        message:
+          error instanceof Error ? error.message : '서버에 연결할 수 없습니다.',
+      },
       { status: 500 }
     );
   }
