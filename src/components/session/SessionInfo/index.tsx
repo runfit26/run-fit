@@ -1,4 +1,3 @@
-import { Dot } from 'lucide-react';
 import Image from 'next/image';
 import { formatTimeToKorean } from '@/lib/time';
 import { Session } from '@/types';
@@ -28,9 +27,7 @@ export default function SessionInfo({ data }: SessionInfPropsProps) {
       <div className="flex flex-col justify-end">
         <div className="text-caption-semibold text-gray-50">{data.name}</div>
         <div className="text-caption-regular text-gray-300">
-          {`${sessionDate}`}
-          <Dot />
-          {`${sessionTime}`}
+          {`${sessionDate} • ${sessionTime}`}
         </div>
       </div>
     </div>
