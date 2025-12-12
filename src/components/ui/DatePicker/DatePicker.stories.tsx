@@ -1,8 +1,10 @@
 import { Meta } from '@storybook/nextjs-vite';
+import { useState } from 'react';
+import { DateRange } from 'react-day-picker';
 import DatePicker from '.';
 
 const meta: Meta = {
-  title: 'Composite/DatePicker',
+  title: 'ui/DatePicker',
   component: DatePicker,
   tags: ['autodocs'],
   argTypes: {
@@ -14,44 +16,41 @@ const meta: Meta = {
       description: '날짜를 선택하는 입력 필드입니다.',
     },
   },
-  args: {
-    label: '모임 날짜',
-    placeholder: '날짜를 입력하세요',
-  },
 };
 
 export default meta;
 type Story = Meta<typeof DatePicker>;
 
-export const Default: Story = {
+/**
+ * 단일 선택 모드 DatePicker 컴포넌트 상태 예시
+ */
+export const Single: Story = {
   args: {
+    mode: 'single',
     label: '모임 날짜',
-    placeholder: '모임 날짜를 선택하세요',
+    placeholder: '날짜를 선택하세요',
   },
-  render: (args) => <DatePicker {...args} />,
+  render: (args) => {
+    const [date, setDate] = useState<Date | undefined>(undefined);
+    return (
+      <DatePicker {...args} mode="single" value={date} onChange={setDate} />
+    );
+  },
 };
 
 /**
- * 여러 DatePicker 컴포넌트를 세로로 배치한 스토리입니다.
+ * 범위 선택 모드 DatePicker 컴포넌트 상태 예시
  */
-export const States: Story = {
-  render: () => (
-    <div className="flex flex-col gap-4">
-      <DatePicker
-        //   mode="single"
-        /**
-         * TO-DO:
-         * - 컴파운드 패턴 Calendar 컴포넌트 merge 후, 해당 스토리 업데이트 필요
-         * - Popover -> Input 이벤트 전파 문제 해결 필요
-         */
-        label="모임 날짜"
-        placeholder="모임 날짜를 선택하세요"
-      />
-      <DatePicker
-        //   mode="range"
-        label="마감 날짜"
-        placeholder="마감 날짜를 선택하세요"
-      />
-    </div>
-  ),
+export const Range: Story = {
+  args: {
+    mode: 'range',
+    label: '기간',
+    placeholder: '기간을 선택하세요',
+  },
+  render: (args) => {
+    const [range, setRange] = useState<DateRange | undefined>(undefined);
+    return (
+      <DatePicker {...args} mode="range" value={range} onChange={setRange} />
+    );
+  },
 };
