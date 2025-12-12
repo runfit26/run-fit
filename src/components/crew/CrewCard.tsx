@@ -2,7 +2,7 @@ import { Dot } from 'lucide-react';
 import Image from 'next/image';
 import { mockProfiles, mockSessions } from '@/mocks/data';
 import { Crew } from '@/types';
-import ProfileList from '../session/ProfileList';
+import ProfileList from '../user/ProfileList';
 
 interface CrewCardProps {
   data: Crew;
