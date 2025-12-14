@@ -30,7 +30,7 @@ export function useSignout() {
   return useMutation({
     mutationFn: postSignout,
     onSuccess: () => {
-      queryClient.setQueryData(userQueries.me().queryKey, null); // 비로그인 상태로 전환
+      queryClient.setQueryData(userQueries.me().queryKey, undefined); // 비로그인 상태로 전환
       queryClient.removeQueries({ queryKey: userQueries.me().queryKey }); // 개인정보 삭제
     },
   });

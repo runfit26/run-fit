@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
-import { getMyInfo, getMyReviews, getUserProfile } from '@/api/fetch/user';
+import { getMyProfile, getMyReviews, getUserProfile } from '@/api/fetch/user';
 import { normalizeParams } from '@/lib/utils';
 import { PaginationQueryParams } from '@/types';
 
@@ -11,7 +11,7 @@ export const userQueries = {
   me: () =>
     queryOptions({
       queryKey: [...userQueries.details(), 'me'],
-      queryFn: getMyInfo,
+      queryFn: getMyProfile,
       staleTime: 1000 * 60 * 30, // 내 정보는 자주 변하지 않으므로 30분동안 fresh 상태
     }),
 
