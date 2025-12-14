@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
-import { getMyInfo, getMyReviews, getUserProfile } from '@/api/fetch/users';
+import { getMyInfo, getMyReviews, getUserProfile } from '@/api/fetch/user';
 import { normalizeParams } from '@/lib/utils';
 import { PaginationQueryParams } from '@/types';
 
