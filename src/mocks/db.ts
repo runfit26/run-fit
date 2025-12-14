@@ -117,7 +117,7 @@ export async function seedMockDb() {
   const createdUsers = [];
 
   const admin1 = await users.create({
-    id: 0,
+    id: 1,
     name: '관리자1',
     email: 'admin@example.com',
     password: 'admin1234!',
@@ -133,7 +133,7 @@ export async function seedMockDb() {
   createdUsers.push(admin1);
 
   const admin2 = await users.create({
-    id: 0,
+    id: 2,
     name: '관리자2',
     email: 'admin2@example.com',
     password: 'admin1234!',

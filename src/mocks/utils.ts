@@ -1,3 +1,4 @@
+import { Collection } from '@msw/data';
 import type { ResponseData, ResponseErrorData } from '@/types/api';
 import { users } from './db';
 
@@ -30,6 +31,9 @@ export function getAuthenticatedUser(request: Request) {
 
   return user || null;
 }
+
+export const findMaxId = (items: { id: number }[]) =>
+  items.length > 0 ? Math.max(...items.map((u) => u.id)) : 0;
 
 export function successResponse<T>(data: T): ResponseData<T> {
   return {

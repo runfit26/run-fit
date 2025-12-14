@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { SigninRequestBody } from '@/api/fetch/auth';
 import { users } from '../db';
-import { errorResponse, path, successResponse } from '../utils';
+import { errorResponse, findMaxId, path, successResponse } from '../utils';
 
 const MOCK_ACCESS_TOKEN = '1';
 const MOCK_REFRESH_TOKEN = 'mock-refresh-token';
@@ -29,7 +29,7 @@ export const authHandlers = [
     }
 
     const newUser = await users.create({
-      id: users.findMany().length + 1,
+      id: findMaxId(users.findMany()) + 1,
       name: name,
       email: email,
       password: password,
@@ -90,9 +90,13 @@ export const authHandlers = [
 
   // 토큰 갱신
   http.post(path('/api/auth/refresh'), ({ request }) => {
-    const hasValidRefreshToken = request.headers
-      .get('Cookie')
-      ?.includes(`refreshToken=${MOCK_REFRESH_TOKEN}`);
+    const cookies = request.headers.get('Cookie');
+    const refreshToken = cookies
+      ?.split('; ')
+      .find((cookie) => cookie.startsWith('refreshToken='))
+      ?.split('=')[1];
+
+    const hasValidRefreshToken = refreshToken === MOCK_REFRESH_TOKEN;
 
     if (!hasValidRefreshToken) {
       return HttpResponse.json(
