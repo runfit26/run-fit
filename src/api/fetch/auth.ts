@@ -5,6 +5,9 @@ export type SignupRequestBody = UserCredentials & { name: string };
 export async function postSignup(body: SignupRequestBody) {
   const response = await fetch('/api/auth/signup', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 
@@ -23,6 +26,9 @@ export async function postSignup(body: SignupRequestBody) {
 export async function postSignin(body: UserCredentials) {
   const response = await fetch('/api/auth/signin', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 

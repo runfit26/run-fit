@@ -31,6 +31,9 @@ export async function updateMyProfile(body: UpdateMyProfileRequestBody) {
   // const accessToken = '';
   const response = await fetch('/api/user', {
     method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 
