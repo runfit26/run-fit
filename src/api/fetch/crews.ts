@@ -18,6 +18,9 @@ export async function createCrew(body: CrewRequestBody) {
   // const accessToken = '';
   const response = await fetch('/api/crews', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 
@@ -146,6 +149,9 @@ export async function delegateCrewLeader(
   // const accessToken = '';
   const response = await fetch(`/api/crews/${crewId}/leader`, {
     method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 
@@ -179,6 +185,9 @@ export async function updateMemberRole(
   // const accessToken = '';
   const response = await fetch(`/api/crews/${crewId}/members/${userId}/role`, {
     method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 
@@ -244,6 +253,9 @@ export async function updateCrewDetail(
   // const accessToken = '';
   const response = await fetch(`/api/crews/${crewId}`, {
     method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 

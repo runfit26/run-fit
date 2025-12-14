@@ -61,6 +61,9 @@ export async function createSession(body: CreateSessionRequestBody) {
   // const accessToken = '';
   const response = await fetch('/api/sessions', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 
@@ -177,6 +180,9 @@ export async function updateSessionDetail(
   // const accessToken = '';
   const response = await fetch(`/api/sessions/${sessionId}`, {
     method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify(body),
   });
 
