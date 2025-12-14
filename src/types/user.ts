@@ -9,6 +9,10 @@ export type UserCredentials = {
   password: string;
 };
 
+export type SigninResponse = {
+  token: string;
+};
+
 export interface Profile extends User {
   image?: string;
   introduction: string;

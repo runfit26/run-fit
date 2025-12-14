@@ -1,6 +1,7 @@
 import {
   ResponseData,
   ResponseErrorData,
+  SigninResponse,
   User,
   UserCredentials,
 } from '@/types';
@@ -37,19 +38,17 @@ export async function postSignin(body: SigninRequestBody) {
     body: JSON.stringify(body),
   });
 
-  if (!response.ok) {
-    const { error } = await response.json();
+  const result: ResponseData<SigninResponse> | ResponseErrorData =
+    await response.json();
 
-    if (!error.success) {
-      throw new Error(error.message);
-    } else {
-      throw new Error('서버에 연결할 수 없습니다.');
+  if (!response.ok) {
+    if ('error' in result) {
+      throw result; // 에러 구조 유지
     }
+    throw new Error('서버에 연결할 수 없습니다.');
   }
 
-  type SigninData = { token: string };
-  const { data }: ResponseData<SigninData> = await response.json();
-  return data;
+  return (result as ResponseData<SigninResponse>).data;
 }
 
 export async function postRefresh() {
