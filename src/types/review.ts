@@ -3,8 +3,10 @@ export interface Review {
   sessionId: number;
   crewId: number;
   userId: number;
+  userName: string;
+  userImage?: string;
   description: string;
   ranks: 1 | 2 | 3 | 4 | 5;
-  createdAt: string;
   image?: string;
+  createdAt: string;
 }
