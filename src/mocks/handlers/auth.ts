@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { SigninRequestBody } from '@/api/fetch/auth';
+import { UserCredentials } from '@/types';
 import { users } from '../db';
 import { errorResponse, findMaxId, path, successResponse } from '../utils';
 
@@ -55,7 +55,7 @@ export const authHandlers = [
   // 로그인
   http.post(path('/api/auth/signin'), async ({ request }) => {
     const body = await request.json();
-    const { email, password } = body as SigninRequestBody;
+    const { email, password } = body as UserCredentials;
 
     const user = users.findFirst((q) => q.where({ email }));
 
