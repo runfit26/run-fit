@@ -1,12 +1,15 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { userQueries } from '@/api/queries/userQueries';
 import LogoDefault from '@/assets/icons/logo-default.svg?react';
 import LogoLarge from '@/assets/icons/logo-large.svg?react';
 import UserAvatar from '@/components/ui/UserAvatar';
 
 export default function Header() {
-  const { isLoggedIn, user } = { isLoggedIn: true, user: { image: null } };
+  const { data: user, isLoading } = useQuery(userQueries.me());
+  const isLoggedIn = !isLoading && !!user;
 
   return (
     <header className="tablet:h-15 tablet:px-6 sticky top-0 z-50 h-14 w-full border-b border-b-gray-600 bg-gray-800 px-4">
