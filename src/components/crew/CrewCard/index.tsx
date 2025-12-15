@@ -1,7 +1,10 @@
+import { useQuery } from '@tanstack/react-query';
 import { Dot } from 'lucide-react';
 import Image from 'next/image';
+import { crewQueries } from '@/api/queries/crewQueries';
+import { sessionQueries } from '@/api/queries/sessionQueries';
 import ProfileList from '@/components/user/ProfileList';
-import { Crew, Profile, Session } from '@/types';
+import { Crew, CrewMember, Session } from '@/types';
 
 interface CrewCardProps {
   data: Crew;
@@ -9,9 +12,18 @@ interface CrewCardProps {
 
 export default function CrewCard({ data: crew }: CrewCardProps) {
   // TODO: use tanstack query to fetch
+  // useQuery(crewQueries.members(crew.id).count());
   const crewMemberCount = 64;
+  // const leaderCount = crewMemberCounts?.leaderCount ?? 0;
+  // const staffCount = crewMemberCounts?.staffCount ?? 0;
+  // const memberCount = crewMemberCounts?.memberCount ?? 0;
+  // const crewMemberCount = leaderCount + staffCount + memberCount;
+
+  // useQuery(sessionQueries.list({ crewId: crew.id, sort: 'registerByAsc' }));
   const crewSessions: Session[] = [];
-  const crewProfiles: Profile[] = [];
+
+  // useQuery(crewQueries.members(crew.id).list());
+  const crewMemberProfiles: CrewMember[] = [];
 
   return (
     <li className="tablet:pt-5 laptop:gap-20 laptop:flex pb-5">
@@ -35,7 +47,7 @@ export default function CrewCard({ data: crew }: CrewCardProps) {
             <span className="text-caption-medium tablet:text-body3-medium rounded-lg bg-gray-500 px-2 py-1 text-gray-100">{`${crew.city}`}</span>
             <Dot color="var(--color-gray-300)" />
             <span className="text-caption-regular tablet:text-body3-regular mr-1 text-gray-300">{`멤버 ${crewMemberCount}명`}</span>
-            <ProfileList data={crewProfiles} />
+            <ProfileList data={crewMemberProfiles} />
           </div>
         </div>
       </div>

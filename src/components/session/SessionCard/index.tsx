@@ -1,10 +1,12 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import { crewQueries } from '@/api/queries/crewQueries';
 import Liked from '@/assets/icons/liked.svg';
 import Location from '@/assets/icons/location.svg';
 import { formatTimeToKorean } from '@/lib/time';
-import { Profile, Session } from '@/types';
+import { CrewMember, Session } from '@/types';
 import { DdayBadge, LevelBadge, PaceBadge } from '../../ui/Badge';
 import ProfileList from '../../user/ProfileList';
 
@@ -14,8 +16,10 @@ interface SessionCardProps {
 
 export default function SessionCard({ data }: SessionCardProps) {
   // TODO: use tanstack query to fetch
+  // useQuery(crewQueries.detail(data.crewId));
   const crewData = { name: '달리는 거북이' };
-  const crewMemberProfiles: Profile[] = [];
+  // useQuery(crewQueries.members(data.crewId).list());
+  const crewMemberProfiles: CrewMember[] = [];
 
   const today = new Date();
   const registerBy = new Date(data.registerBy);

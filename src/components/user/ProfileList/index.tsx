@@ -1,17 +1,9 @@
 import UserAvatar from '@/components/ui/UserAvatar';
 import { cn } from '@/lib/utils';
-import { Profile } from '@/types';
+import { CrewMember } from '@/types';
 
 interface ProfileListProps {
-  data:
-    | Profile[]
-    | Array<{
-        userId: string;
-        name: string;
-        image: string | null;
-        role: string;
-        joinedAt: string;
-      }>;
+  data: CrewMember[];
   className?: React.ComponentProps<'div'>;
 }
 
@@ -28,8 +20,8 @@ export default function ProfileList({
     >
       {profiles.slice(0, 3).map((profile) => (
         <UserAvatar
-          key={'id' in profile ? profile.id : profile.userId}
-          src={profile.image}
+          key={profile.userId}
+          src={profile.profileImage}
           alt={profile.name}
         />
       ))}
