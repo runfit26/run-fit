@@ -61,11 +61,11 @@ export default function SessionPage() {
             <Dropdown.Trigger>최근 생성순</Dropdown.Trigger>
           </Dropdown>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid w-full grid-cols-3 gap-6">
           {data?.content?.map((session: Session) => (
             <SessionCard
               key={session.id}
-              data={session}
+              {...session}
               onClick={() => router.push(`/sessions/${session.id}`)}
             />
           ))}
