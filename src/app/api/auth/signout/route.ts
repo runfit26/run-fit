@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
+import { proxyUrl } from '@/api/utils';
 import { getAccessToken } from '@/lib/auth';
-import { proxyUrl } from '@/lib/constants';
 
 export async function POST() {
   const apiUrl = proxyUrl('/auth/signout');
