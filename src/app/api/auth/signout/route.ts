@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { proxyUrl } from '@/api/utils';
+import { proxyUrl } from '@/lib/api';
 import { getAccessToken } from '@/lib/auth';
 
 export async function POST() {

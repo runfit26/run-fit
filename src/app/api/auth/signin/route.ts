@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { proxyUrl } from '@/api/utils';
+import { proxyUrl } from '@/lib/api';
 
 export async function POST(request: NextRequest) {
   const apiUrl = proxyUrl('/auth/signin');
