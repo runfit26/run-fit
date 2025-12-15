@@ -1,27 +1,37 @@
+import Image from 'next/image';
 import Link from 'next/link';
-import BgPc from '@/assets/layout/bg/pc.svg?react';
-import Banner from '@/assets/layout/img/pc.svg?react';
 import SignupForm from '@/components/auth/SignupForm';
 
 export default function SignupPage() {
   return (
-    <main className="h-main relative flex items-center justify-center">
-      <div className="desktop:block z-0 hidden">
-        <BgPc className="absolute w-1/2" />
-      </div>
-      <div className="laptop:grid-cols-2 desktop:h-full grid grid-cols-1 items-center gap-20">
-        <Banner className="z-10" />
-        <div className="z-20">
-          <h2 className="text-title2-semibold mb-8 text-center">회원가입</h2>
-          <SignupForm />
-          <p className="text-body3-medium mt-6 text-center">
-            이미 회원이신가요?
-            <Link href="/signin" className="text-brand-300 ml-1">
-              로그인
-            </Link>
-          </p>
+    <main className="h-main flex items-center justify-start">
+      <section className="relative flex h-[calc(100vh-56px)] w-1/2 items-center justify-center">
+        <Image
+          src="/assets/bg/pc.png"
+          alt="Background"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Image
+            src="/assets/banner.png"
+            alt="Background"
+            className="absolute bottom-30 z-0 -translate-y-30"
+            width={600}
+            height={400}
+          />
         </div>
-      </div>
+      </section>
+      <section className="desktop:px-28 tablet:px-20 w-1/2">
+        <h2 className="text-title2-semibold mb-8 text-center">회원가입</h2>
+        <SignupForm />
+        <p className="text-body3-medium mt-6 text-center">
+          이미 회원이신가요?
+          <Link href="/signin" className="text-brand-300 ml-1">
+            로그인
+          </Link>
+        </p>
+      </section>
     </main>
   );
 }
