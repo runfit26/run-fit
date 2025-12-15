@@ -44,7 +44,13 @@ export default function Header() {
             <>
               <Link href="/my">
                 {/* @TODO: UserAvatar 추가 시 아래 줄 삭제 */}
-                <div className="tablet:block hidden size-10 rounded-full bg-white"></div>
+                <Image
+                  className="tablet:block hidden rounded-full border-[1.5px] border-gray-700"
+                  src="/assets/profile.png"
+                  alt="Profile"
+                  width={40}
+                  height={40}
+                />
                 {/* <UserAvatar src={user.image} className="size-10" /> */}
               </Link>
               <Hamburger className="tablet:hidden size-6" />
