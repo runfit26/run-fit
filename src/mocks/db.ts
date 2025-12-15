@@ -115,7 +115,43 @@ export const reviews = new Collection({ schema: reviewSchema });
 export async function seedMockDb() {
   // Users
   const createdUsers = [];
-  for (let i = 1; i <= 30; i++) {
+
+  const admin1 = await users.create({
+    id: 1,
+    name: '관리자1',
+    email: 'admin@example.com',
+    password: 'admin1234!',
+    image: null,
+    introduction: null,
+    city: null,
+    pace: null,
+    styles: [],
+    createdAt: faker.date.past().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+
+  createdUsers.push(admin1);
+
+  const admin2 = await users.create({
+    id: 2,
+    name: '관리자2',
+    email: 'admin2@example.com',
+    password: 'admin1234!',
+    image: faker.image.avatar(),
+    introduction: faker.lorem.sentence(),
+    city: faker.helpers.arrayElement(SIDO_LIST),
+    pace: faker.number.int({ min: 300, max: 480 }),
+    styles: faker.helpers.arrayElements(
+      ['조깅', '러닝크루', '인터벌', '장거리', '마라톤'],
+      { min: 0, max: 3 }
+    ),
+    createdAt: faker.date.past().toISOString(),
+    updatedAt: new Date().toISOString(),
+  });
+
+  createdUsers.push(admin2);
+
+  for (let i = 3; i <= 30; i++) {
     const user = await users.create({
       id: i,
       name: faker.person.firstName(),
