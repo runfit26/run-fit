@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 declare global {
   // msw가 한 번만 시작되도록 전역 플래그를 설정합니다.
@@ -12,16 +12,37 @@ export default function MockProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const shouldMock =
+    process.env.NODE_ENV === 'development' &&
+    process.env.NEXT_PUBLIC_USE_MSW === 'true';
+
+  const [ready, setReady] = useState(!shouldMock);
+
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'development') return;
-    if (process.env.NEXT_PUBLIC_USE_MSW !== 'true') return;
-    if (globalThis.__mswStarted) return;
+    if (!shouldMock) return;
+
+    if (globalThis.__mswStarted) {
+      setReady(true);
+      return;
+    }
+
     globalThis.__mswStarted = true;
 
     import('.')
-      .then(({ worker }) => worker.start())
-      .then(() => console.log('[MSW] Mock Service Worker is running'));
-  }, []);
+      .then(({ worker }) =>
+        worker.start({
+          onUnhandledRequest: 'bypass',
+        })
+      )
+      .then(() => {
+        setReady(true);
+      })
+      .catch(() => {
+        setReady(true);
+      });
+  }, [shouldMock]);
+
+  if (!ready) return null;
 
   return <>{children}</>;
 }
