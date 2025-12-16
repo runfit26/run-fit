@@ -21,6 +21,16 @@ export async function POST() {
         { status: proxyResponse.status }
       );
 
+      if (proxyResponse.status === 401) {
+        response.cookies.set('accessToken', '', {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+          path: '/api',
+          maxAge: 0,
+        });
+      }
+
       return response;
     }
 

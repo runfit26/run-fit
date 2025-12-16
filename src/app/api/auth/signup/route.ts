@@ -15,10 +15,9 @@ export async function POST(request: NextRequest) {
 
     if (!proxyResponse.ok) {
       const errorData = await proxyResponse.json();
-      const response = NextResponse.json(
-        { ...errorData },
-        { status: proxyResponse.status }
-      );
+      const response = NextResponse.json(errorData, {
+        status: proxyResponse.status,
+      });
 
       return response;
     }
