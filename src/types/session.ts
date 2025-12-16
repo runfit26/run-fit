@@ -2,6 +2,8 @@ import { PaginationQueryParams } from './api';
 import { Sido, Sigungu } from './region';
 
 type City = Sido;
+export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+
 export interface Session {
   id: number;
   crewId: number;
@@ -17,7 +19,7 @@ export interface Session {
   };
   sessionAt: string;
   registerBy: string;
-  level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  level: Level;
   status: 'OPEN' | 'CLOSED';
   pace: number;
   maxParticipantCount: number;
