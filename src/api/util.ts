@@ -24,7 +24,7 @@ export async function handleRequest(
   }
 
   const baseURL = process.env.NEXT_PUBLIC_API_URL;
-  const proxyURL = new URL(`api/${pathname}?${searchParams}`, baseURL);
+  const proxyURL = new URL(`${pathname}?${searchParams}`, baseURL);
 
   const proxyRequest = new Request(proxyURL, {
     method: request.method,
