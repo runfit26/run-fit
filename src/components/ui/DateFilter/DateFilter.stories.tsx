@@ -1,6 +1,6 @@
-// src/components/DateFilter.stories.tsx
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
+import { DateRange } from 'react-day-picker';
 import DateFilter from '.';
 
 const meta: Meta<typeof DateFilter> = {
