@@ -6,5 +6,5 @@ export async function GET(
   ctx: RouteContext<'/api/crews/[crewId]/members'>
 ) {
   const { crewId } = await ctx.params;
-  return handleRequest(request, `/api/crews/${crewId}/members`, false);
+  return handleRequest(request, `/crews/${crewId}/members`, false);
 }

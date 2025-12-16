@@ -6,5 +6,5 @@ export async function GET(
   ctx: RouteContext<'/api/sessions/[sessionId]'>
 ) {
   const { sessionId } = await ctx.params;
-  return handleRequest(request, `/api/sessions/${sessionId}`, false);
+  return handleRequest(request, `/sessions/${sessionId}`, false);
 }

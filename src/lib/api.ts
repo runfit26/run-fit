@@ -55,8 +55,11 @@ export async function handleRequest(
   }
 
   try {
-    const requestPath = proxyUrl(`/api/${pathname}?${searchParams}`);
-    console.log('requestPath', requestPath);
+    const trimmedPathname = pathname.startsWith('/')
+      ? pathname.slice(1)
+      : pathname;
+    const requestPath = proxyUrl(`/api/${trimmedPathname}?${searchParams}`);
+    console.log('requestPath: ', requestPath);
     const proxyResponse = await fetch(requestPath, {
       method: request.method,
       headers: {

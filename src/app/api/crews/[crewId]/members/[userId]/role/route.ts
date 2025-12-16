@@ -8,7 +8,7 @@ export async function GET(
   const { crewId, userId } = await ctx.params;
   return handleRequest(
     request,
-    `/api/crews/${crewId}/members/${userId}/role`,
+    `/crews/${crewId}/members/${userId}/role`,
     false
   );
 }
