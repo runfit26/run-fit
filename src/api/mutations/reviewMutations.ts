@@ -21,7 +21,7 @@ export const useCreateSessionReview = (sessionId: number) => {
         queryKey: reviewQueries.session(sessionId).lists(), // 해당 세션 리뷰 목록 캐시 무효화
       });
       queryClient.invalidateQueries({
-        queryKey: userQueries.me.reviews().queryKey, // 내 리뷰 캐시 무효화
+        queryKey: userQueries.me.all(), // 내 정보 캐시 무효화
       });
       queryClient.invalidateQueries({
         queryKey: sessionQueries.detail(sessionId).queryKey, // 세션 상세 캐시 무효화
@@ -38,7 +38,7 @@ export const useDeleteReview = (sessionId?: number) => {
     mutationFn: (reviewId: number) => deleteSessionReview(reviewId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: userQueries.me.reviews().queryKey, // 내 리뷰 캐시 무효화
+        queryKey: userQueries.me.all(), // 내 정보 캐시 무효화
       });
       if (sessionId) {
         queryClient.invalidateQueries({

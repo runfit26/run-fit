@@ -8,7 +8,7 @@ import LogoLarge from '@/assets/icons/logo-large.svg?react';
 import UserAvatar from '@/components/ui/UserAvatar';
 
 export default function Header() {
-  const { data: user, isLoading } = useQuery(userQueries.me());
+  const { data: user, isLoading } = useQuery(userQueries.me.info());
   const isLoggedIn = !isLoading && !!user;
 
   return (
