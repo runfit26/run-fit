@@ -92,7 +92,7 @@ export const sessionHandlers = [
   }),
 
   // 세션 목록 조회
-  http.get(path('/api/sessions'), ({ request }) => {
+  http.get('/api/sessions', ({ request }) => {
     const user = getAuthenticatedUser(request);
     const isLoggedIn = !!user;
     const url = new URL(request.url);
