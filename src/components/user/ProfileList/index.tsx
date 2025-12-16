@@ -1,6 +1,6 @@
 import UserAvatar from '@/components/ui/UserAvatar';
 import { cn } from '@/lib/utils';
-import { CrewMember } from '@/types';
+import type { CrewMember } from '@/types';
 
 interface ProfileListProps {
   data: CrewMember[];
@@ -8,21 +8,21 @@ interface ProfileListProps {
 }
 
 export default function ProfileList({
-  data: profiles,
+  data: members,
   className,
 }: ProfileListProps) {
   return (
     <div
       className={cn(
-        'tablet:*:size-6 flex -space-x-1 *:size-4 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-gray-900',
+        'tablet:*:size-6 flex items-center -space-x-1 *:size-4 *:data-[slot=avatar]:ring-2 *:data-[slot=avatar]:ring-gray-900',
         className
       )}
     >
-      {profiles.slice(0, 3).map((profile) => (
+      {members.slice(0, 3).map((member) => (
         <UserAvatar
-          key={profile.userId}
-          src={profile.profileImage}
-          alt={profile.name}
+          key={member.userId}
+          src={member.profileImage}
+          alt={member.name}
         />
       ))}
     </div>

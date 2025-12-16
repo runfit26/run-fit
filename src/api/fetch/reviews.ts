@@ -1,10 +1,4 @@
-import {
-  PageData,
-  PaginationQueryParams,
-  ResponseData,
-  ResponseErrorData,
-  Review,
-} from '@/types';
+import { PageData, PaginationQueryParams, ResponseData, Review } from '@/types';
 
 export type CreateSessionReviewResponseData = Pick<
   Review,
