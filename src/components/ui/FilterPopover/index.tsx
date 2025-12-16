@@ -2,7 +2,7 @@
 
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import * as React from 'react';
-import ArrowDown from '@/assets/icons/arrow-down.svg';
+import ArrowDown from '@/assets/icons/arrow-down.svg?react';
 import { cn } from '@/lib/utils';
 
 export default function Popover(
