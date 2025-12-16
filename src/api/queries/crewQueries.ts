@@ -8,7 +8,11 @@ import {
   getCrews,
 } from '@/api/fetch/crews';
 import { normalizeParams } from '@/lib/utils';
-import { CrewListFilters, MemberRoleFilters } from '@/types';
+import {
+  CrewListFilters,
+  MemberRoleFilters,
+  PaginationQueryParams,
+} from '@/types';
 
 export const crewQueries = {
   all: () => ['crews'],

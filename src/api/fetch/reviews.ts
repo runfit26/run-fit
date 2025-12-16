@@ -58,7 +58,7 @@ export async function createSessionReview(
     }
   }
 
-  const { data }: ResponseData<Omit<Review, userName | userImage>> =
+  const { data }: ResponseData<Omit<Review, 'userName' | 'userImage'>> =
     await response.json();
   return data;
 }
