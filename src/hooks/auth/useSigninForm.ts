@@ -1,53 +1,37 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useSignin } from '@/api/mutations/authMutations';
 import {
-  SigninFormValues,
   signinSchema,
+  type SigninFormValues,
 } from '@/lib/validations/auth/signinSchema';
+import type { UseAuthFormOptions } from './types';
 
-export function useSigninForm() {
-  const router = useRouter();
-
+export function useSigninForm(options: UseAuthFormOptions) {
   const form = useForm<SigninFormValues>({
     resolver: zodResolver(signinSchema),
-    mode: 'onSubmit',
+    mode: 'onChange',
   });
 
   const mutation = useSignin();
 
   const submit = form.handleSubmit((values) => {
-    mutation.mutate(
-      {
-        email: values.email,
-        password: values.password,
+    mutation.mutate(values, {
+      onSuccess: () => {
+        options?.onSuccess?.();
       },
-      {
-        onSuccess: () => {
-          router.push('/');
-        },
-        onError: ({ error }) => {
-          form.setError('root', {
-            message: error.message,
-          });
-          // switch (error.code) {
-          //   case 'INVALID_CREDENTIALS':
-          //     form.setError('root', {
-          //       message: error.message,
-          //     });
-          //     break;
+      onError: (error) => {
+        options?.onError?.(error.message);
 
-          //   default:
-          //     form.setError('root', {
-          //       message: '로그인 중 오류가 발생했습니다.',
-          //     });
-          // }
-        },
-      }
-    );
+        form.setError('root', {
+          message: error.message,
+        });
+
+        form.reset();
+      },
+    });
   });
 
   return {

@@ -1,64 +1,37 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { useSignup } from '@/api/mutations/authMutations';
 import {
-  SignupFormValues,
   signupSchema,
+  type SignupFormValues,
 } from '@/lib/validations/auth/signupSchema';
+import type { UseAuthFormOptions } from './types';
 
-/**
- * 회원가입 훅
- * @returns 회원가입 폼, 제출 핸들러, 제출 중 상태
- */
-export function useSignupForm() {
-  const router = useRouter();
-
+export function useSignupForm(options: UseAuthFormOptions) {
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
-    mode: 'onSubmit',
+    mode: 'onChange',
   });
 
   const mutation = useSignup();
 
   const submit = form.handleSubmit((values) => {
-    mutation.mutate(
-      {
-        email: values.email,
-        password: values.password,
-        name: values.name,
+    mutation.mutate(values, {
+      onSuccess: () => {
+        options?.onSuccess?.();
       },
-      {
-        onSuccess: () => {
-          router.push('/signin');
-        },
-        onError: ({ error }) => {
-          form.setError('root', {
-            message: error.message,
-          });
-          // switch (error.code) {
-          //   case 'ALREADY_EXISTS_EMAIL':
-          //     form.setError('email', {
-          //       message: error.message,
-          //     });
-          //     break;
+      onError: (error) => {
+        options?.onError?.(error.message);
 
-          //   case 'VALIDATION_ERROR':
-          //     form.setError('root', {
-          //       message: error.message,
-          //     });
-          //     break;
+        form.setError('root', {
+          message: error.message,
+        });
 
-          //   default:
-          //     form.setError('root', {
-          //       message: '회원가입 중 오류가 발생했습니다.',
-          //     });
-          // }
-        },
-      }
-    );
+        form.reset();
+      },
+    });
   });
 
   return {
