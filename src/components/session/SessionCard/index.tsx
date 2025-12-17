@@ -38,7 +38,7 @@ export default function SessionCard({
   const { data: crewData } = useQuery(crewQueries.detail(crewId));
   const { data: participantsData } = useQuery({
     ...sessionQueries.participants(sessionId),
-    enabled: displayParticipants,
+    enabled: displayParticipants && !!sessionId,
   });
 
   const today = new Date();
