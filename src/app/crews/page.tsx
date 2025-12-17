@@ -24,7 +24,7 @@ export default function Page() {
             <br />
             러닝 메이트를 찾다
           </h2>
-          <span className="text-body3-regular">
+          <span className="text-body3-regular text-gray-300">
             러닝 페이스와 선호하는 스타일에 딱 맞는 세션을 찾아보세요!
           </span>
         </div>
