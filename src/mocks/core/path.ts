@@ -1,12 +1,12 @@
 export type Layer = 'proxy' | 'backend';
-export type PathFn = (p: string) => string;
+export type PathFn = (path: string) => string;
 
 export function createPath(layer: Layer, backendBaseUrl: string): PathFn {
-  if (layer === 'proxy') return (p) => p;
+  if (layer === 'proxy') return (path) => path;
 
   // '/api/xxx' -> `${backendBaseUrl}/xxx`
-  return (p) => {
-    if (!p.startsWith('/api')) return `${backendBaseUrl}${p}`;
-    return `${backendBaseUrl}${p.slice(4)}`;
+  return (path) => {
+    if (!path.startsWith('/api')) return `${backendBaseUrl}${path}`;
+    return `${backendBaseUrl}${path.slice(4)}`;
   };
 }

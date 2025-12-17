@@ -1,11 +1,14 @@
 import { base, en, Faker, ko } from '@faker-js/faker';
-import { Collection } from '@msw/data';
 import z from 'zod';
 import { SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
+
+const SEED_NUMBER = 1234;
 
 export const faker = new Faker({
   locale: [ko, en, base],
 });
+
+faker.seed(SEED_NUMBER);
 
 /* ------------------------------------------------------------------ */
 /* Schemas                                                            */
@@ -20,7 +23,6 @@ const userSchema = z.object({
   id: z.number(),
   name: z.string(),
   email: z.email(),
-  password: z.string(),
   image: z.string().nullable().optional(),
   introduction: z.string().max(500).nullable().optional(),
   city: z.string().nullable().optional(),
@@ -92,51 +94,45 @@ const reviewSchema = z.object({
   ...baseSchema,
 });
 
-export type Session = z.infer<typeof sessionSchema>;
+const mockUser1 = {
+  id: 1,
+  name: '홍길동',
+  email: 'admin@example.com',
+  password: 'admin1234!',
+  image: null,
+  introduction: null,
+  city: null,
+  pace: null,
+  styles: [],
+  createdAt: faker.date.past().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
 
-/* ------------------------------------------------------------------ */
-/* Collections                                                        */
-/* ------------------------------------------------------------------ */
+const mockUser2 = {
+  id: 2,
+  name: '관리자2',
+  email: 'admin2@example.com',
+  password: 'admin1234!',
+  image: faker.image.avatar(),
+  introduction: faker.lorem.sentence(),
+  city: faker.helpers.arrayElement(SIDO_LIST),
+  pace: faker.number.int({ min: 300, max: 480 }),
+  styles: faker.helpers.arrayElements(
+    ['조깅', '러닝크루', '인터벌', '장거리', '마라톤'],
+    { min: 0, max: 3 }
+  ),
+  createdAt: faker.date.past().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
 
-export const users = new Collection({ schema: userSchema });
-export const crews = new Collection({ schema: crewSchema });
-export const memberships = new Collection({ schema: membershipSchema });
-export const sessions = new Collection({ schema: sessionSchema });
-export const sessionLikes = new Collection({ schema: sessionLikeSchema });
-export const sessionParticipants = new Collection({
-  schema: sessionParticipantSchema,
-});
-export const reviews = new Collection({ schema: reviewSchema });
-
-/* ------------------------------------------------------------------ */
-/* Seed function                                                      */
-/* ------------------------------------------------------------------ */
-
-export async function seedMockDb() {
-  // Users
-  const createdUsers = [];
-
-  const admin1 = await users.create({
-    id: 1,
-    name: '관리자1',
-    email: 'admin@example.com',
-    password: 'admin1234!',
-    image: null,
-    introduction: null,
-    city: null,
-    pace: null,
-    styles: [],
-    createdAt: faker.date.past().toISOString(),
-    updatedAt: new Date().toISOString(),
-  });
-
-  createdUsers.push(admin1);
-
-  const admin2 = await users.create({
-    id: 2,
-    name: '관리자2',
-    email: 'admin2@example.com',
-    password: 'admin1234!',
+type User = z.infer<typeof userSchema>;
+export const users: User[] = [
+  mockUser1,
+  mockUser2,
+  ...Array.from({ length: 28 }, (_, i) => ({
+    id: i + 3,
+    name: faker.person.fullName(),
+    email: `user${i + 3}@example.com`,
     image: faker.image.avatar(),
     introduction: faker.lorem.sentence(),
     city: faker.helpers.arrayElement(SIDO_LIST),
@@ -147,166 +143,67 @@ export async function seedMockDb() {
     ),
     createdAt: faker.date.past().toISOString(),
     updatedAt: new Date().toISOString(),
-  });
+  })),
+];
 
-  createdUsers.push(admin2);
+type Crew = z.infer<typeof crewSchema>;
+export const crews: Crew[] = Array.from({ length: 95 }, (_, i) => ({
+  id: i + 1,
+  name: `${faker.company.name()}`,
+  description: faker.lorem.paragraph(),
+  city: faker.helpers.arrayElement(SIDO_LIST),
+  image: faker.image.urlPicsumPhotos({ width: 640, height: 480 }),
+  createdAt: faker.date.past().toISOString(),
+  updatedAt: new Date().toISOString(),
+}));
 
-  for (let i = 3; i <= 30; i++) {
-    const user = await users.create({
-      id: i,
-      name: faker.person.firstName(),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-      image: faker.image.avatar(),
-      introduction: faker.lorem.sentence(),
-      city: faker.helpers.arrayElement(SIDO_LIST),
-      pace: faker.number.int({ min: 300, max: 480 }),
-      styles: faker.helpers.arrayElements(
-        ['조깅', '러닝크루', '인터벌', '장거리', '마라톤'],
-        { min: 0, max: 3 }
-      ),
-      createdAt: faker.date.past().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-    createdUsers.push(user);
-  }
+type Session = z.infer<typeof sessionSchema>;
+export const sessions: Session[] = Array.from({ length: 101 }, (_, i) => {
+  const city = faker.helpers.arrayElement(SIDO_LIST);
+  const districts = SIGUNGU_MAP[city] || [];
+  const district =
+    districts.length > 0 ? faker.helpers.arrayElement(districts) : null;
 
-  // Crews
-  const createdCrews = [];
-  for (let i = 1; i <= 30; i++) {
-    const crew = await crews.create({
-      id: i,
-      name: `${faker.company.name()}`,
-      description: faker.lorem.paragraph(),
-      city: faker.helpers.arrayElement(SIDO_LIST),
-      image: faker.image.urlPicsumPhotos({ width: 640, height: 480 }),
-      createdAt: faker.date.past().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-    createdCrews.push(crew);
-  }
+  return {
+    id: i + 1,
+    crewId: faker.number.int({ min: 1, max: crews.length }),
+    hostUserId: faker.number.int({ min: 1, max: users.length }),
+    name: faker.lorem.words(3),
+    description: faker.lorem.sentence(),
+    image: faker.image.urlPicsumPhotos({ width: 640, height: 480 }),
+    city: city,
+    district: district,
+    location: faker.location.streetAddress(),
+    sessionAt: faker.date.future().toISOString(),
+    registerBy: faker.date.soon().toISOString(),
+    level: faker.helpers.arrayElement(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
+    status: faker.helpers.arrayElement(['OPEN', 'CLOSED']),
+    pace: faker.number.int({ min: 300, max: 480 }),
+    maxParticipantCount: faker.number.int({ min: 10, max: 30 }),
+    createdAt: faker.date.past().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+});
 
-  // Memberships
-  let membershipId = 1;
-  for (const crew of createdCrews) {
-    // 각 크루마다 5~15명의 멤버 추가
-    const memberCount = faker.number.int({ min: 5, max: 15 });
-    const selectedUsers = faker.helpers.arrayElements(
-      createdUsers,
-      memberCount
-    );
+type Review = z.infer<typeof reviewSchema>;
+export const reviews: Review[] = Array.from({ length: 30 }, (_, i) => ({
+  id: i + 1,
+  sessionId: faker.number.int({ min: 1, max: sessions.length }),
+  userId: faker.number.int({ min: 1, max: users.length }),
+  description: faker.lorem.paragraph(),
+  ranks: faker.number.int({ min: 1, max: 5 }),
+  image: faker.datatype.boolean()
+    ? faker.image.urlPicsumPhotos({ width: 640, height: 480 })
+    : null,
+  createdAt: faker.date.past().toISOString(),
+  updatedAt: new Date().toISOString(),
+}));
 
-    for (let i = 0; i < selectedUsers.length; i++) {
-      await memberships.create({
-        id: membershipId++,
-        userId: selectedUsers[i].id,
-        crewId: crew.id,
-        role:
-          i === 0 ? 'LEADER' : faker.helpers.arrayElement(['STAFF', 'MEMBER']),
-        joinedAt: faker.date.past().toISOString(),
-        createdAt: faker.date.past().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
-  }
+type Membership = z.infer<typeof membershipSchema>;
+export const memberships: Membership[] = [];
 
-  // Sessions
-  const createdSessions = [];
-  for (let i = 1; i <= 101; i++) {
-    const crew = faker.helpers.arrayElement(createdCrews);
-    const hostUser = faker.helpers.arrayElement(createdUsers);
+type SessionParticipant = z.infer<typeof sessionParticipantSchema>;
+export const sessionParticipants: SessionParticipant[] = [];
 
-    const city = faker.helpers.arrayElement(SIDO_LIST);
-    const districts = SIGUNGU_MAP[city] || [];
-    const district =
-      districts.length > 0 ? faker.helpers.arrayElement(districts) : null;
-
-    const session = await sessions.create({
-      id: i,
-      crewId: crew.id,
-      hostUserId: hostUser.id,
-      name: faker.lorem.words(3),
-      description: faker.lorem.sentence(),
-      image: faker.image.urlPicsumPhotos(),
-      city: city,
-      district: district,
-      location: faker.location.streetAddress(),
-      sessionAt: faker.date.future().toISOString(),
-      registerBy: faker.date.soon().toISOString(),
-      level: faker.helpers.arrayElement([
-        'BEGINNER',
-        'INTERMEDIATE',
-        'ADVANCED',
-      ]),
-      status: faker.helpers.arrayElement(['OPEN', 'CLOSED']),
-      pace: faker.number.int({ min: 300, max: 480 }),
-      maxParticipantCount: faker.number.int({ min: 10, max: 30 }),
-      createdAt: faker.date.past().toISOString(),
-      updatedAt: new Date().toISOString(),
-    });
-    createdSessions.push(session);
-  }
-
-  // Participants
-  let participantId = 1;
-  for (const session of createdSessions) {
-    const participantCount = faker.number.int({ min: 3, max: 10 });
-    const participants = faker.helpers.arrayElements(
-      createdUsers,
-      participantCount
-    );
-
-    for (const user of participants) {
-      await sessionParticipants.create({
-        id: participantId++,
-        sessionId: session.id,
-        userId: user.id,
-        joinedAt: faker.date.recent().toISOString(),
-        createdAt: faker.date.past().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
-  }
-
-  // Likes
-  let likeId = 1;
-  for (const session of createdSessions) {
-    // 각 세션마다 0~20명이 좋아요
-    const likeCount = faker.number.int({ min: 0, max: 20 });
-    const likedUsers = faker.helpers.arrayElements(createdUsers, likeCount);
-
-    for (const user of likedUsers) {
-      await sessionLikes.create({
-        id: likeId++,
-        sessionId: session.id,
-        userId: user.id,
-        likedAt: faker.date.recent().toISOString(),
-        createdAt: faker.date.past().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
-  }
-
-  // Reviews
-  let reviewId = 1;
-  for (const session of createdSessions) {
-    // 각 세션마다 0~5개의 리뷰 (모든 세션에 리뷰가 있지는 않음)
-    const reviewCount = faker.number.int({ min: 0, max: 5 });
-    const reviewers = faker.helpers.arrayElements(createdUsers, reviewCount);
-
-    for (const user of reviewers) {
-      await reviews.create({
-        id: reviewId++,
-        sessionId: session.id,
-        userId: user.id,
-        description: faker.lorem.paragraph(),
-        ranks: faker.number.int({ min: 1, max: 5 }),
-        image: faker.helpers.maybe(() => faker.image.urlPicsumPhotos(), {
-          probability: 0.3,
-        }),
-        createdAt: faker.date.past().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-    }
-  }
-}
+type SessionLike = z.infer<typeof sessionLikeSchema>;
+export const sessionLikes: SessionLike[] = [];

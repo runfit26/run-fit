@@ -1,15 +1,11 @@
 import { setupServer } from 'msw/node';
 import { createPath } from '../core/path';
-import { seedMockDb } from '../data';
 import { authHandlers } from '../handlers/auth';
 import { bypassHandlers } from '../handlers/bypass';
-import { crewHandlers } from '../handlers/crew';
-import { membershipHandlers } from '../handlers/membership';
-import { reviewHandlers } from '../handlers/review';
-import { sessionHandlers } from '../handlers/session';
-import { userHandlers } from '../handlers/user';
-
-await seedMockDb();
+import { createCrewHandlers } from '../handlers/crew';
+import { createReviewHandlers } from '../handlers/review';
+import { createSessionHandlers } from '../handlers/session';
+import { createUserHandlers } from '../handlers/user';
 
 const layer = 'backend' as const;
 const authMode = 'strict' as const;
@@ -18,17 +14,11 @@ const backendBaseUrl =
 
 const p = createPath(layer, backendBaseUrl);
 
-// export const server = setupServer(
-//   ...createAuthHandlers(p, authMode),
-//   ...createMembershipHandlers(p, authMode)
-// );
-
 export const server = setupServer(
   ...authHandlers,
   ...bypassHandlers,
-  ...crewHandlers,
-  ...membershipHandlers,
-  ...reviewHandlers,
-  ...sessionHandlers,
-  ...userHandlers
+  ...createCrewHandlers(p, authMode),
+  ...createReviewHandlers(p, authMode),
+  ...createSessionHandlers(p, authMode),
+  ...createUserHandlers(p, authMode)
 );

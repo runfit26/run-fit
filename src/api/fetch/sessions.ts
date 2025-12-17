@@ -48,6 +48,7 @@ export type CreateSessionRequestBody = Pick<
   | 'image'
   | 'city'
   | 'district'
+  | 'location'
   | 'coords'
   | 'sessionAt'
   | 'registerBy'

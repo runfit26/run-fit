@@ -1,4 +1,5 @@
 import { HttpResponse, type HttpResponseResolver } from 'msw';
+import { errorResponse } from '../utils';
 
 export type AuthMode = 'off' | 'bypass' | 'strict';
 
@@ -17,10 +18,7 @@ export function isAuthed(request: Request) {
 
 export function unauthorized() {
   return HttpResponse.json(
-    {
-      success: false,
-      error: { code: 'UNAUTHORIZED', message: 'Unauthorized' },
-    },
+    errorResponse({ code: 'UNAUTHORIZED', message: 'Unauthorized' }),
     { status: 401 }
   );
 }
@@ -28,6 +26,7 @@ export function unauthorized() {
 export function resetAuth() {
   sessions.clear();
 }
+
 // eslint-disable-next-line
 type Resolver = HttpResponseResolver<any, any>;
 
