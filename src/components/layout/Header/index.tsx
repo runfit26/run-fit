@@ -5,11 +5,15 @@ import Link from 'next/link';
 import { userQueries } from '@/api/queries/userQueries';
 import LogoDefault from '@/assets/icons/logo-default.svg?react';
 import LogoLarge from '@/assets/icons/logo-large.svg?react';
+import Dropdown from '@/components/ui/Dropdown';
 import UserAvatar from '@/components/ui/UserAvatar';
+
+// import { useSignout } from './useSignout';
 
 export default function Header() {
   const { data: user, isLoading } = useQuery(userQueries.me());
   const isLoggedIn = !isLoading && !!user;
+  // const handleSignout = useSignout();
 
   return (
     <header className="tablet:h-15 tablet:px-6 sticky top-0 z-50 h-14 w-full border-b border-b-gray-600 bg-gray-800 px-4">
@@ -34,9 +38,17 @@ export default function Header() {
         <div>
           {isLoggedIn ? (
             <>
-              <Link href="/my">
-                <UserAvatar src={user.image} className="size-10" />
-              </Link>
+              <Dropdown>
+                <Dropdown.TriggerNoArrow>
+                  <UserAvatar src={user.image} className="size-10" />
+                </Dropdown.TriggerNoArrow>
+                <Dropdown.Content className="z-51">
+                  <Dropdown.Item>
+                    <Link href="/my">마이페이지</Link>
+                  </Dropdown.Item>
+                  <Dropdown.Item>로그아웃</Dropdown.Item>
+                </Dropdown.Content>
+              </Dropdown>
             </>
           ) : (
             <Link

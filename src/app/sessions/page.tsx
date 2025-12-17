@@ -9,7 +9,7 @@ import FilterButton from '@/components/ui/FilterButton';
 import { Session } from '@/types';
 
 export default function SessionPage() {
-  const { data } = useQuery(
+  const { data: sessions } = useQuery(
     sessionQueries.list({
       page: 0,
       size: 10,
@@ -68,7 +68,7 @@ export default function SessionPage() {
           </Dropdown>
         </div>
         <div className="grid w-full grid-cols-3 gap-6">
-          {data?.content?.map((session: Session) => (
+          {sessions?.content?.map((session: Session) => (
             <SessionCard key={session.id} session={session} />
           ))}
         </div>

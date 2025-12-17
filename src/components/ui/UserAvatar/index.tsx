@@ -28,6 +28,7 @@ export default function UserAvatar({
 
   return (
     <div
+      data-slot="avatar"
       className={cx(
         'relative overflow-hidden rounded-full',
         sizeMap[size ?? 'lg'],
