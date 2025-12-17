@@ -8,21 +8,30 @@ import { useState } from 'react';
 interface UserAvatarProps {
   src?: string | null;
   alt?: string;
+  size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
+const sizeMap: Record<NonNullable<UserAvatarProps['size']>, string> = {
+  sm: 'size-6',
+  md: 'size-8',
+  lg: 'size-10',
+};
 
 export default function UserAvatar({
   src,
   alt = '사용자 프로필',
   className,
+  size,
 }: UserAvatarProps) {
   const [imageError, setImageError] = useState(false);
   const showImage = isValidImageUrl(src) && !imageError;
 
   return (
     <div
+      data-slot="avatar"
       className={cx(
-        'relative size-10 overflow-hidden rounded-full bg-gray-200',
+        'relative overflow-hidden rounded-full',
+        sizeMap[size ?? 'lg'],
         className
       )}
     >

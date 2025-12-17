@@ -6,6 +6,7 @@ export interface Crew {
   description: string;
   city: string;
   image?: string | null;
+  memberCount: number;
   createdAt: string;
   memberCount: number;
 }

@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import { proxyUrl } from '@/lib/api';
-import { getAccessToken } from '@/lib/auth';
+import { getRefreshToken } from '@/lib/auth';
 
 export async function POST() {
   try {
-    const accessToken = await getAccessToken();
-    const proxyResponse = await fetch(proxyUrl('/api/auth/signout'), {
+    const refreshToken = await getRefreshToken();
+    const proxyResponse = await fetch(proxyUrl('/api/auth/refresh'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
-        ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+        ...(refreshToken && { Cookie: `refreshToken=${refreshToken}` }),
       },
       cache: 'no-cache',
     });
@@ -21,28 +21,28 @@ export async function POST() {
         { status: proxyResponse.status }
       );
 
-      if (proxyResponse.status === 401) {
-        response.cookies.set('accessToken', '', {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-          path: '/api',
-          maxAge: 0,
-        });
-      }
-
       return response;
     }
 
-    const data = await proxyResponse.json();
-    const response = NextResponse.json(data, { status: proxyResponse.status });
+    const { success, data, error } = await proxyResponse.json();
+    if (!data?.token) {
+      return NextResponse.json(
+        { code: 'INVALID_RESPONSE', message: '서버 응답에 토큰이 없습니다.' },
+        { status: 500 }
+      );
+    }
 
-    response.cookies.set('accessToken', '', {
+    const response = NextResponse.json(
+      { success, data, error },
+      { status: proxyResponse.status }
+    );
+
+    response.cookies.set('accessToken', data.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
       path: '/api',
-      maxAge: 0,
+      maxAge: 60 * 60, // 1 hour (3600 seconds)
     });
 
     const proxySetCookies = proxyResponse.headers.getSetCookie();

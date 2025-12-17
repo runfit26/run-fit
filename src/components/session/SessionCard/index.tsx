@@ -13,20 +13,24 @@ import type { Session } from '@/types';
 import { DdayBadge, LevelBadge, PaceBadge } from '../../ui/Badge';
 import ProfileList from '../../user/ProfileList';
 
-type SessionCardProps = Session;
+interface SessionCardProps {
+  session: Session;
+}
 
 export default function SessionCard({
-  crewId,
-  id: sessionId,
-  registerBy,
-  sessionAt,
-  image,
-  city,
-  name,
-  pace,
-  level,
-  currentParticipantCount,
-  maxParticipantCount,
+  session: {
+    crewId,
+    id: sessionId,
+    registerBy,
+    sessionAt,
+    image,
+    city,
+    name,
+    pace,
+    level,
+    currentParticipantCount,
+    maxParticipantCount,
+  },
 }: SessionCardProps) {
   const { data: crewData } = useQuery(crewQueries.detail(crewId));
   const { data: participantsData } = useQuery(
@@ -61,7 +65,7 @@ export default function SessionCard({
         className="tablet:aspect-video relative aspect-165/185 w-full cursor-pointer self-stretch overflow-hidden rounded-lg"
       >
         <Image
-          src={image || '/assets/session-empty.png'}
+          src={image || '/assets/session-default.png'}
           alt="Session"
           fill
           className={cn(
@@ -85,7 +89,7 @@ export default function SessionCard({
           </div>
         </div>
       </Link>
-      <section className="mobile:mb-2 desktop:mt-[18px] pointer-events-none my-3">
+      <div className="mobile:mb-2 desktop:mt-[18px] pointer-events-none my-3">
         <span className="text-body3-semibold tablet:text-body2-semibold laptop:text-title3-semibold mb-0.5 line-clamp-1 text-gray-50">
           {name}
         </span>
@@ -101,16 +105,15 @@ export default function SessionCard({
           <LevelBadge level={levelValue} size="md" className="hidden tablet:inline-flex laptop:hidden" />
           <LevelBadge level={levelValue} size="lg" className="hidden laptop:inline-flex" />
       </div>
-      </section>
-
-      <section className="desktop:gap-2 flex items-center gap-1">
-        <ProfileList data={participantsData?.participants || []} />
+      </div>
+      <div className="desktop:gap-2 flex items-center gap-1">
+        <ProfileList members={participantsData?.participants || []} />
         <div className="text-caption-regular laptop:text-body3-regular pointer-events-none text-gray-300">
           {crewData?.name
             ? `${currentParticipantCount}/${maxParticipantCount}명 • ${crewData.name}`
             : `${currentParticipantCount}/${maxParticipantCount}명`}
         </div>
-      </section>
+      </div>
     </div>
   );
 }
