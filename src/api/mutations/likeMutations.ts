@@ -49,7 +49,7 @@ export function useLikeSession(sessionId: number) {
         queryKey: sessionQueries.detail(sessionId).queryKey,
       });
       queryClient.invalidateQueries({
-        queryKey: userQueries.me.likes().queryKey,
+        queryKey: userQueries.me.likeAll(),
       });
     },
   });

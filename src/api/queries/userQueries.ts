@@ -38,6 +38,7 @@ export const userQueries = {
     },
 
     // 찜한 세션
+    likeAll: () => [...userQueries.me.all(), 'likes'],
     likes: (params: PaginationQueryParams) => {
       const cleanParams = normalizeParams(params);
       return queryOptions({
