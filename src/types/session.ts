@@ -10,6 +10,7 @@ export interface Session<City extends Sido = Sido> {
   image: string;
   city: City;
   district: Sigungu<City>;
+  location: string;
   coords: {
     lat: number;
     lng: number;
@@ -23,6 +24,7 @@ export interface Session<City extends Sido = Sido> {
   currentParticipantCount: number;
   createdAt: string;
   liked: boolean;
+  participants: CrewMember[];
 }
 
 export type SessionListFilters = PaginationQueryParams & {
