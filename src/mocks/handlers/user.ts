@@ -25,7 +25,7 @@ export function createUserHandlers(p: PathFn, authMode: AuthMode) {
           (await request.json()) as UpdateMyProfileRequestBody;
         const user = users[0];
 
-        const resBody = {
+        const data = {
           id: 1,
           email: user.email,
           name: name || user.name,
@@ -38,7 +38,7 @@ export function createUserHandlers(p: PathFn, authMode: AuthMode) {
           updatedAt: '2025-12-17T02:07:53.249Z',
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 

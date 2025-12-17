@@ -1,15 +1,12 @@
 import { http, HttpResponse } from 'msw';
-import { CreateSessionRequestBody } from '@/api/fetch/sessions';
+import {
+  CreateSessionRequestBody,
+  UpdateSessionDetailRequestBody,
+} from '@/api/fetch/sessions';
 import { AuthMode, requireAuth } from '../core/auth';
 import { type PathFn } from '../core/path';
-import {
-  memberships,
-  sessionLikes,
-  sessionParticipants,
-  sessions,
-  users,
-} from '../data';
-import { errorResponse, successResponse } from '../utils';
+import { faker, sessions } from '../data';
+import { parseIdParam, successResponse } from '../utils';
 
 export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
   return [
@@ -33,7 +30,7 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
           maxParticipantCount,
         } = (await request.json()) as CreateSessionRequestBody;
 
-        const resBody = {
+        const data = {
           crewId: crewId,
           name: name,
           description: description,
@@ -49,7 +46,7 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
           pace: pace,
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 201 });
+        return HttpResponse.json(successResponse(data), { status: 201 });
       })
     ),
 
@@ -141,7 +138,7 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
       const paginatedSessions = filteredSessions.slice(startIndex, endIndex);
       const hasNext = endIndex < filteredSessions.length;
 
-      const data = paginatedSessions.map((session) => ({
+      const content = paginatedSessions.map((session) => ({
         id: session.id,
         crewId: session.crewId,
         hostUserId: session.hostUserId,
@@ -160,50 +157,144 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
         updatedAt: session.updatedAt,
       }));
 
-      return HttpResponse.json(
-        successResponse({
-          data: data,
-          hasNext: hasNext,
-        }),
-        { status: 200 }
-      );
+      const data = {
+        content: content,
+        hasNext: hasNext,
+      };
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 세션 상세 조회 @TODO
     http.get(p('/api/sessions/:id'), ({ params }) => {
-      const sessionId = Number(params.id);
+      const sessionId = parseIdParam(params.id);
 
-      return HttpResponse.json(successResponse(1), { status: 200 });
+      const data = {
+        id: sessionId,
+        crewId: 1,
+        hostUserId: 1,
+        name: faker.lorem.words(3),
+        description: faker.lorem.sentence(),
+        image: faker.image.urlPicsumPhotos(),
+        city: '서울',
+        district: '영등포구',
+        location: '서울특별시 영등포구 여의동로 330',
+        coords: {
+          lat: 37.566826,
+          lng: 126.9786567,
+        },
+        sessionAt: '2025-12-20T02:41:38.192Z',
+        registerBy: '2025-12-19T02:41:38.192Z',
+        level: 'BEGINNER',
+        status: 'OPEN',
+        pace: 300,
+        maxParticipantCount: 10,
+        currentParticipantCount: 2,
+        liked: true,
+        createdAt: '2025-12-17T02:41:38.192Z',
+      };
+
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
-    // 세션 참가 신청  @TODO
-    http.post(p('/api/sessions/:id/join'), async ({ request, params }) => {
-      return HttpResponse.json(successResponse(1), { status: 200 });
+    // 세션 참가 신청
+    http.post(p('/api/sessions/:id/join'), () => {
+      const data = {
+        message: '참가 신청 성공',
+        currentParticipantCount: 3,
+        maxParticipantCount: 10,
+      };
+
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
-    // 세션 참가 취소  @TODO
-    http.delete(p('/api/sessions/:id/leave'), ({ request, params }) => {
-      return HttpResponse.json(successResponse(1), { status: 200 });
+    // 세션 참가 취소
+    http.delete(p('/api/sessions/:id/leave'), () => {
+      const data = {
+        message: '참가 취소 성공',
+        currentParticipantCount: 2,
+        maxParticipantCount: 10,
+      };
+
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
-    // 세션 찜(좋아요) 추가  @TODO
-    http.post(p('/api/sessions/:id/like'), async ({ request, params }) => {
-      return HttpResponse.json(successResponse(1), { status: 200 });
+    // 세션 찜(좋아요) 추가
+    http.post(p('/api/sessions/:id/like'), () => {
+      const data = {
+        message: '찜 등록 성공',
+      };
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
-    // 세션 찜(좋아요) 취소  @TODO
-    http.delete(p('/api/sessions/:id/like'), ({ request, params }) => {
-      return HttpResponse.json(successResponse(1), { status: 200 });
+    // 세션 찜(좋아요) 취소
+    http.delete(p('/api/sessions/:id/like'), () => {
+      const data = {
+        message: '찜 취소 성공',
+      };
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
-    // 세션 참가자 목록 조회  @TODO
-    http.get(p('/api/sessions/:id/participants'), ({ params }) => {
-      return HttpResponse.json(successResponse(1), { status: 200 });
+    // 세션 참가자 목록 조회
+    http.get(p('/api/sessions/:id/participants'), () => {
+      const data = {
+        participants: [
+          {
+            userId: 1,
+            name: faker.person.fullName(),
+            profileImage: faker.image.avatar(),
+            role: 'LEADER',
+            joinedAt: '2025-12-11T02:49:35.793Z',
+          },
+          {
+            userId: 2,
+            name: faker.person.fullName(),
+            profileImage: faker.image.avatar(),
+            role: 'STAFF',
+            joinedAt: '2025-12-12T02:49:35.793Z',
+          },
+          {
+            userId: 3,
+            name: faker.person.fullName(),
+            profileImage: faker.image.avatar(),
+            role: 'MEMBER',
+            joinedAt: '2025-12-13T02:49:35.793Z',
+          },
+        ],
+        toatalCount: 3,
+      };
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 세션 정보 수정 @TODO
-    http.put(p('/api/sessions/:id'), async ({ request, params }) => {
-      return HttpResponse.json(successResponse(1), { status: 200 });
+    http.put(p('/api/sessions/:id'), async ({ request }) => {
+      const { name, description, image } =
+        (await request.json()) as UpdateSessionDetailRequestBody;
+
+      const data = {
+        id: 0,
+        crewId: 0,
+        hostUserId: 0,
+        name: name,
+        description: description,
+        image: image || faker.image.urlPicsumPhotos(),
+        city: '서울',
+        district: '영등포구',
+        location: '서울특별시 영등포구 여의동로 330',
+        coords: {
+          lat: 37.566826,
+          lng: 126.9786567,
+        },
+        sessionAt: '2025-12-20T02:52:24.951Z',
+        registerBy: '2025-12-19T02:52:24.951Z',
+        level: 'BEGINNER',
+        status: 'OPEN',
+        pace: 400,
+        maxParticipantCount: 10,
+        currentParticipantCount: 2,
+        createdAt: '2025-12-17T02:52:24.951Z',
+      };
+
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
   ];
 }

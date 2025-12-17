@@ -8,29 +8,29 @@ import { successResponse } from '../utils';
 const MOCK_ACCESS_TOKEN = 'mock-access-token';
 const MOCK_REFRESH_TOKEN = 'mock-refresh-token';
 
-export function createAuthClientHandlers(p: PathFn, authMode: AuthMode) {
+export function createAuthHandlers(p: PathFn, authMode: AuthMode) {
   return [
     // 회원가입
     http.post(p('/api/auth/signup'), async ({ request }) => {
       const { email, name } = (await request.json()) as SignupRequestBody;
 
-      const resBody = {
+      const data = {
         id: users.length + 1,
         name: name,
         email: email,
         createdAt: new Date().toISOString(),
       };
 
-      return HttpResponse.json(successResponse(resBody), { status: 201 });
+      return HttpResponse.json(successResponse(data), { status: 201 });
     }),
 
     // 로그인
-    http.post(p('/api/auth/signin'), async ({ request }) => {
-      const resBody = {
+    http.post(p('/api/auth/signin'), async () => {
+      const data = {
         token: MOCK_ACCESS_TOKEN,
       };
 
-      return HttpResponse.json(successResponse(resBody), {
+      return HttpResponse.json(successResponse(data), {
         headers: {
           'Set-Cookie': `refreshToken=${MOCK_REFRESH_TOKEN}; Path=/;`,
         },
@@ -39,8 +39,8 @@ export function createAuthClientHandlers(p: PathFn, authMode: AuthMode) {
 
     // 토큰 갱신
     http.post(p('/api/auth/refresh'), () => {
-      const resBody = { token: 'string' };
-      return HttpResponse.json(successResponse(resBody), { status: 200 });
+      const data = { token: 'string' };
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 로그아웃

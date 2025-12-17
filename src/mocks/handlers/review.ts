@@ -40,7 +40,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
         createdAt: review.createdAt,
       }));
 
-      const resBody = {
+      const data = {
         content,
         page,
         size,
@@ -50,7 +50,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
         hasPrevious,
       };
 
-      return HttpResponse.json(successResponse(resBody), { status: 200 });
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 세션 리뷰 작성
@@ -63,7 +63,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
           image?: string;
         };
 
-        const resBody = {
+        const data = {
           id: 0,
           sessionId: 0,
           crewId: 0,
@@ -76,7 +76,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
           createdAt: new Date().toISOString(),
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 201 });
+        return HttpResponse.json(successResponse(data), { status: 201 });
       })
     ),
 
@@ -84,11 +84,11 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
     http.delete(
       p('/api/reviews/:reviewId'),
       requireAuth(authMode, async () => {
-        const resBody = {
+        const data = {
           message: '리뷰가 삭제되었습니다.',
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 
@@ -127,7 +127,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
         };
       });
 
-      const resBody = {
+      const data = {
         content,
         page,
         size,
@@ -137,7 +137,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
         hasPrevious,
       };
 
-      return HttpResponse.json(successResponse(resBody), { status: 200 });
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 내가 작성한 리뷰 목록
@@ -177,7 +177,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
           };
         });
 
-        const resBody = {
+        const data = {
           content,
           page,
           size,
@@ -187,7 +187,7 @@ export function createReviewHandlers(p: PathFn, authMode: AuthMode) {
           hasPrevious,
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
   ];

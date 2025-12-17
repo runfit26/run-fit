@@ -20,7 +20,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         const reqBody = (await request.json()) as CreateCrewRequest;
         const { name, description, city, image } = reqBody;
 
-        const resBody = {
+        const data = {
           id: 1,
           name: name,
           description: description,
@@ -29,7 +29,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
           createdAt: new Date().toISOString(),
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 201 });
+        return HttpResponse.json(successResponse(data), { status: 201 });
       })
     ),
 
@@ -85,7 +85,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
       const paginatedCrews = filteredCrews.slice(startIndex, endIndex);
       const hasNext = endIndex < filteredCrews.length;
 
-      const data = paginatedCrews.map((crew) => {
+      const content = paginatedCrews.map((crew) => {
         return {
           id: crew.id,
           name: crew.name,
@@ -97,12 +97,12 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         };
       });
 
-      const resBody = {
-        data: data,
+      const data = {
+        content: content,
         hasNext: hasNext,
       };
 
-      return HttpResponse.json(successResponse(resBody), { status: 200 });
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 크루 상세 조회
@@ -111,7 +111,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
       requireAuth(authMode, ({ params }) => {
         const id = parseIdParam(params.id);
 
-        const resBody = {
+        const data = {
           id: id,
           name: faker.company.name() + ' 러닝 크루',
           description: faker.lorem.paragraph(),
@@ -120,13 +120,13 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
           createdAt: new Date().toISOString(),
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 
     // 크루 멤버 목록 조회
     http.get(p('/api/crews/:id/members'), () => {
-      const resBody = {
+      const data = {
         leader: {
           userId: 1,
           name: '홍길동',
@@ -154,30 +154,30 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         ],
       };
 
-      return HttpResponse.json(successResponse(resBody), { status: 200 });
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 크루 멤버 역할별 카운트 조회
     http.get(p('/api/crews/:id/members/count'), () => {
-      const resBody = {
+      const data = {
         leaderCount: 1,
         staffCount: 3,
         memberCount: 24,
       };
 
-      return HttpResponse.json(successResponse(resBody), { status: 200 });
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 크루 내 특정 사용자 역할 조회
     http.get(p('/api/crews/:crewId/members/:userId/role'), ({ params }) => {
       const userId = parseIdParam(params.userId);
 
-      const resBody = {
+      const data = {
         userId: userId,
         role: faker.helpers.arrayElement(['LEADER', 'STAFF', 'MEMBER']),
       };
 
-      return HttpResponse.json(successResponse(resBody), { status: 200 });
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
     // 크루장 변경 (리더 위임)
@@ -187,9 +187,9 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         const body = (await request.json()) as { newLeaderId: number };
         const newLeaderId = body.newLeaderId;
 
-        const resBody = { oldLeaderId: 1, newLeaderId: newLeaderId };
+        const data = { oldLeaderId: 1, newLeaderId: newLeaderId };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 
@@ -201,14 +201,14 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         const body = (await request.json()) as { role: 'STAFF' | 'MEMBER' };
         const newRole = body.role;
 
-        const resBody = {
+        const data = {
           userId: userId,
           previousRole: 'MEMBER',
           newRole: newRole,
           message: '운영진으로 등록되었습니다.',
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 
@@ -218,12 +218,12 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
       requireAuth(authMode, ({ params }) => {
         const userId = parseIdParam(params.userId);
 
-        const resBody = {
+        const data = {
           message: '해당 사용자가 크루에서 제거되었습니다.',
           userId: userId,
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 
@@ -234,7 +234,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         const crewId = parseIdParam(params.id);
         const body = (await request.json()) as Partial<CreateCrewRequest>;
 
-        const resBody = {
+        const data = {
           id: crewId!,
           name: body.name || '기존 크루 이름',
           description: body.description || '기존 크루 설명',
@@ -243,7 +243,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
           createdAt: new Date().toISOString(),
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 
@@ -251,11 +251,11 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
     http.delete(
       p('/api/crews/:id'),
       requireAuth(authMode, () => {
-        const resBody = {
+        const data = {
           message: '크루가 삭제되었습니다.',
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
 
@@ -263,14 +263,14 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
     http.post(
       p('/api/crews/:crewId/join'),
       requireAuth(authMode, () => {
-        const resBody = {
+        const data = {
           crewId: 1,
           userId: 1,
           role: 'MEMBER',
           joinedAt: new Date().toISOString(),
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 201 });
+        return HttpResponse.json(successResponse(data), { status: 201 });
       })
     ),
 
@@ -278,11 +278,11 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
     http.post(
       p('/api/crews/:crewId/leave'),
       requireAuth(authMode, () => {
-        const resBody = {
+        const data = {
           message: '크루를 탈퇴했습니다.',
         };
 
-        return HttpResponse.json(successResponse(resBody), { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
   ];
