@@ -1,8 +1,10 @@
 'use client';
 
 // import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { sessionQueries } from '@/api/queries/sessionQueries';
 // import { sessionQueries } from '@/api/queries/sessionQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import FixedBottomBar, {
@@ -23,40 +25,16 @@ import {
 
 export default function Page() {
   const { id } = useParams();
-  // const {
-  //   data: session,
-  //   error,
-  //   isLoading,
-  // } = useQuery(sessionQueries.detail(Number(id)));
+  const {
+    data: session,
+    error,
+    isLoading,
+  } = useQuery(sessionQueries.detail(Number(id)));
+  const { ref, height } = useFixedBottomBar();
 
-  const { data, error, isLoading } = {
-    data: {
-      id: 1,
-      crewId: 1,
-      hostUserId: 3,
-      name: '여의도에서 잠실로 변경',
-      description: '변경되었습니다',
-      image:
-        'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      city: '서울',
-      district: '영등포구',
-      coords: {
-        lat: 37.5267,
-        lng: 126.9347,
-      },
-      sessionAt: '2025-12-17T09:39:44.324',
-      registerBy: '2025-12-11T09:39:44.324',
-      level: 'BEGINNER',
-      status: 'CLOSED',
-      pace: 360,
-      maxParticipantCount: 40,
-      currentParticipantCount: 2,
-      liked: false,
-      createdAt: '2025-12-15T18:55:20.314495',
-    },
-    error: false,
-    isLoading: false,
-  };
+  if (isLoading) return null;
+  if (error) return null;
+  if (!session) return null;
 
   const participants = [
     {
@@ -92,7 +70,7 @@ export default function Page() {
     currentParticipantCount,
     createdAt,
     liked,
-  } = data;
+  } = session;
 
   const crew = {
     id: 0,
@@ -118,27 +96,17 @@ export default function Page() {
     createdAt: '2025-12-16T07:30:41.004Z',
   };
 
-  const { ref, height } = useFixedBottomBar();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  // if (error) {
-  //   return <div>Error: {(error as Error).message}</div>;
-  // }
-
   return (
-    <main className="h-main w-full">
+    <main className="h-main relative w-full">
       <Image
         src={image}
         alt={name}
-        height={200}
-        width={300}
-        className="w-full"
+        height={267}
+        width={375}
+        className="z-0 aspect-375/267 w-full object-cover"
       />
 
-      <div className="rounded-t-[20px] p-6">
+      <div className="relative z-100 -mt-5 rounded-t-[20px] bg-gray-800 p-6">
         <div className="mb-6 px-1">
           <div className="mb-1 flex w-full items-center justify-between gap-2">
             <Badge variant="dday" size="sm">
