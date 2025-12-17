@@ -16,7 +16,6 @@ faker.seed(SEED_NUMBER);
 
 const baseSchema = {
   createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
 };
 
 const userSchema = z.object({
@@ -59,6 +58,10 @@ const sessionSchema = z.object({
   location: z.string().nullable().optional(),
   city: z.string().nullable().optional(),
   district: z.string().nullable().optional(),
+  coords: z.object({
+    lat: z.number(),
+    lng: z.number(),
+  }),
   sessionAt: z.iso.datetime(),
   registerBy: z.iso.datetime(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
@@ -174,6 +177,10 @@ export const sessions: Session[] = Array.from({ length: 101 }, (_, i) => {
     city: city,
     district: district,
     location: faker.location.streetAddress(),
+    coords: {
+      lat: faker.location.latitude(),
+      lng: faker.location.longitude(),
+    },
     sessionAt: faker.date.future().toISOString(),
     registerBy: faker.date.soon().toISOString(),
     level: faker.helpers.arrayElement(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
@@ -181,7 +188,6 @@ export const sessions: Session[] = Array.from({ length: 101 }, (_, i) => {
     pace: faker.number.int({ min: 300, max: 480 }),
     maxParticipantCount: faker.number.int({ min: 10, max: 30 }),
     createdAt: faker.date.past().toISOString(),
-    updatedAt: new Date().toISOString(),
   };
 });
 
@@ -196,7 +202,6 @@ export const reviews: Review[] = Array.from({ length: 30 }, (_, i) => ({
     ? faker.image.urlPicsumPhotos({ width: 640, height: 480 })
     : null,
   createdAt: faker.date.past().toISOString(),
-  updatedAt: new Date().toISOString(),
 }));
 
 type Membership = z.infer<typeof membershipSchema>;

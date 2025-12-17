@@ -138,24 +138,38 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
       const paginatedSessions = filteredSessions.slice(startIndex, endIndex);
       const hasNext = endIndex < filteredSessions.length;
 
-      const content = paginatedSessions.map((session) => ({
-        id: session.id,
-        crewId: session.crewId,
-        hostUserId: session.hostUserId,
-        name: session.name,
-        description: session.description,
-        image: session.image,
-        location: session.location,
-        sessionAt: session.sessionAt,
-        registerBy: session.registerBy,
-        level: session.level,
-        status: session.status,
-        pace: session.pace,
-        maxParticipantCount: session.maxParticipantCount,
-        currentParticipantCount: 0,
-        createdAt: session.createdAt,
-        updatedAt: session.updatedAt,
-      }));
+      const content = paginatedSessions.map(
+        ({ maxParticipantCount, ...rest }) => ({
+          ...rest,
+          currentParticipantCount: faker.number.int({
+            min: 0,
+            max: maxParticipantCount,
+          }),
+          participants: [
+            {
+              userId: 0,
+              name: faker.person.fullName(),
+              profileImage: faker.image.avatar(),
+              role: 'LEADER',
+              joinedAt: '2025-12-17T03:11:18.981Z',
+            },
+            {
+              userId: 0,
+              name: faker.person.fullName(),
+              profileImage: faker.image.avatar(),
+              role: 'STAFF',
+              joinedAt: '2025-12-17T03:11:18.981Z',
+            },
+            {
+              userId: 0,
+              name: faker.person.fullName(),
+              profileImage: faker.image.avatar(),
+              role: 'MEMBER',
+              joinedAt: '2025-12-17T03:11:18.981Z',
+            },
+          ],
+        })
+      );
 
       const data = {
         content: content,
