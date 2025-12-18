@@ -2,9 +2,12 @@ import { format } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { formatMinutesToHHmm } from '@/lib/time';
-import { LevelValue, SessionListFilters, SortValue } from '@/types';
-
-type RegionValue = Record<string, string[]>;
+import type {
+  LevelValue,
+  RegionValue,
+  SessionListFilters,
+  SortValue,
+} from '@/types';
 
 export function useSessionFilters() {
   // UI 상태 관리용 필터들

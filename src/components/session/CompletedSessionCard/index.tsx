@@ -23,6 +23,13 @@ export default function CompletedSessionCard({
     sessionAtDate.getMinutes()
   );
 
+  const levelMap: Record<string, 'easy' | 'medium' | 'hard'> = {
+    BEGINNER: 'easy',
+    INTERMEDIATE: 'medium',
+    ADVANCED: 'hard',
+  };
+  const levelValue = session.level ? levelMap[session.level] : 'easy';
+
   return (
     <div className="flex w-full items-center gap-3">
       <Link href={`/sessions/${session.id}`}>

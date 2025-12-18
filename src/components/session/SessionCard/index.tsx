@@ -54,6 +54,13 @@ export default function SessionCard({
     sessionAtDate.getMinutes()
   );
 
+  const levelMap: Record<string, 'easy' | 'medium' | 'hard'> = {
+    BEGINNER: 'easy',
+    INTERMEDIATE: 'medium',
+    ADVANCED: 'hard',
+  };
+  const levelValue = level ? levelMap[level] : 'easy';
+
   return (
     <div className="flex w-full flex-col">
       <div className="tablet:aspect-video relative aspect-165/185 w-full cursor-pointer self-stretch overflow-hidden rounded-lg">
