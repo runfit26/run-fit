@@ -1,5 +1,7 @@
+import { format } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import { formatMinutesToHHmm } from '@/lib/time';
 import { LevelValue, SessionListFilters, SortValue } from '@/types';
 
 export function useSessionFilters() {
@@ -16,10 +18,10 @@ export function useSessionFilters() {
       level,
       city: region ? Object.keys(region) : undefined,
       district: region ? Object.values(region).flat() : undefined,
-      dateFrom: date?.from?.toISOString(),
-      dateTo: date?.to?.toISOString(),
-      timeFrom: time ? String(time[0]) : undefined,
-      timeTo: time ? String(time[1]) : undefined,
+      dateFrom: date?.from ? format(date.from, 'yyyy-MM-dd') : undefined,
+      dateTo: date?.to ? format(date.to, 'yyyy-MM-dd') : undefined,
+      timeFrom: time ? formatMinutesToHHmm(time[0]) : undefined,
+      timeTo: time ? formatMinutesToHHmm(time[1]) : undefined,
       sort: sort || 'createdAtDesc',
     };
   }, [region, date, time, level, sort]);
