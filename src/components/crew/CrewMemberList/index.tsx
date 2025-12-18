@@ -58,7 +58,7 @@ export default function CrewMemberList({
     <div className="flex flex-col">
       {children}
       <div className="flex flex-col">
-        {members.map((member) => {
+        {members.slice(0, 4).map((member) => {
           return <CrewMemberListItem key={member.userId} member={member} />;
         })}
       </div>

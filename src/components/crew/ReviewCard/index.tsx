@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { sessionQueries } from '@/api/queries/sessionQueries';
-import { userQueries } from '@/api/queries/userQueries';
 import SessionInfo from '@/components/session/SessionInfo';
 import Rating from '@/components/ui/Rating';
 import UserAvatar from '@/components/ui/UserAvatar';
@@ -13,7 +12,6 @@ interface ReviewCardProps {
 }
 
 export default function ReviewCard({ data: review }: ReviewCardProps) {
-  const { data: userProfile } = useQuery(userQueries.profile(review.userId));
   const { data: userSession } = useQuery(
     sessionQueries.detail(review.sessionId)
   );
@@ -24,8 +22,8 @@ export default function ReviewCard({ data: review }: ReviewCardProps) {
       <Rating value={review.ranks} disabled onChange={() => {}} />
       <div className="text-body3-regular">{review.description}</div>
       <div className="*:text-caption-regular flex items-center gap-2 *:text-gray-300">
-        <UserAvatar src={userProfile?.image} alt={userProfile?.name} />
-        <div>{userProfile?.name}</div>
+        <UserAvatar src={review.userImage} alt={review.userName} />
+        <div>{review.userName}</div>
         <div>|</div>
         <div>{createdAtText}</div>
       </div>

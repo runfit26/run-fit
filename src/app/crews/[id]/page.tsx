@@ -26,49 +26,29 @@ function PageAction({
   className?: string;
   myRole: 'LEADER' | 'STAFF' | 'MEMBER' | undefined;
 }) {
-  if (myRole === 'LEADER' || myRole === 'STAFF') {
-    const handleShare = () => {};
-    const handleClick = () => {};
-    return (
-      <div className={cn('flex gap-7', className)}>
-        <button
-          type="button"
-          aria-label="크루 링크 공유하기"
-          onClick={handleShare}
-        >
-          <Share className="size-6 stroke-[#9CA3AF]" />
-        </button>
-        <Button
-          type="button"
-          className="bg-brand-500 text-body2-semibold flex-1 px-6 py-3"
-          onClick={handleClick}
-        >
-          세션 생성하기
-        </Button>
-      </div>
-    );
-  } else {
-    const handleShare = () => {};
-    const handleClick = () => {};
-    return (
-      <div className={cn('flex gap-7', className)}>
-        <button
-          type="button"
-          aria-label="크루 링크 공유하기"
-          onClick={handleShare}
-        >
-          <Share className="size-6 stroke-[#9CA3AF]" />
-        </button>
-        <Button
-          type="button"
-          className="bg-brand-500 text-body2-semibold flex-1 px-6 py-3"
-          onClick={handleClick}
-        >
-          가입하기
-        </Button>
-      </div>
-    );
-  }
+  const isCrewAdmin = myRole === 'LEADER' || myRole === 'STAFF';
+  const handleShare = () => {};
+  const handleCreateSession = () => {};
+  const handleJoinCrew = () => {};
+
+  return (
+    <div className={cn('flex gap-7', className)}>
+      <button
+        type="button"
+        aria-label="크루 링크 공유하기"
+        onClick={handleShare}
+      >
+        <Share className="size-6 stroke-[#9CA3AF]" />
+      </button>
+      <Button
+        type="button"
+        className="bg-brand-500 text-body2-semibold flex-1 px-6 py-3"
+        onClick={isCrewAdmin ? handleCreateSession : handleJoinCrew}
+      >
+        {isCrewAdmin ? '세션 생성하기' : '가입하기'}
+      </Button>
+    </div>
+  );
 }
 
 export default function Page() {
@@ -90,13 +70,14 @@ export default function Page() {
   // crewReview는 Slice에서 Page로 바뀌어야함
   // pagination 컴포넌트 및 총 review 개수를 위해서 totalElements 필요
   const { data: myProfile } = useQuery(userQueries.me.info());
-  const { data: myRole } = useQuery(
-    crewQueries.members(crewId).detail(myProfile?.id as number)
-  );
+  const { data: myRole } = useQuery({
+    ...crewQueries.members(crewId).detail(myProfile?.id ?? 0),
+    enabled: !!myProfile?.id,
+  });
 
-  const members = [...(crewMembers?.members || [])]
-    .filter((member): member is CrewMember => member !== undefined)
-    .slice(0, 4);
+  const members = [...(crewMembers?.members || [])].filter(
+    (member): member is CrewMember => member !== undefined
+  );
 
   const { ref, height } = useFixedBottomBar();
 
@@ -114,7 +95,7 @@ export default function Page() {
           )}
         >
           <Image
-            src={crew?.image || '/crew.local.jpg'}
+            src={crew?.image || '/assets/crew-default.png'}
             alt="Crew"
             fill
             className="laptop:rounded-[20px] overflow-hidden object-cover"
@@ -195,7 +176,7 @@ export default function Page() {
                   />
                   <ReviewCard
                     data={{
-                      id: 1,
+                      id: 2,
                       sessionId: 5,
                       crewId: crew?.id as number,
                       userId: 5,
