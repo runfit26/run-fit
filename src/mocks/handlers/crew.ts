@@ -106,23 +106,20 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
     }),
 
     // 크루 상세 조회
-    http.get(
-      p('/api/crews/:id'),
-      requireAuth(authMode, ({ params }) => {
-        const id = parseIdParam(params.id);
+    http.get(p('/api/crews/:id'), ({ params }) => {
+      const id = parseIdParam(params.id);
 
-        const data = {
-          id: id,
-          name: faker.company.name() + ' 러닝 크루',
-          description: faker.lorem.paragraph(),
-          city: '서울',
-          image: faker.image.avatar(),
-          createdAt: new Date().toISOString(),
-        };
+      const data = {
+        id: id,
+        name: faker.company.name() + ' 러닝 크루',
+        description: faker.lorem.paragraph(),
+        city: '서울',
+        image: faker.image.avatar(),
+        createdAt: new Date().toISOString(),
+      };
 
-        return HttpResponse.json(successResponse(data), { status: 200 });
-      })
-    ),
+      return HttpResponse.json(successResponse(data), { status: 200 });
+    }),
 
     // 크루 멤버 목록 조회
     http.get(p('/api/crews/:id/members'), () => {
