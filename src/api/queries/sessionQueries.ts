@@ -5,7 +5,7 @@ import {
   getSessions,
 } from '@/api/fetch/sessions';
 import { normalizeParams } from '@/lib/utils';
-import { PaginationQueryParams, SessionListFilters } from '@/types';
+import { SessionListFilters } from '@/types';
 
 export const sessionQueries = {
   all: () => ['sessions'],
