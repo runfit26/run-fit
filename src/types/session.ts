@@ -1,4 +1,5 @@
 import { PaginationQueryParams } from './api';
+import { CrewMember } from './crew';
 import { Sido, Sigungu } from './region';
 
 export interface Session<City extends Sido = Sido> {
@@ -24,6 +25,7 @@ export interface Session<City extends Sido = Sido> {
   currentParticipantCount: number;
   createdAt: string;
   liked: boolean;
+  participants: CrewMember[];
 }
 
 export type SessionListFilters = PaginationQueryParams & {
