@@ -18,6 +18,7 @@ export const buttonVariants = cva(
       size: {
         default: 'text-body2-semibold h-12 px-6 py-3 has-[>svg]:px-3',
         sm: 'text-body3-semibold h-9 px-6 py-2 has-[>svg]:px-2.5',
+        xs: 'text-caption-semibold h-8 px-6 py-2 has-[>svg]:px-2',
       },
     },
     defaultVariants: {
