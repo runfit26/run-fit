@@ -137,12 +137,20 @@ export function useSessionFilters() {
    * -------------------------- */
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (filters.region && Object.keys(filters.region).length > 0) count++;
+    const region = filters.region;
+    if (region) {
+      const validRegion = Object.entries(region).some(([city, districts]) => {
+        if (!city.trim()) return false;
+        if (!districts || districts.length === 0) return false;
+        return districts.some((d) => d.trim() !== '');
+      });
+
+      if (validRegion) count++;
+    }
+
     if (filters.date?.from || filters.date?.to) count++;
-    if (filters.time && (filters.time[0] !== 0 || filters.time[1] !== 720))
-      count++;
+    if (filters.time) count++;
     if (filters.level) count++;
-    if (filters.sort !== DEFAULT_SESSION_FILTER.sort) count++;
     return count;
   }, [filters]);
 
