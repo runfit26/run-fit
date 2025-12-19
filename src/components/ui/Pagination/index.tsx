@@ -3,7 +3,6 @@ import Link from 'next/link';
 import * as React from 'react';
 import ArrowDown from '@/assets/icons/arrow-down.svg?react';
 import { cn } from '@/lib/utils';
-import Button, { buttonVariants } from '../Button';
 
 export default function Pagination({
   className,
@@ -39,13 +38,11 @@ function PaginationItem({ ...props }: React.ComponentProps<'li'>) {
 
 type PaginationLinkProps = {
   isActive?: boolean;
-} & Pick<React.ComponentProps<typeof Button>, 'size'> &
-  React.ComponentProps<typeof Link>;
+} & React.ComponentProps<typeof Link>;
 
 function PaginationLink({
   className,
   isActive,
-  // size = "icon",
   ...props
 }: PaginationLinkProps) {
   return (
@@ -54,10 +51,11 @@ function PaginationLink({
       data-slot="pagination-link"
       data-active={isActive}
       className={cn(
-        buttonVariants({
-          // variant: isActive ? "outline" : "ghost",
-          // size,
-        }),
+        isActive ? 'text-gray-100' : 'text-gray-300',
+        // buttonVariants({
+        //   // variant: isActive ? "outline" : "ghost",
+        //   // size,
+        // }),
         className
       )}
       {...props}
@@ -72,11 +70,10 @@ function PaginationPrevious({
   return (
     <PaginationLink
       aria-label="Go to previous page"
-      size="default"
       className={cn('gap-1 px-2.5 sm:pl-2.5', className)}
       {...props}
     >
-      <ArrowDown className="rotate-90" />
+      <ArrowDown className="size-6 rotate-90" />
     </PaginationLink>
   );
 }
@@ -88,11 +85,10 @@ function PaginationNext({
   return (
     <PaginationLink
       aria-label="Go to next page"
-      size="default"
       className={cn('gap-1 px-2.5 sm:pr-2.5', className)}
       {...props}
     >
-      <ArrowDown className="-rotate-90" />
+      <ArrowDown className="size-6 -rotate-90" />
     </PaginationLink>
   );
 }
