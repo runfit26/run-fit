@@ -16,16 +16,18 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 
 export default function SessionPage() {
-  const { filters, changeFilter, resetFilters, activeFilterCount } =
-    useSessionFilters();
+  const {
+    filters,
+    queryFilters,
+    changeFilter,
+    resetFilters,
+    activeFilterCount,
+  } = useSessionFilters();
 
   const { data: sessions } = useQuery(
     sessionQueries.list({
-      page: 0,
       size: 10,
-      sort: filters.sort,
-      level: filters.level,
-      // ...
+      ...queryFilters,
     })
   );
 
@@ -67,7 +69,6 @@ export default function SessionPage() {
           <Image
             src="/assets/session-list.png"
             alt="Session List"
-            // className="origin-center scale-[0.8]"
             width={417}
             height={235}
           />
