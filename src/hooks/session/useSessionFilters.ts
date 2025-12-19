@@ -24,20 +24,38 @@ export function useSessionFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  // URL -> UI 필터 읽기
-  const filters: SessionFilterState = useMemo(
-    () => ({
-      page: Number(searchParams.get('page')) ?? DEFAULT_SESSION_FILTER.page,
+  /* --------------------------
+   * 1) URL 쿼리 -> UI 필터 변환
+   * -------------------------- */
+  const filters: SessionFilterState = useMemo(() => {
+    // 다중 지역 가져오기
+    const cityList = searchParams.getAll('city');
+    const districtList = searchParams.getAll('district');
+
+    // region 객체 재구성
+    let region: Record<string, string[]> | undefined = undefined;
+
+    if (cityList.length > 0 && districtList.length > 0) {
+      region = cityList.reduce(
+        (acc, city, i) => {
+          const district = districtList[i];
+          if (!acc[city]) acc[city] = [];
+          if (district) acc[city].push(district);
+          return acc;
+        },
+        {} as Record<string, string[]>
+      );
+    }
+
+    return {
+      page: Number(searchParams.get('page')) || DEFAULT_SESSION_FILTER.page,
       sort:
         (searchParams.get('sort') as SessionSort) ??
         DEFAULT_SESSION_FILTER.sort,
       level:
         (searchParams.get('level') as LevelFilterValue) ??
         DEFAULT_SESSION_FILTER.level,
-      region:
-        searchParams.get('city') && searchParams.get('district')
-          ? { [searchParams.get('city')!]: [searchParams.get('district')!] }
-          : DEFAULT_SESSION_FILTER.region,
+      region,
       date: searchParams.get('dateFrom')
         ? {
             from: new Date(searchParams.get('dateFrom')!),
@@ -51,18 +69,18 @@ export function useSessionFilters() {
               Number(searchParams.get('timeTo')),
             ]
           : DEFAULT_SESSION_FILTER.time,
-    }),
-    [searchParams]
-  );
+    };
+  }, [searchParams]);
 
-  // API Query 필터 변환
+  /* --------------------------
+   * 2) UI 필터 -> API 필터 변환
+   * -------------------------- */
   const queryFilters: SessionListFilters = useMemo(() => {
     const { region, date, time, level, sort, page } = filters;
 
     const timeFrom = time ? formatMinutesToHHmm(time[0]) : undefined;
-
     const rawTimeTo = time ? time[1] : undefined;
-    const safeTimeTo = rawTimeTo === 1440 ? 1439 : rawTimeTo; // 24:00 → 23:59
+    const safeTimeTo = rawTimeTo === 1440 ? 1439 : rawTimeTo;
 
     const timeTo =
       safeTimeTo !== undefined ? formatMinutesToHHmm(safeTimeTo) : undefined;
@@ -80,7 +98,9 @@ export function useSessionFilters() {
     };
   }, [filters]);
 
-  // URL 업데이트 함수
+  /* --------------------------
+   * 3) 필터 적용 시 URL 업데이트
+   * -------------------------- */
   const applyFilters = (next: SessionFilterState) => {
     const { region, date, time, level, sort, page } = next;
     const params = new URLSearchParams();
@@ -88,16 +108,22 @@ export function useSessionFilters() {
     if (level) params.set('level', level);
     if (sort) params.set('sort', sort);
     if (page != null) params.set('page', String(page));
+
+    // 다중 지역 설정
     if (region) {
-      const city = Object.keys(region)[0]!;
-      const district = region[city][0];
-      params.set('city', city);
-      params.set('district', district);
+      Object.entries(region).forEach(([city, districts]) => {
+        districts.forEach((district) => {
+          params.append('city', city);
+          params.append('district', district);
+        });
+      });
     }
+
     if (date?.from) {
       params.set('dateFrom', format(date.from, 'yyyy-MM-dd'));
       params.set('dateTo', format(date.to!, 'yyyy-MM-dd'));
     }
+
     if (time) {
       params.set('timeFrom', time[0] + '');
       params.set('timeTo', time[1] + '');
@@ -106,6 +132,9 @@ export function useSessionFilters() {
     router.push(`/sessions?${params.toString()}`);
   };
 
+  /* --------------------------
+   * 4) 필터 개수 계산
+   * -------------------------- */
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (filters.region && Object.keys(filters.region).length > 0) count++;
@@ -121,7 +150,6 @@ export function useSessionFilters() {
     filters,
     queryFilters,
     applyFilters,
-    resetFilters: () => applyFilters(DEFAULT_SESSION_FILTER),
     activeFilterCount,
   };
 }
