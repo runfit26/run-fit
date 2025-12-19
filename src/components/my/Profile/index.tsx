@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { userQueries } from '@/api/queries/userQueries';
+import Button from '@/components/ui/Button';
 import { formatPaceText, secondsToMinutes } from '@/lib/pace';
 
 export default function Profile() {
@@ -20,12 +21,12 @@ export default function Profile() {
               className="object-cover"
             />
           </div>
-          <button
-            className="bg-gray-750 text-caption-medium tablet:text-body3-medium tablet:px-3 rounded-xl px-2 py-2 text-gray-200"
-            type="button"
+          <Button
+            variant="neutral"
+            className="text-caption-semibold tablet:text-body3-semibold tablet:h-9 tablet:px-3 h-8 px-3.5 py-2"
           >
             내 정보 수정
-          </button>
+          </Button>
         </div>
         <div>
           <h2 className="text-body1-semibold tablet:text-title2-semibold">
