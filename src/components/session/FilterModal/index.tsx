@@ -1,86 +1,191 @@
 'use client';
 
+import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import Calendar from '@/components/ui/Calendar';
+import Checkbox from '@/components/ui/Checkbox';
 import Chip from '@/components/ui/Chip';
 import Modal from '@/components/ui/Modal';
 import Tabs from '@/components/ui/Tabs';
 import TimeSlider from '@/components/ui/TimeSlider';
 import { FILTER_TABS, LEVEL_OPTIONS } from '@/constants/session-filter';
 import { useSessionFilterContext } from '@/provider/SessionFilterProvider';
+import { Sido, SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
 
 export default function FilterModal({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { draft, setDraft, reset, apply } = useSessionFilterContext();
+  const {
+    draft,
+    setDraft,
+    reset: providerReset,
+    apply: providerApply,
+  } = useSessionFilterContext();
+
+  // 지역은 모달 내부 임시 상태로 관리
+  const [activeSido, setActiveSido] = useState<Sido>('서울');
+  const [tempRegion, setTempRegion] = useState<Record<string, string[]>>(
+    draft.region || {}
+  );
+
+  // 체크박스 토글 함수
+  const handleToggle = (sido: string, sigungu: string, checked: boolean) => {
+    setTempRegion((prev) => {
+      const currentList = prev[sido] || [];
+      const newList = checked
+        ? [...currentList, sigungu]
+        : currentList.filter((i) => i !== sigungu);
+
+      if (newList.length === 0) {
+        const next = { ...prev };
+        delete next[sido];
+        return next;
+      }
+
+      return { ...prev, [sido]: newList };
+    });
+  };
+
+  const resetAll = () => {
+    setTempRegion({});
+    providerReset(); // Provider에 정의된 reset -> 전체 필터 초기화
+  };
+
+  // 전체 draft 적용
+  const applyAll = () => {
+    const next = { ...draft, region: tempRegion };
+    setDraft(next);
+    providerApply(next);
+  };
 
   return (
-    <Modal>
-      {/* Trigger */}
+    <Modal
+      onOpenChange={(open) => {
+        if (open) {
+          setTempRegion(draft.region || {}); // 모달 열 때마다 tempRegion 초기화
+        }
+      }}
+    >
       <Modal.Trigger asChild>{children}</Modal.Trigger>
-      {/* Content */}
+
       <Modal.Content className="max-h-[546px] min-h-[356px] w-[540px] p-7">
-        {/* Header & Title */}
         <Modal.Header className="w-full">
           <Modal.Title>필터</Modal.Title>
         </Modal.Header>
-        {/* Description & Body */}
-        <Modal.Description className="min-h-[120px] w-full">
-          <Tabs defaultValue="region" className="w-full">
-            <Tabs.List className="mb-3">
-              {FILTER_TABS.map((tab) => (
-                <Tabs.Trigger key={tab.key} value={tab.key} size="sm">
-                  {tab.label}
-                </Tabs.Trigger>
-              ))}
-            </Tabs.List>
-            <div className="flex min-h-[120px] w-full flex-col items-center">
-              <Tabs.Content value="region">
-                {/* <RegionFilter value={filters.region} onChange={changeRegion} /> */}
-              </Tabs.Content>
-              <Tabs.Content value="date">
-                <Calendar.Range
-                  className="w-[315px]"
-                  selected={draft.date}
-                  onSelect={(date) => setDraft({ ...draft, date })}
-                />
-              </Tabs.Content>
-              <Tabs.Content value="time" className="w-full px-[78px]">
-                <TimeSlider
-                  value={[draft.time?.[0] || 0, draft.time?.[1] || 720]}
-                  onValueChange={(time) => setDraft({ ...draft, time })}
-                />
-              </Tabs.Content>
-              <Tabs.Content value="level" className="flex w-full gap-2">
-                {LEVEL_OPTIONS.map(({ label, value }) => (
-                  <Chip
-                    key={value ?? 'all'}
-                    tone="secondary"
-                    state={draft.level === value ? 'active' : 'default'}
-                    onClick={() => setDraft({ ...draft, level: value })}
-                  >
-                    {label}
-                  </Chip>
+
+        <Modal.Description className="min-h-[120px] w-full" asChild>
+          <div className="min-h-[120px] w-full">
+            <Tabs defaultValue="region" className="w-full">
+              <Tabs.List className="mb-3">
+                {FILTER_TABS.map((tab) => (
+                  <Tabs.Trigger key={tab.key} value={tab.key} size="sm">
+                    {tab.label}
+                  </Tabs.Trigger>
                 ))}
-              </Tabs.Content>
-            </div>
-          </Tabs>
+              </Tabs.List>
+
+              <div className="flex min-h-[120px] w-full flex-col items-center">
+                {/* 지역 필터 */}
+                <Tabs.Content value="region" className="w-full">
+                  <div className="grid h-[310px] w-full grid-cols-[160px_1fr]">
+                    {/* 시/도 리스트 */}
+                    <ul className="w-40 overflow-y-auto rounded-lg bg-gray-600 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:bg-transparent">
+                      {SIDO_LIST.map((sido) => (
+                        <li key={sido}>
+                          <button
+                            onClick={() => setActiveSido(sido)}
+                            className="text-body3-regular w-full px-4 py-3 text-left text-gray-100 hover:bg-gray-800"
+                          >
+                            {sido}
+                            {tempRegion[sido]?.length > 0 && (
+                              <span className="bg-brand-400 ml-2 inline-block size-1.5 rounded-full" />
+                            )}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* 시/군/구 리스트 */}
+                    <div className="scrollbar-hide overflow-y-auto bg-gray-700 px-3 py-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:bg-transparent">
+                      <div className="grid grid-cols-2">
+                        {SIGUNGU_MAP[activeSido]?.map((sigungu) => {
+                          const checked =
+                            tempRegion[activeSido]?.includes(sigungu) ?? false;
+
+                          return (
+                            <label
+                              key={sigungu}
+                              className="flex cursor-pointer items-center gap-2 px-3 py-2 hover:opacity-80"
+                            >
+                              <Checkbox
+                                checked={checked}
+                                onCheckedChange={(v) =>
+                                  handleToggle(activeSido, sigungu, v === true)
+                                }
+                              />
+                              <span className="text-body3-regular text-gray-50 select-none">
+                                {sigungu}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </Tabs.Content>
+
+                {/* 날짜 필터 */}
+                <Tabs.Content value="date">
+                  <Calendar.Range
+                    className="w-[315px]"
+                    selected={draft.date}
+                    onSelect={(date) => setDraft({ ...draft, date })}
+                  />
+                </Tabs.Content>
+
+                {/* 시간 필터 */}
+                <Tabs.Content value="time" className="w-full px-[78px]">
+                  <TimeSlider
+                    value={[draft.time?.[0] ?? 0, draft.time?.[1] ?? 720]}
+                    onValueChange={(time) => setDraft({ ...draft, time })}
+                  />
+                </Tabs.Content>
+
+                {/* 난이도 필터 */}
+                <Tabs.Content value="level" className="flex w-full gap-2">
+                  {LEVEL_OPTIONS.map(({ label, value }) => (
+                    <Chip
+                      key={value ?? 'all'}
+                      tone="secondary"
+                      state={draft.level === value ? 'active' : 'default'}
+                      onClick={() => setDraft({ ...draft, level: value })}
+                    >
+                      {label}
+                    </Chip>
+                  ))}
+                </Tabs.Content>
+              </div>
+            </Tabs>
+          </div>
         </Modal.Description>
-        {/* Footer */}
+
+        {/* FOOTER */}
         <Modal.Footer className="flex w-full justify-between">
           <Modal.Close asChild>
-            <button className="px-6 py-2" onClick={reset}>
+            <button className="px-6 py-2" onClick={resetAll}>
               초기화
             </button>
           </Modal.Close>
+
           <Modal.Close asChild>
-            <Button className="flex-1" onClick={apply}>
+            <Button className="flex-1" onClick={applyAll}>
               결과 보기
             </Button>
           </Modal.Close>
         </Modal.Footer>
+
         <Modal.CloseButton />
       </Modal.Content>
     </Modal>

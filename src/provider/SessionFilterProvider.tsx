@@ -10,7 +10,7 @@ type Ctx = {
   draft: SessionFilterState;
   setDraft: React.Dispatch<React.SetStateAction<SessionFilterState>>;
   reset: () => void;
-  apply: () => void;
+  apply: (next: SessionFilterState) => void;
 };
 
 const SessionFilterContext = createContext<Ctx | null>(null);
@@ -51,8 +51,8 @@ export function SessionFilterProvider({
   };
 
   // 적용 = draft를 화면/URL에 반영
-  const apply = () => {
-    applyFilters(draft);
+  const apply = (next?: SessionFilterState) => {
+    applyFilters(next ?? draft);
   };
 
   return (
