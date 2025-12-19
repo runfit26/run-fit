@@ -6,6 +6,9 @@ type SafeImageProps = Omit<ImageProps, 'src'> & {
   fallbackSrc: string;
 };
 
+/**
+ * 이미지 URL이 잘못되었거나, 로드를 실패한 경우 대체 이미지를 보여주는 컴포넌트
+ */
 export default function SafeImage({
   src,
   fallbackSrc,
