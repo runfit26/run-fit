@@ -20,7 +20,7 @@ export const chipVariants = cva(
       {
         tone: 'primary',
         state: 'default',
-        className: 'border-1 border-gray-700 bg-gray-800',
+        className: 'border border-gray-700 bg-gray-800',
       },
       {
         tone: 'primary',
@@ -30,7 +30,7 @@ export const chipVariants = cva(
       {
         tone: 'primary',
         state: 'active',
-        className: 'border-1 border-brand-500 bg-brand-950 text-brand-300',
+        className: 'border border-brand-500 bg-brand-950 text-brand-300',
       },
 
       // secondary
@@ -47,7 +47,7 @@ export const chipVariants = cva(
       {
         tone: 'secondary',
         state: 'active',
-        className: 'text-brand-300 border-1 border-brand-500 bg-brand-900',
+        className: 'text-brand-300 border border-brand-500 bg-brand-900',
       },
     ],
     defaultVariants: {
