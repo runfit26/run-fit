@@ -9,6 +9,7 @@ import LogoDefault from '@/assets/icons/logo-default.svg?react';
 import LogoLarge from '@/assets/icons/logo-large.svg?react';
 import Dropdown from '@/components/ui/Dropdown';
 import UserAvatar from '@/components/ui/UserAvatar';
+import { cn } from '@/lib/utils';
 import { type Profile } from '@/types';
 
 export default function Header() {
@@ -24,14 +25,32 @@ export default function Header() {
           <LogoLarge className="tablet:block hidden" />
         </Link>
         <nav className="text-body3-semibold tablet:text-body2-semibold tablet:gap-6 flex h-full flex-1 items-stretch gap-3">
-          <Link href="/sessions" className="flex items-center">
+          <Link
+            href="/sessions"
+            className={cn(
+              'flex items-center text-gray-300 hover:text-white',
+              isSessionsButNotLikes(pathname) && 'text-white'
+            )}
+          >
             세션 목록
           </Link>
-          <Link href="/crews" className="flex items-center">
+          <Link
+            href="/crews"
+            className={cn(
+              'flex items-center text-gray-300 hover:text-white',
+              isCrews(pathname) && 'text-white'
+            )}
+          >
             크루 찾기
           </Link>
           {isLoggedIn && (
-            <Link href="/sessions/likes" className="flex items-center">
+            <Link
+              href="/sessions/likes"
+              className={cn(
+                'flex items-center text-gray-300 hover:text-white',
+                isSessionsLikes(pathname) && 'text-white'
+              )}
+            >
               찜한 세션
             </Link>
           )}
@@ -74,5 +93,25 @@ function GuestMenu() {
     >
       로그인
     </Link>
+  );
+}
+
+function isSessionsButNotLikes(pathname: string) {
+  const isSessions =
+    pathname === '/sessions' || pathname.startsWith('/sessions/');
+
+  const isLikes =
+    pathname === '/sessions/likes' || pathname.startsWith('/sessions/likes/');
+
+  return isSessions && !isLikes;
+}
+
+function isCrews(pathname: string) {
+  return pathname === '/crews' || pathname.startsWith('/crews/');
+}
+
+function isSessionsLikes(pathname: string) {
+  return (
+    pathname === '/sessions/likes' || pathname.startsWith('/sessions/likes/')
   );
 }
