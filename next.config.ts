@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [
+      // mock 이미지 도메인
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
@@ -31,6 +32,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'cdn.jsdelivr.net',
+      },
+      // S3 버킷 도메인
+      {
+        protocol: 'https',
+        hostname: 'runfit-bucket.s3.amazonaws.com',
       },
     ],
   },

@@ -34,8 +34,8 @@ export interface Session<City extends Sido = Sido> {
   };
   sessionAt: string;
   registerBy: string;
-  level: LevelValue;
-  status: 'OPEN' | 'CLOSED';
+  level: LevelValue
+  status: SessionStatus;
   pace: number;
   maxParticipantCount: number;
   currentParticipantCount: number;
@@ -55,3 +55,6 @@ export type SessionListFilters = PaginationQueryParams & {
   timeTo?: string;
   sort: SortValue;
 };
+
+export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+export type SessionStatus = 'OPEN' | 'CLOSED';

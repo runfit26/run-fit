@@ -19,7 +19,7 @@ export default function SessionPage() {
   );
 
   return (
-    <main className="h-main mx-auto flex max-w-[1198px] flex-col items-center justify-start">
+    <main className="h-main mx-auto flex max-w-[1120px] flex-col items-center justify-start">
       <div className="flex w-full items-center justify-between">
         {/** 배너 */}
         <div>
@@ -28,7 +28,7 @@ export default function SessionPage() {
             <br />
             러닝 메이트를 찾다
           </h2>
-          <span className="text-body3-regular">
+          <span className="text-body3-regular text-gray-200">
             러닝 페이스와 선호하는 스타일에 딱 맞는 세션을 찾아보세요!
           </span>
         </div>
