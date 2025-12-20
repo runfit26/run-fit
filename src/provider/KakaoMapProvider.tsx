@@ -36,7 +36,6 @@ type ConvertAddressToCoordsFn = (
 ) => void;
 
 interface KakaoMapContextValue {
-  loaded: boolean;
   createMap: CreateMapFn;
   createMarker: CreateMarkerFn;
   convertAddressToCoords: ConvertAddressToCoordsFn;
@@ -149,7 +148,7 @@ export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
         />
       )}
       <KakaoMapContext.Provider
-        value={{ loaded, createMap, createMarker, convertAddressToCoords }}
+        value={{ createMap, createMarker, convertAddressToCoords }}
       >
         {children}
       </KakaoMapContext.Provider>
