@@ -29,12 +29,7 @@ export default function KakaoMap({
       center: coords,
     });
 
-    if (!map) {
-      console.log(
-        '--------------------Kakao Map loaded or container ready failed.'
-      );
-      return;
-    }
+    if (!map) return;
     mapRef.current = map;
 
     const marker = createMarker(map, coords);

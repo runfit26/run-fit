@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Coords } from '@/types/kakaoMap';
+import { Coords, Document } from '@/types/kakaoMap';
 
 const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 const KAKAO_MAP_URL = process.env.NEXT_PUBLIC_KAKAO_MAP_URL;
@@ -17,12 +17,6 @@ const KAKAO_MAP_SCRIPT_SRC =
   KAKAO_JS_KEY && KAKAO_MAP_URL
     ? `${KAKAO_MAP_URL}?appkey=${KAKAO_JS_KEY}&autoload=false`
     : null;
-
-// https://developers.kakao.com/docs/latest/ko/local/dev-guide#address-coord-response-body-document
-type Document = {
-  x: string; // 경도, longitude
-  y: string; // 위도, latitude
-};
 
 type CreateMapFn = (
   container: HTMLElement,
@@ -131,6 +125,12 @@ export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
   const handleError = () => {
     setError(new Error('Failed to load Kakao Map script'));
   };
+
+  useEffect(() => {
+    if (window.kakao?.maps && !loaded) {
+      window.kakao.maps.load(() => setLoaded(true));
+    }
+  }, [loaded]);
 
   useEffect(() => {
     if (error) {
