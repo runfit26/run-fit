@@ -23,8 +23,8 @@ import ProgressBar from '@/components/ui/ProgressBar';
 import Rating from '@/components/ui/Rating';
 import SafeImage from '@/components/ui/SafeImage';
 import UserAvatar from '@/components/ui/UserAvatar';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { formatDDay, formatKoYMD, formatKoYYMDMeridiemTime } from '@/lib/time';
+import { cn } from '@/lib/utils';
 import { Crew } from '@/types';
 import { Session } from '@/types/session';
 
@@ -38,7 +38,7 @@ export default function Page() {
     enabled: !!crewId,
   });
 
-  const { ref, height } = useFixedBottomBar();
+  const { ref } = useFixedBottomBar();
 
   if (sessionQuery.isLoading) return null;
   if (sessionQuery.isError) return null;
@@ -49,11 +49,13 @@ export default function Page() {
   if (!crewQuery.data) return null;
 
   return (
-    <main
-      className="h-main laptop:bg-gray-900 relative bg-gray-800"
-      style={{ paddingBottom: `${height}px` }}
-    >
-      <SessionDetailView session={session} crew={crewQuery.data} />
+    <>
+      <main
+        className="h-main laptop:bg-gray-900 bg-gray-800"
+        style={{ paddingBottom: 96 }}
+      >
+        <SessionDetailView session={session} crew={crewQuery.data} />
+      </main>
       <FixedBottomBar ref={ref}>
         <div className="flex items-center gap-7">
           <div className="flex items-center gap-4">
@@ -65,7 +67,7 @@ export default function Page() {
           </Button>
         </div>
       </FixedBottomBar>
-    </main>
+    </>
   );
 }
 
@@ -76,11 +78,21 @@ function SessionDetailView({
   session: Session;
   crew: Crew;
 }) {
-  const isLaptopUp = useMediaQuery({ min: 'laptop' });
+  return (
+    <>
+      <div className={cn('laptop:hidden flex', 'flex-col bg-gray-800 py-10')}>
+        <SessionImage image={session.image} name={session.name} />
+        <SessionShortInfo session={session} crewId={crew.id} />
+        <SessionDetailInfo session={session} />
+        <CrewShortInfo crew={crew} />
+      </div>
 
-  if (isLaptopUp) {
-    return (
-      <div className="mx-auto flex max-w-[1120px] gap-10 bg-gray-900 py-10">
+      <div
+        className={cn(
+          'laptop:flex hidden',
+          'mx-auto max-w-[1120px] gap-10 bg-gray-900 py-10'
+        )}
+      >
         <div className="flex flex-1 flex-col gap-10 px-5">
           <SessionImage image={session.image} name={session.name} />
           <SessionDetailInfo session={session} />
@@ -90,16 +102,7 @@ function SessionDetailView({
           <CrewShortInfo crew={crew} />
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div className="bg-gray-800 py-10">
-      <SessionImage image={session.image} name={session.name} />
-      <SessionShortInfo session={session} crewId={crew.id} />
-      <SessionDetailInfo session={session} />
-      <CrewShortInfo crew={crew} />
-    </div>
+    </>
   );
 }
 
