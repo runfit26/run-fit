@@ -52,17 +52,17 @@ export default function PaceSlider({
           max={max}
           onValueChange={handleRadixValueChange}
           className={cn(
-            'relative flex w-full touch-none items-center select-none data-disabled:opacity-50',
-            className
+            'relative flex w-full touch-none items-center select-none data-disabled:opacity-50'
           )}
           step={step}
           {...props}
         >
           <SliderPrimitive.Track
             data-slot="slider-track"
-            className={
-              'relative grow overflow-hidden rounded-full bg-gray-800 data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:w-full'
-            }
+            className={cn(
+              'relative grow overflow-hidden rounded-full bg-gray-800 data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:w-full',
+              className
+            )}
           >
             {Array.from({ length: CIRCLE_COUNT }, (_, index) => {
               return (
