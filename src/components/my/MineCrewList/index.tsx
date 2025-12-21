@@ -47,7 +47,9 @@ export default function MineCrewList() {
               )}
             </div>
           ) : (
-            <p>아직 생성한 크루가 없어요.</p>
+            <p className="text-body3-regular mt-4.5 text-center text-gray-300">
+              아직 내가 만든 크루가 없어요
+            </p>
           )}
         </div>
       </div>
