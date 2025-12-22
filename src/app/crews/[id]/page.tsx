@@ -37,11 +37,13 @@ export default function Page() {
   const crewId = Number(params.id);
 
   const searchParams = useSearchParams();
-  const pageFilter = searchParams.get('page');
+  const pageFilter = Number(searchParams.get('page'))
+    ? Number(searchParams.get('page')) - 1
+    : 0;
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const [currentPage, setCurrentPage] = useState(Number(pageFilter) ?? 0);
+  const [currentPage, setCurrentPage] = useState(pageFilter);
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -68,7 +70,7 @@ export default function Page() {
     queryKey: [...crewQueries.reviews(crewId).all(), 'infinite-list'],
     queryFn: ({ pageParam }) =>
       getCrewReviews(crewId, { page: pageParam, size: 4 }),
-    initialPageParam: 0,
+    initialPageParam: pageFilter,
     getNextPageParam: (lastPage) => {
       return lastPage?.hasNext ? lastPage.page + 1 : undefined;
     },
@@ -161,6 +163,7 @@ export default function Page() {
     }
 
     setCurrentPage(targetPageIndex);
+    router.push(`/crews/${crewId}?page=${targetPageIndex + 1}`);
   };
 
   const { ref, height } = useFixedBottomBar();
