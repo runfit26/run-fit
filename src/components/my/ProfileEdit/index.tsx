@@ -136,6 +136,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                 {SIDO_LIST.map((sido) => (
                   <button
                     key={sido}
+                    aria-label={`${sido} ${city === sido ? '선택됨' : '선택'}`}
                     onClick={() =>
                       setCity((prev) => (prev === sido ? null : sido))
                     }
@@ -186,7 +187,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                 }
 
                 await updateProfile({
-                  name,
+                  name: name.trim(),
                   introduction,
                   pace,
                   city,
@@ -194,6 +195,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                   image: imageUrl,
                 });
 
+                toast.success('프로필 업데이트 완료!');
                 setOpen(false);
               } catch {
                 toast.error('프로필 업데이트 실패!');
