@@ -101,7 +101,7 @@ export default function MineCrewList() {
                       className="object-cover"
                     />
                   </div>
-                  <div className="tablet:w-[231px] flex w-[75vw] min-w-0 flex-col gap-0.5">
+                  <div className="tablet:w-[231px] flex w-[60vw] min-w-0 flex-col gap-0.5">
                     <p className="text-body2-semibold truncate text-gray-50">
                       {crew.name}
                     </p>
