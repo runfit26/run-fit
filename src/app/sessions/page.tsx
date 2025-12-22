@@ -21,7 +21,11 @@ export default function SessionPage() {
   const { filters, queryFilters, applyFilters, activeFilterCount } =
     useSessionFilters();
 
-  const { data: sessions } = useQuery(
+  const {
+    data: sessions,
+    isLoading,
+    isError,
+  } = useQuery(
     sessionQueries.list({
       size: 10,
       ...queryFilters,
@@ -31,6 +35,22 @@ export default function SessionPage() {
   const isDesktop = useMediaQuery({ min: 'laptop' });
   const isTablet = useMediaQuery({ min: 'tablet', max: 'laptop' });
   const isMobile = useMediaQuery({ max: 'tablet' });
+
+  if (isLoading) {
+    return (
+      <div className="h-main flex items-center justify-center text-gray-300">
+        로딩 중...
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="h-main text-error-100 flex items-center justify-center">
+        세션 목록을 불러오는데 실패했습니다.
+      </div>
+    );
+  }
 
   return (
     <SessionFilterProvider initialFilters={filters} applyFilters={applyFilters}>
@@ -79,15 +99,27 @@ export default function SessionPage() {
           activeFilterCount={activeFilterCount}
         />
 
-        <div
-          className={cn(
-            'grid w-full grid-cols-2 gap-6',
-            isDesktop && 'grid-cols-3'
+        <div className="mt-6 flex w-full flex-1 items-center justify-center py-20">
+          {sessions?.content?.length ? (
+            <div className="desktop:grid-cols-3 grid w-full grid-cols-2 gap-6">
+              {sessions.content.map((session) => (
+                <SessionCard key={session.id} session={session} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-10">
+              <Image
+                src="/assets/empty-session.png"
+                alt="No Sessions"
+                width={300}
+                height={150}
+              />
+              <span className="text-body2-medium text-center text-gray-300">
+                아직 생성된 세션이 없어요 <br /> 세션은 크루를 개설하거나 <br />
+                운영진으로 활동할 때 만들 수 있어요!
+              </span>
+            </div>
           )}
-        >
-          {sessions?.content?.map((session) => (
-            <SessionCard key={session.id} session={session} />
-          ))}
         </div>
       </main>
     </SessionFilterProvider>
