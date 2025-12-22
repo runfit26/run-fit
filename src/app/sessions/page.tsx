@@ -99,7 +99,7 @@ export default function SessionPage() {
           activeFilterCount={activeFilterCount}
         />
 
-        <div className="mt-6 flex w-full flex-1 items-center justify-center py-20">
+        <div className="mt-6 flex w-full flex-1 items-center justify-center">
           {sessions?.content?.length ? (
             <div className="desktop:grid-cols-3 grid w-full grid-cols-2 gap-6">
               {sessions.content.map((session) => (
