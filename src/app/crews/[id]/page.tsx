@@ -342,17 +342,18 @@ export default function Page() {
             </div>
             {/* Crew Title */}
             <div className="laptop:bg-gray-750 laptop:w-[360px] laptop:shrink-0 w-full flex-col self-start rounded-[20px] px-6 py-7 shadow-[0px_10px_30px_-5px_rgba(0,0,0,0.20)]">
-              <CrewMemberList members={members}>
-                <div className="flex flex-col">
-                  <span className="text-title3-semibold line-clamp-1 text-gray-50">
-                    {crew?.name}
-                  </span>
-                  <span className="text-body3-regular text-gray-200">
-                    {crew?.city} • 멤버 {crewMembers?.members.length}명
-                  </span>
-                </div>
+              <CrewMemberList
+                members={members}
+                crewInfo={
+                  <CrewInfo
+                    crewName={crew?.name as string}
+                    crewCity={crew?.city as string}
+                    crewMemberCount={crewMembers?.members.length as number}
+                  />
+                }
+              >
                 <div className="laptop:flex hidden flex-col">
-                  <PageAction className={'my-8'} myRole={myRole?.role} />
+                  <PageAction className="my-8" myRole={myRole?.role} />
                   <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-zinc-700" />
                   <div className="flex items-center gap-1">
                     <span className="text-body2-semibold my-4 text-gray-50">
@@ -372,6 +373,27 @@ export default function Page() {
         <PageAction myRole={myRole?.role} />
       </FixedBottomBar>
     </>
+  );
+}
+
+function CrewInfo({
+  crewName,
+  crewCity,
+  crewMemberCount,
+}: {
+  crewName: string;
+  crewCity: string;
+  crewMemberCount: number;
+}) {
+  return (
+    <div className="flex flex-col">
+      <span className="text-title3-semibold line-clamp-1 text-gray-50">
+        {crewName}
+      </span>
+      <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
+        {crewCity} • 멤버 {crewMemberCount}명
+      </span>
+    </div>
   );
 }
 
@@ -401,7 +423,7 @@ function PageAction({
   const handleJoinCrew = () => {};
 
   return (
-    <div className={cn('flex gap-7', className)}>
+    <div className={cn('flex items-center gap-7', className)}>
       <Modal>
         <Modal.Trigger
           aria-label="크루 링크 공유하기"
