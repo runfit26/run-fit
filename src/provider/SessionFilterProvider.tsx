@@ -51,8 +51,9 @@ export function SessionFilterProvider({
   };
 
   // 적용 = draft를 화면/URL에 반영
-  const apply = (next?: SessionFilterState) => {
-    applyFilters(next ?? draft);
+  const apply = (next: SessionFilterState) => {
+    setDraft(next);
+    applyFilters(next);
   };
 
   return (

@@ -8,7 +8,11 @@ import Chip from '@/components/ui/Chip';
 import Modal from '@/components/ui/Modal';
 import Tabs from '@/components/ui/Tabs';
 import TimeSlider from '@/components/ui/TimeSlider';
-import { FILTER_TABS, LEVEL_OPTIONS } from '@/constants/session-filter';
+import {
+  FILTER_TABS,
+  LEVEL_OPTIONS,
+  SessionFilterState,
+} from '@/constants/session-filter';
 import { useSessionFilterContext } from '@/provider/SessionFilterProvider';
 import { Sido, SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
 
@@ -17,23 +21,28 @@ export default function FilterModal({
 }: {
   children: React.ReactNode;
 }) {
-  const {
-    draft,
-    setDraft,
-    reset: providerReset,
-    apply: providerApply,
-  } = useSessionFilterContext();
+  const { draft, reset, apply } = useSessionFilterContext();
 
-  // 지역은 모달 내부 임시 상태로 관리
-  const [activeSido, setActiveSido] = useState<Sido>('서울');
-  const [tempRegion, setTempRegion] = useState<Record<string, string[]>>(
-    draft.region || {}
+  // 모든 필터를 내부 임시 상태로 관리
+  const [tempRegion, setTempRegion] = useState<SessionFilterState['region']>(
+    draft.region
   );
+  const [tempDate, setTempDate] = useState<SessionFilterState['date']>(
+    draft.date
+  );
+  const [tempTime, setTempTime] = useState<SessionFilterState['time']>(
+    draft.time
+  );
+  const [tempLevel, setTempLevel] = useState<SessionFilterState['level']>(
+    draft.level
+  );
+
+  const [activeSido, setActiveSido] = useState<Sido>('서울');
 
   // 체크박스 토글 함수
   const handleToggle = (sido: string, sigungu: string, checked: boolean) => {
     setTempRegion((prev) => {
-      const currentList = prev[sido] || [];
+      const currentList = prev?.[sido] || [];
       const newList = checked
         ? [...currentList, sigungu]
         : currentList.filter((i) => i !== sigungu);
@@ -48,24 +57,38 @@ export default function FilterModal({
     });
   };
 
-  const resetAll = () => {
-    setTempRegion({});
-    providerReset(); // Provider에 정의된 reset -> 전체 필터 초기화
+  // 모달 닫을 때 temp를 draft 값으로 복원
+  const initTempFromDraft = () => {
+    setTempRegion(draft.region);
+    setTempDate(draft.date);
+    setTempTime(draft.time);
+    setTempLevel(draft.level);
+
+    // 현재 active sido도 초기화
+    const initialSido = Object.keys(draft.region ?? {})[0] || '서울';
+    setActiveSido(initialSido as Sido);
   };
 
   // 전체 draft 적용
   const applyAll = () => {
-    const next = { ...draft, region: tempRegion };
-    setDraft(next);
-    providerApply(next);
+    apply({
+      ...draft,
+      region: tempRegion,
+      date: tempDate,
+      time: tempTime,
+      level: tempLevel,
+    });
+  };
+
+  const resetAll = () => {
+    reset();
+    initTempFromDraft();
   };
 
   return (
     <Modal
       onOpenChange={(open) => {
-        if (open) {
-          setTempRegion(draft.region || {}); // 모달 열 때마다 tempRegion 초기화
-        }
+        if (open) initTempFromDraft();
       }}
     >
       <Modal.Trigger asChild>{children}</Modal.Trigger>
@@ -99,7 +122,7 @@ export default function FilterModal({
                             className="text-body3-regular w-full px-4 py-3 text-left text-gray-100 hover:bg-gray-800"
                           >
                             {sido}
-                            {tempRegion[sido]?.length > 0 && (
+                            {tempRegion && tempRegion[sido]?.length > 0 && (
                               <span className="bg-brand-400 ml-2 inline-block size-1.5 rounded-full" />
                             )}
                           </button>
@@ -112,7 +135,8 @@ export default function FilterModal({
                       <div className="grid grid-cols-2">
                         {SIGUNGU_MAP[activeSido]?.map((sigungu) => {
                           const checked =
-                            tempRegion[activeSido]?.includes(sigungu) ?? false;
+                            tempRegion?.[activeSido]?.includes(sigungu) ??
+                            false;
 
                           return (
                             <label
@@ -140,16 +164,16 @@ export default function FilterModal({
                 <Tabs.Content value="date">
                   <Calendar.Range
                     className="w-[315px]"
-                    selected={draft.date}
-                    onSelect={(date) => setDraft({ ...draft, date })}
+                    selected={tempDate}
+                    onSelect={setTempDate}
                   />
                 </Tabs.Content>
 
                 {/* 시간 필터 */}
                 <Tabs.Content value="time" className="w-full px-[78px]">
                   <TimeSlider
-                    value={[draft.time?.[0] ?? 0, draft.time?.[1] ?? 720]}
-                    onValueChange={(time) => setDraft({ ...draft, time })}
+                    value={tempTime || [0, 720]}
+                    onValueChange={setTempTime}
                   />
                 </Tabs.Content>
 
@@ -159,8 +183,8 @@ export default function FilterModal({
                     <Chip
                       key={value ?? 'all'}
                       tone="secondary"
-                      state={draft.level === value ? 'active' : 'default'}
-                      onClick={() => setDraft({ ...draft, level: value })}
+                      state={tempLevel === value ? 'active' : 'default'}
+                      onClick={() => setTempLevel(value)}
                     >
                       {label}
                     </Chip>
