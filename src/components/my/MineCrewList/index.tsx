@@ -85,14 +85,16 @@ export default function MineCrewList() {
             className="tablet:block top-[26px] right-6 hidden"
           />
           <hr className="tablet:block hidden w-full border-gray-700" />
-          {!isLoading ? (
+          {isLoading && (
             <div className="flex h-full w-full items-center justify-center">
               <Spinner className="text-brand-500 size-10" />
             </div>
-          ) : (
+          )}
+
+          {!isLoading && allCrews && allCrews.content.length > 0 && (
             <div className="overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-track]:bg-transparent">
               <div className="flex flex-col justify-center gap-5">
-                {allCrews?.content.map((crew) => (
+                {allCrews.content.map((crew) => (
                   <Link
                     key={crew.id}
                     href={`/crews/${crew.id}`}
