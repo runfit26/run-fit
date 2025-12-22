@@ -70,7 +70,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
 
   return (
     <Modal open={open} onOpenChange={setOpen}>
-      <Modal.Content className="scrollbar-hidden laptop:max-w-[480px] laptop:rounded-xl laptop:bg-gray-800 laptop:h-auto laptop:max-h-[85dvh] h-dvh w-full overflow-y-auto bg-gray-900">
+      <Modal.Content className="scrollbar-hidden laptop:max-w-[480px] laptop:rounded-xl laptop:bg-gray-800 laptop:h-auto laptop:max-h-[85dvh] h-dvh w-full bg-gray-900">
         <Modal.Header className="relative flex items-center justify-center">
           <button
             className="laptop:hidden absolute left-0"
@@ -82,7 +82,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
         </Modal.Header>
         <Modal.CloseButton
           onClick={() => setOpen(false)}
-          className="laptop:block top-6.5 right-6 hidden"
+          className="laptop:block top-[26px] right-6 hidden"
         />
         <div className="overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-track]:bg-transparent">
           <div className="tablet:gap-5 laptop:gap-3 flex flex-col gap-3">
