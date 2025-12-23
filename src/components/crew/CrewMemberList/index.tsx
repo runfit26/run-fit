@@ -1,6 +1,10 @@
 import { useContext, useState } from 'react';
 import {
+  useDelegateCrewLeader,
+  useDeleteCrew,
   useExpelMember,
+  useLeaveCrew,
+  useUpdateCrewDetail,
   useUpdateMemberRole,
 } from '@/api/mutations/crewMutations';
 import Settings from '@/assets/icons/settings.svg?react';
@@ -32,7 +36,7 @@ export default function CrewMemberList({
           <span className="text-title3-semibold line-clamp-1 text-gray-50">
             {crew.name}
           </span>
-          <CrewMenuActions />
+          {myRole && <CrewMenuActions />}
         </div>
         <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
           {crew.city} • 멤버 {members.length}명
@@ -103,9 +107,12 @@ export default function CrewMemberList({
 }
 
 function CrewMenuActions() {
-  const { myRole } = useContext(CrewDetailContext);
+  const { crewId, myRole } = useContext(CrewDetailContext);
 
-  if (!myRole) return null;
+  const leaveCrew = useLeaveCrew(crewId ?? 0);
+  const updateCrewDetail = useUpdateCrewDetail(crewId ?? 0);
+  const delegateCrewLeader = useDelegateCrewLeader(crewId ?? 0);
+  const deleteCrew = useDeleteCrew(crewId ?? 0);
 
   return (
     <Dropdown size="lg">
@@ -113,11 +120,26 @@ function CrewMenuActions() {
         <VerticalEllipsis className="size-6" />
       </Dropdown.TriggerNoArrow>
       <Dropdown.Content className="z-60 *:w-[120px]">
-        {myRole !== 'LEADER' && <Dropdown.Item>크루 나가기</Dropdown.Item>}
+        {myRole !== 'LEADER' && (
+          <Modal>
+            <Dropdown.Item onClick={() => leaveCrew.mutate()}>
+              크루 나가기
+            </Dropdown.Item>
+          </Modal>
+        )}
         {myRole === 'LEADER' && (
           <>
+            {/* TODO: 수정 및 변경은 Modal이 떠야함 */}
             <Dropdown.Item>수정하기</Dropdown.Item>
-            <Dropdown.Item className="text-error-100">삭제하기</Dropdown.Item>
+            <Dropdown.Item className="text-error-100">
+              크루장 변경
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => deleteCrew.mutate()}
+              className="text-error-100"
+            >
+              삭제하기
+            </Dropdown.Item>
           </>
         )}
       </Dropdown.Content>
@@ -153,12 +175,13 @@ function CrewMemberListItem({
   editMode: 'view' | 'edit';
 }) {
   const { crewId } = useContext(CrewDetailContext);
+
   const expelMember = useExpelMember(member.userId);
-  const updateMemberRole = useUpdateMemberRole(crewId ?? 0, member.userId);
+  const updateMemberRole = useUpdateMemberRole(crewId ?? 0);
   const handleSelect = (roleTo: 'STAFF' | 'MEMBER') => {
     if (roleTo === member.role) return;
 
-    updateMemberRole.mutate({ role: roleTo });
+    updateMemberRole.mutate({ userId: member.userId, body: { role: roleTo } });
   };
 
   const roleText = (role = member.role) => {
@@ -207,7 +230,7 @@ function CrewMemberListItem({
             )}
           </div>
           <Modal>
-            <Modal.Trigger aria-label="크루 링크 공유하기" asChild>
+            <Modal.Trigger aria-label="멤버 추방" asChild>
               <span className="text-body3-medium text-error-100 shrink-0 px-3 py-2">
                 삭제하기
               </span>

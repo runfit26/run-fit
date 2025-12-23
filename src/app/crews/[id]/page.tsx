@@ -416,7 +416,6 @@ function PageAction({ className }: { className?: string }) {
     setActionModalData({
       description: '정말 탈퇴하시겠어요?',
     });
-    leaveCrew.mutate();
   };
 
   return (
@@ -465,6 +464,7 @@ function PageAction({ className }: { className?: string }) {
             <Button
               variant="outlined"
               className="text-body2-semibold flex-1 px-6 py-3"
+              onClick={handleLeaveCrew}
             >
               크루 나가기
             </Button>
@@ -480,7 +480,9 @@ function PageAction({ className }: { className?: string }) {
                 {/* 가입하기 */}
                 <Button
                   className="text-body2-semibold flex-1 px-6 py-3"
-                  onClick={handleJoinCrew}
+                  onClick={() => {
+                    router.push(`/signin?redirect=${pathname}`);
+                  }}
                 >
                   로그인 하기
                 </Button>
@@ -488,16 +490,26 @@ function PageAction({ className }: { className?: string }) {
             </Modal.Footer>
           ) : isCrewAdmin ? null : (
             <Modal.Footer className="w-full flex-row">
-              <div className="flex flex-row gap-2">
+              <div className="flex w-full flex-row gap-2">
                 {/* 크루 나가기 */}
                 <Button
-                  className="w-full"
+                  className="w-full shrink"
                   variant="neutral"
-                  onClick={handleLeaveCrew}
+                  onClick={() => {
+                    leaveCrew.mutate();
+                    setIsActionModalOpen(false);
+                  }}
                 >
                   나가기
                 </Button>
-                <Button className="w-full">취소</Button>
+                <Button
+                  className="w-full shrink"
+                  onClick={() => {
+                    setIsActionModalOpen(false);
+                  }}
+                >
+                  취소
+                </Button>
               </div>
             </Modal.Footer>
           )}
