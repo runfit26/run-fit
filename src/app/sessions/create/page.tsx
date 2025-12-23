@@ -1,17 +1,20 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useState } from 'react';
 import ShevronLeft from '@/assets/icons/chevron-left.svg?react';
-import SessionLevelCard from '@/components/session/SessionLevelCard';
 import Button from '@/components/ui/Button';
-import DatePicker from '@/components/ui/DatePicker';
-import { CoverImageUploader } from '@/components/ui/ImageUploader';
-import Input from '@/components/ui/Input';
-import PaceSlider from '@/components/ui/PaceSlider';
-import Textarea from '@/components/ui/Textarea';
-import { cn } from '@/lib/utils';
 import { useDaumPostcode } from '@/provider/DaumPostcodeProvider';
+import DateInputField from './_components/DateInputField';
+import DetailInputField from './_components/DetailInputField';
+import FakeTextInputField from './_components/FakeTextInputField';
+import ImageInputField from './_components/ImageInputField';
+import LevelInputField from './_components/LevelInputField';
+import MaxParticipantsInputField from './_components/MaxParticipantsInputField';
+import NameInputField from './_components/NameInputField';
+import PaceInputField from './_components/PaceInputField';
+import RegisterByInputField from './_components/RegisterByInputField';
+import SearchAddressButton from './_components/SearchAddressButton';
 
 export default function Page() {
   return (
@@ -46,48 +49,23 @@ export function BackButton() {
 
 function SessionCreateForm() {
   const date = new Date();
-  const [location, setLocation] = React.useState('서울특별시 어쩌구');
-  const [city, setCity] = React.useState('');
-  const [district, setDistrict] = React.useState('');
+  const [location, setLocation] = useState('서울특별시 어쩌구');
+  const [city, setCity] = useState('');
+  const [district, setDistrict] = useState('');
   const { openAddressSearch } = useDaumPostcode();
 
   return (
     <form className="laptop:flex-row laptop:gap-20 flex w-full flex-col">
       <div className="w-[380px]">
-        <Input
-          label="세션 이름"
-          id="session-name"
-          placeholder="세션 이름을 입력하세요"
-        />
-        <CoverImageUploader />
+        <NameInputField />
+        <ImageInputField />
         <div className="flex">
-          <DatePicker
-            id="session-date"
-            mode="single"
-            label="모임 날짜"
-            placeholder="모임 날짜를 선택해주세요"
-            value={date}
-            onChange={() => 0}
-          />
+          <DateInputField date={date} />
         </div>
         <div className="flex flex-col gap-3">
-          <div
-            className={cn(
-              location ? 'flex flex-col items-start gap-2' : 'hidden'
-            )}
-          >
-            <label className="text-body3-semibold text-gray-50">장소</label>
-            <input
-              disabled
-              value={location}
-              className="text-body2-medium w-full rounded-xl bg-gray-800 px-4 py-2 text-white"
-            />
-          </div>
-          <Button
-            type="button"
-            variant="outlined"
-            className="w-full"
-            size="sm"
+          <FakeTextInputField location={location} />
+          <SearchAddressButton
+            location={location}
             onClick={() =>
               openAddressSearch((data) => {
                 setLocation(data.address);
@@ -95,69 +73,19 @@ function SessionCreateForm() {
                 setDistrict(data.sigungu);
               })
             }
-          >
-            {location ? '다시 검색하기' : '주소 검색하기'}
-          </Button>
-        </div>
-        <div className="laptop:block hidden">
-          <label htmlFor="">상세 내용</label>
-          <Textarea placeholder="세션에 대한 상세 설명을 작성해주세요" />
-        </div>
-      </div>
-      <div className="laptop:flex-1">
-        <div>
-          <label>
-            <span>{'페이스 (분/km)'}</span>
-            <span>세션에서 함께 달릴 기준 페이스를 선택해주세요!</span>
-          </label>
-          <PaceSlider className="" value={300} onValueChange={() => {}} />
-        </div>
-        <div>
-          <label>
-            <span>난이도</span>
-            <span>페이스와 별개로, 이 세션의 체감 난이도를 선택해주세요</span>
-          </label>
-          <div>
-            <SessionLevelCard
-              label="초급"
-              description="천천히 몸을 풀며 가볍게 달리는 데 집중해요"
-              size="sm"
-              checked={false}
-              onClick={() => {}}
-            />
-            <SessionLevelCard
-              label="초급"
-              description="천천히 몸을 풀며 가볍게 달리는 데 집중해요"
-              size="sm"
-              checked={false}
-              onClick={() => {}}
-            />
-            <SessionLevelCard
-              label="초급"
-              description="천천히 몸을 풀며 가볍게 달리는 데 집중해요"
-              size="sm"
-              checked={false}
-              onClick={() => {}}
-            />
-          </div>
-        </div>
-        <hr className="text-gray-500" />
-        <Input label="모집 정원" placeholder="최소 2인 이상 입력해주세요" />
-        <div className="flex">
-          <DatePicker
-            id="session-date"
-            mode="single"
-            label="마감날짜"
-            placeholder="마감 날짜를 선택해주세요"
-            value={date}
-            onChange={() => 0}
           />
         </div>
-        <div className="laptop:hidden block">
-          <label htmlFor="">상세 내용</label>
-          <Textarea placeholder="세션에 대한 상세 설명을 작성해주세요" />
+        <DetailInputField />
+      </div>
+      <div className="laptop:flex-1">
+        <PaceInputField />
+        <LevelInputField />
+        <hr className="text-gray-500" />
+        <MaxParticipantsInputField />
+        <div className="flex">
+          <RegisterByInputField date={date} />
         </div>
-
+        <DetailInputField />
         <Button type="button" className="w-full" size="sm" disabled>
           생성하기
         </Button>
