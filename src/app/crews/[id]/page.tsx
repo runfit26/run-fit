@@ -168,204 +168,207 @@ export default function Page() {
 
   const { ref, height } = useFixedBottomBar();
 
-  if (!crew) return null;
+  // if (!crew) return null;
 
   return (
     <>
       <CrewDetailContext value={myRoleData?.role}>
-        <div
-          className="h-main flex flex-col items-center"
-          style={{ paddingBottom: height }}
-        >
-          {/* Crew Image */}
+        {crew && (
           <div
-            className={cn(
-              'laptop:mt-10 laptop:mb-[52px] laptop:max-w-[1120px] relative w-full',
-              'laptop:h-[300px] tablet:h-60 h-[174px]'
-            )}
+            className="h-main flex flex-col items-center"
+            style={{ paddingBottom: height }}
           >
-            <Image
-              src={crew?.image || '/assets/crew-default.png'}
-              alt="Crew"
-              fill
-              className="laptop:rounded-[20px] overflow-hidden object-cover"
-            />
-          </div>
-          {/* Crew Page Main */}
-          <div className="laptop:max-w-[1120px] w-full">
-            <div className="laptop:flex-row laptop:gap-10 flex w-full flex-col-reverse">
-              {/* Crew Crew Info */}
-              <div className="laptop:px-3 flex w-full flex-col gap-y-10 px-6">
-                <Tabs defaultValue="1" className="">
-                  <Tabs.List>
-                    <Tabs.Trigger value="1">상세 정보</Tabs.Trigger>
-                    <Tabs.Trigger value="2">모집 중인 세션</Tabs.Trigger>
-                    <Tabs.Trigger value="3">후기</Tabs.Trigger>
-                  </Tabs.List>
-                </Tabs>
-                <div id="detail" className="flex flex-col gap-2">
-                  <span className="text-title3-semibold text-gray-50">
-                    크루 소개
-                  </span>
-                  <div className="text-body2-regular text-gray-100">
-                    {crew?.description}
-                  </div>
-                </div>
-                <div id="sessions" className="flex flex-col gap-4">
-                  <span className="text-title3-semibold text-gray-50">
-                    모집중인 세션
-                  </span>
-                  <div className="grid grid-cols-3 gap-3">
-                    {crewSessions?.content.slice(0, 3).map((session) => (
-                      <SessionCard
-                        key={session.id}
-                        session={session}
-                        displayParticipants={false}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <span className="text-title3-semibold text-gray-50">
-                    마감된 세션
-                  </span>
-                  <div className="flex flex-col divide-y divide-gray-700 *:py-2">
-                    {crewSessions?.content.slice(0, 3).map((session) => (
-                      <CompletedSessionCard
-                        key={session.id}
-                        session={session}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div
-                  id="review"
-                  className="flex flex-col gap-3 border-t border-t-gray-700 py-5"
-                >
-                  <div className="flex gap-2">
+            {/* Crew Image */}
+            <div
+              className={cn(
+                'laptop:mt-10 laptop:mb-[52px] laptop:max-w-[1120px] relative w-full',
+                'laptop:h-[300px] tablet:h-60 h-[174px]'
+              )}
+            >
+              <Image
+                src={crew?.image || '/assets/crew-default.png'}
+                alt="Crew"
+                fill
+                className="laptop:rounded-[20px] overflow-hidden object-cover"
+              />
+            </div>
+            {/* Crew Page Main */}
+            <div className="laptop:max-w-[1120px] w-full">
+              <div className="laptop:flex-row laptop:gap-10 flex w-full flex-col-reverse">
+                {/* Crew Crew Info */}
+                <div className="laptop:px-3 flex w-full flex-col gap-y-10 px-6">
+                  <Tabs defaultValue="1" className="">
+                    <Tabs.List>
+                      <Tabs.Trigger value="1">상세 정보</Tabs.Trigger>
+                      <Tabs.Trigger value="2">모집 중인 세션</Tabs.Trigger>
+                      <Tabs.Trigger value="3">후기</Tabs.Trigger>
+                    </Tabs.List>
+                  </Tabs>
+                  <div id="detail" className="flex flex-col gap-2">
                     <span className="text-title3-semibold text-gray-50">
-                      후기
+                      크루 소개
                     </span>
-                    <span className="text-title3-semibold text-brand-300">
-                      {totalElements}
-                    </span>
-                  </div>
-                  <div className="flex flex-col divide-y divide-dashed divide-gray-500 *:pb-2 not-first:*:pt-2">
-                    {crewReviewsData.map((review) => (
-                      <ReviewCard key={review?.id} data={review} />
-                    ))}
-                  </div>
-                  <div className="tablet:mt-4 mt-3 flex justify-center">
-                    <Pagination>
-                      <Pagination.Content>
-                        {/* Previous */}
-                        <Pagination.Item>
-                          <Pagination.Previous
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (canGoPrevious && !isFetchingNextPage) {
-                                goToPage(currentPage - 1);
-                              }
-                            }}
-                            className={cn(
-                              !canGoPrevious || isFetchingNextPage
-                                ? 'pointer-events-none opacity-50'
-                                : ''
-                            )}
-                            isActive={canGoPrevious}
-                          />
-                        </Pagination.Item>
-                        {/* Page Numbers with Ellipsis */}
-                        {(() => {
-                          const displayedPages = getDisplayedPages(
-                            currentPage,
-                            totalPages
-                          );
-                          const items: React.ReactNode[] = [];
-
-                          displayedPages.forEach((pageNum, index) => {
-                            // Add ellipsis if there's a gap
-                            if (
-                              index > 0 &&
-                              pageNum - displayedPages[index - 1] > 1
-                            ) {
-                              items.push(
-                                <Pagination.Item key={`ellipsis-${pageNum}`}>
-                                  <Pagination.Ellipsis />
-                                </Pagination.Item>
-                              );
-                            }
-
-                            // Add page number
-                            items.push(
-                              <Pagination.Item key={pageNum}>
-                                <Pagination.Link
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    if (!isFetchingNextPage) {
-                                      goToPage(pageNum);
-                                    }
-                                  }}
-                                  isActive={pageNum === currentPage}
-                                  className={cn(
-                                    isFetchingNextPage
-                                      ? 'pointer-events-none opacity-50'
-                                      : ''
-                                  )}
-                                >
-                                  {pageNum + 1}
-                                </Pagination.Link>
-                              </Pagination.Item>
-                            );
-                          });
-
-                          return items;
-                        })()}
-                        {/* Next */}
-                        <Pagination.Item>
-                          <Pagination.Next
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (canGoNext && !isFetchingNextPage) {
-                                goToPage(currentPage + 1);
-                              }
-                            }}
-                            className={cn(
-                              !canGoNext || isFetchingNextPage
-                                ? 'pointer-events-none opacity-50'
-                                : ''
-                            )}
-                            isActive={canGoNext}
-                          />
-                        </Pagination.Item>
-                      </Pagination.Content>
-                    </Pagination>
-                  </div>
-                </div>
-              </div>
-              {/* Crew Title */}
-              <div className="laptop:bg-gray-750 laptop:w-[360px] laptop:shrink-0 w-full flex-col self-start rounded-[20px] px-6 py-7 shadow-[0px_10px_30px_-5px_rgba(0,0,0,0.20)]">
-                <CrewMemberList crew={crew} members={members}>
-                  <div className="laptop:flex hidden flex-col">
-                    <PageAction className="my-8" />
-                    <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-zinc-700" />
-                    <div className="flex items-center gap-1">
-                      <span className="text-body2-semibold my-4 text-gray-50">
-                        멤버
-                      </span>
-                      <span className="text-body1-semibold text-brand-300">
-                        {crewMembers?.members.length}
-                      </span>
+                    <div className="text-body2-regular text-gray-100">
+                      {crew?.description}
                     </div>
                   </div>
-                </CrewMemberList>
+                  <div id="sessions" className="flex flex-col gap-4">
+                    <span className="text-title3-semibold text-gray-50">
+                      모집중인 세션
+                    </span>
+                    <div className="grid grid-cols-3 gap-3">
+                      {crewSessions?.content.slice(0, 3).map((session) => (
+                        <SessionCard
+                          key={session.id}
+                          session={session}
+                          displayParticipants={false}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <span className="text-title3-semibold text-gray-50">
+                      마감된 세션
+                    </span>
+                    <div className="flex flex-col divide-y divide-gray-700 *:py-2">
+                      {crewSessions?.content.slice(0, 3).map((session) => (
+                        <CompletedSessionCard
+                          key={session.id}
+                          session={session}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div
+                    id="review"
+                    className="flex flex-col gap-3 border-t border-t-gray-700 py-5"
+                  >
+                    <div className="flex gap-2">
+                      <span className="text-title3-semibold text-gray-50">
+                        후기
+                      </span>
+                      <span className="text-title3-semibold text-brand-300">
+                        {totalElements}
+                      </span>
+                    </div>
+                    <div className="flex flex-col divide-y divide-dashed divide-gray-500 *:pb-2 not-first:*:pt-2">
+                      {crewReviewsData.map((review) => (
+                        <ReviewCard key={review?.id} data={review} />
+                      ))}
+                    </div>
+                    <div className="tablet:mt-4 mt-3 flex justify-center">
+                      <Pagination>
+                        <Pagination.Content>
+                          {/* Previous */}
+                          <Pagination.Item>
+                            <Pagination.Previous
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (canGoPrevious && !isFetchingNextPage) {
+                                  goToPage(currentPage - 1);
+                                }
+                              }}
+                              className={cn(
+                                !canGoPrevious || isFetchingNextPage
+                                  ? 'pointer-events-none opacity-50'
+                                  : ''
+                              )}
+                              isActive={canGoPrevious}
+                            />
+                          </Pagination.Item>
+                          {/* Page Numbers with Ellipsis */}
+                          {(() => {
+                            const displayedPages = getDisplayedPages(
+                              currentPage,
+                              totalPages
+                            );
+                            const items: React.ReactNode[] = [];
+
+                            displayedPages.forEach((pageNum, index) => {
+                              // Add ellipsis if there's a gap
+                              if (
+                                index > 0 &&
+                                pageNum - displayedPages[index - 1] > 1
+                              ) {
+                                items.push(
+                                  <Pagination.Item key={`ellipsis-${pageNum}`}>
+                                    <Pagination.Ellipsis />
+                                  </Pagination.Item>
+                                );
+                              }
+
+                              // Add page number
+                              items.push(
+                                <Pagination.Item key={pageNum}>
+                                  <Pagination.Link
+                                    href="#"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      if (!isFetchingNextPage) {
+                                        goToPage(pageNum);
+                                      }
+                                    }}
+                                    isActive={pageNum === currentPage}
+                                    className={cn(
+                                      isFetchingNextPage
+                                        ? 'pointer-events-none opacity-50'
+                                        : ''
+                                    )}
+                                  >
+                                    {pageNum + 1}
+                                  </Pagination.Link>
+                                </Pagination.Item>
+                              );
+                            });
+
+                            return items;
+                          })()}
+                          {/* Next */}
+                          <Pagination.Item>
+                            <Pagination.Next
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                if (canGoNext && !isFetchingNextPage) {
+                                  goToPage(currentPage + 1);
+                                }
+                              }}
+                              className={cn(
+                                !canGoNext || isFetchingNextPage
+                                  ? 'pointer-events-none opacity-50'
+                                  : ''
+                              )}
+                              isActive={canGoNext}
+                            />
+                          </Pagination.Item>
+                        </Pagination.Content>
+                      </Pagination>
+                    </div>
+                  </div>
+                </div>
+                {/* Crew Title */}
+                <div className="laptop:bg-gray-750 laptop:w-[360px] laptop:shrink-0 w-full flex-col self-start rounded-[20px] px-6 py-7 shadow-[0px_10px_30px_-5px_rgba(0,0,0,0.20)]">
+                  <CrewMemberList crew={crew} members={members}>
+                    <div className="laptop:flex hidden flex-col">
+                      <PageAction className="my-8" />
+                      <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-zinc-700" />
+                      <div className="flex items-center gap-1">
+                        <span className="text-body2-semibold my-4 text-gray-50">
+                          멤버
+                        </span>
+                        <span className="text-body1-semibold text-brand-300">
+                          {crewMembers?.members.length}
+                        </span>
+                      </div>
+                    </div>
+                  </CrewMemberList>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
+
         <FixedBottomBar ref={ref}>
           <PageAction />
         </FixedBottomBar>
