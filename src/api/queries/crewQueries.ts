@@ -9,9 +9,11 @@ import {
 } from '@/api/fetch/crews';
 import { normalizeParams } from '@/lib/utils';
 import {
+  Crew,
   CrewListFilters,
   MemberRoleFilters,
   PaginationQueryParams,
+  SliceData,
 } from '@/types';
 
 export const crewQueries = {
@@ -27,6 +29,25 @@ export const crewQueries = {
       placeholderData: (previousData) => previousData, // 필터가 변경되어 데이터를 새로 불러올 때 화면이 깜빡이는 현상 방지
       staleTime: 1000 * 60, // 1분동안 fresh 상태
     });
+  },
+
+  listInfinite: (filters: Omit<CrewListFilters, 'page'>) => {
+    const cleanFilters = normalizeParams(filters);
+    return {
+      queryKey: [...crewQueries.lists(), 'infinite', cleanFilters],
+      queryFn: async ({ pageParam = 0 }): Promise<SliceData<Crew>> => {
+        return await getCrews({ ...cleanFilters, page: pageParam });
+      },
+      getNextPageParam: (
+        lastPage: SliceData<Crew>,
+        allPages: SliceData<Crew>[]
+      ) => {
+        if (!lastPage.hasNext) return undefined;
+        return allPages.length;
+      },
+      initialPageParam: 0,
+      staleTime: 1000 * 60,
+    };
   },
 
   // 크루 상세 정보 조회

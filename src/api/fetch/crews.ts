@@ -9,6 +9,7 @@ import {
   Review,
   Role,
   SliceData,
+  SuccessResponse,
 } from '@/types';
 
 export type CrewRequestBody = Pick<
@@ -54,7 +55,7 @@ export async function getCrews(queryParams?: CrewListFilters) {
     }
   }
 
-  const { data }: ResponseData<SliceData<Crew>> = await response.json();
+  const { data }: SuccessResponse<SliceData<Crew>> = await response.json();
   return data;
 }
 
