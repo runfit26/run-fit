@@ -298,7 +298,11 @@ function ParticipantsList({ sessionId }: { sessionId: number }) {
   if (participantsQuery.isLoading) return <h1>Loading...</h1>;
 
   return participantsQuery.isError ? (
-    <div className="h-10">참가자 목록을 보려면 로그인이 필요합니다.</div>
+    <div className="h-10">
+      {participantsQuery.error?.message === 'UNAUTHORIZED'
+        ? '참가자 목록을 보려면 로그인이 필요합니다.'
+        : '참가자 목록을 불러올 수 없습니다.'}
+    </div>
   ) : (
     <ul className="tablet:gap-5 mb-3 flex flex-col gap-2">
       {participants.slice(0, 4).map((participant) => (
@@ -361,7 +365,11 @@ function CrewShortInfo({ crew }: { crew: Crew }) {
       <hr className="text-gray-600" />
 
       {reviewsQuery.isError ? (
-        <div>크루 리뷰를 보려면 로그인이 필요합니다.</div>
+        <div>
+          {reviewsQuery.error?.message === 'UNAUTHORIZED'
+            ? '크루 리뷰를 보려면 로그인이 필요합니다.'
+            : '크루 리뷰를 불러올 수 없습니다.'}
+        </div>
       ) : (
         review && (
           <div>
