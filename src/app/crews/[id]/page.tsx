@@ -172,7 +172,7 @@ export default function Page() {
 
   return (
     <>
-      <CrewDetailContext value={myRoleData?.role}>
+      <CrewDetailContext value={{ crewId: crew?.id, myRole: myRoleData?.role }}>
         {crew && (
           <div
             className="h-main flex flex-col items-center"
@@ -379,7 +379,7 @@ export default function Page() {
 
 function PageAction({ className }: { className?: string }) {
   const router = useRouter();
-  const myRole = useContext(CrewDetailContext);
+  const { myRole } = useContext(CrewDetailContext);
   const isCrewAdmin = myRole === 'LEADER' || myRole === 'STAFF';
   const pathname = usePathname();
 
