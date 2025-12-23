@@ -14,6 +14,7 @@ import {
 } from 'next/navigation';
 import { useContext, useState } from 'react';
 import { getCrewReviews } from '@/api/fetch/crews';
+import { useJoinCrew, useLeaveCrew } from '@/api/mutations/crewMutations';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
@@ -167,8 +168,6 @@ export default function Page() {
   };
 
   const { ref, height } = useFixedBottomBar();
-
-  // if (!crew) return null;
 
   return (
     <>
@@ -379,9 +378,18 @@ export default function Page() {
 
 function PageAction({ className }: { className?: string }) {
   const router = useRouter();
-  const { myRole } = useContext(CrewDetailContext);
-  const isCrewAdmin = myRole === 'LEADER' || myRole === 'STAFF';
   const pathname = usePathname();
+
+  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
+  const [actionModalData, setActionModalData] = useState({
+    description: '',
+  });
+
+  const { crewId, myRole } = useContext(CrewDetailContext);
+  const isCrewAdmin = myRole === 'LEADER' || myRole === 'STAFF';
+
+  const joinCrew = useJoinCrew(crewId ?? 0);
+  const leaveCrew = useLeaveCrew(crewId ?? 0);
 
   const handleShare = async () => {
     if (typeof window !== 'undefined' && navigator) {
@@ -393,7 +401,23 @@ function PageAction({ className }: { className?: string }) {
   const handleCreateSession = () => {
     router.push('/sessions/create');
   };
-  const handleJoinCrew = () => {};
+  const handleJoinCrew = () => {
+    joinCrew.mutate(undefined, {
+      onError: () => {
+        setIsActionModalOpen(true);
+        setActionModalData({
+          description: '크루에 가입하려면 로그인이 필요해요!',
+        });
+      },
+    });
+  };
+  const handleLeaveCrew = () => {
+    setIsActionModalOpen(true);
+    setActionModalData({
+      description: '정말 탈퇴하시겠어요?',
+    });
+    leaveCrew.mutate();
+  };
 
   return (
     <div className={cn('flex items-center gap-7', className)}>
@@ -416,13 +440,69 @@ function PageAction({ className }: { className?: string }) {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-      <Button
-        type="button"
-        className="bg-brand-500 text-body2-semibold flex-1 px-6 py-3"
-        onClick={isCrewAdmin ? handleCreateSession : handleJoinCrew}
-      >
-        {isCrewAdmin ? '세션 생성하기' : '가입하기'}
-      </Button>
+      {/* modal for actions */}
+      <Modal open={isActionModalOpen}>
+        {!myRole ? (
+          <Modal.Trigger aria-label="크루 가입하기" asChild>
+            <Button
+              className="text-body2-semibold flex-1 px-6 py-3"
+              onClick={handleJoinCrew}
+            >
+              가입하기
+            </Button>
+          </Modal.Trigger>
+        ) : isCrewAdmin ? (
+          <Modal.Trigger aria-label="세션 생성하기" asChild>
+            <Button
+              className="text-body2-semibold flex-1 px-6 py-3"
+              onClick={handleCreateSession}
+            >
+              세션 생성하기
+            </Button>
+          </Modal.Trigger>
+        ) : (
+          <Modal.Trigger aria-label="크루 나가기" asChild>
+            <Button
+              variant="outlined"
+              className="text-body2-semibold flex-1 px-6 py-3"
+            >
+              크루 나가기
+            </Button>
+          </Modal.Trigger>
+        )}
+        <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
+          <Modal.Title />
+          <Modal.CloseButton onClick={() => setIsActionModalOpen(false)} />
+          <Modal.Description>{actionModalData.description}</Modal.Description>
+          {!myRole ? (
+            <Modal.Footer>
+              <Modal.Close asChild>
+                {/* 가입하기 */}
+                <Button
+                  className="text-body2-semibold flex-1 px-6 py-3"
+                  onClick={handleJoinCrew}
+                >
+                  로그인 하기
+                </Button>
+              </Modal.Close>
+            </Modal.Footer>
+          ) : isCrewAdmin ? null : (
+            <Modal.Footer className="w-full flex-row">
+              <div className="flex flex-row gap-2">
+                {/* 크루 나가기 */}
+                <Button
+                  className="w-full"
+                  variant="neutral"
+                  onClick={handleLeaveCrew}
+                >
+                  나가기
+                </Button>
+                <Button className="w-full">취소</Button>
+              </div>
+            </Modal.Footer>
+          )}
+        </Modal.Content>
+      </Modal>
     </div>
   );
 }
