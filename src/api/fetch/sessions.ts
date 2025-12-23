@@ -1,5 +1,6 @@
 import {
   CrewMember,
+  MemberRoleFilters,
   ResponseData,
   Session,
   SessionListFilters,
@@ -144,9 +145,17 @@ export async function unregisterFromSession(sessionId: number) {
   return data;
 }
 
-export async function getSessionParticipants(sessionId: number) {
+export async function getSessionParticipants(
+  sessionId: number,
+  queryParams?: MemberRoleFilters
+) {
   // const accessToken = '';
-  const response = await fetch(`/api/sessions/${sessionId}/participants`);
+  const query = new URLSearchParams(
+    queryParams as Record<string, string>
+  ).toString();
+  const response = await fetch(
+    `/api/sessions/${sessionId}/participants?${query}`
+  );
 
   if (!response.ok) {
     const resData = await response.json();
