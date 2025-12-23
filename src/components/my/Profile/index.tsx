@@ -6,16 +6,23 @@ import { useState } from 'react';
 import { userQueries } from '@/api/queries/userQueries';
 import Button from '@/components/ui/Button';
 import { formatPaceText, secondsToMinutes } from '@/lib/pace';
+import type { Profile } from '@/types';
 import ProfileEdit from '../ProfileEdit';
 
 export default function Profile() {
   const { data } = useQuery(userQueries.me.info());
   const [open, setOpen] = useState(false);
-  const isEmptyProfile =
-    data?.introduction === null &&
-    data?.pace === null &&
-    data?.city === null &&
-    data?.styles?.length === 0;
+
+  function isEmptyProfile(profile: Profile) {
+    return (
+      !profile.introduction ||
+      !profile.city ||
+      profile.pace === null ||
+      (profile.styles?.length ?? 0) === 0
+    );
+  }
+
+  const empty = data ? isEmptyProfile(data) : true;
 
   return (
     <>
@@ -44,7 +51,7 @@ export default function Profile() {
           </h2>
         </div>
 
-        {isEmptyProfile ? (
+        {empty ? (
           <div className="mt-6 flex flex-col items-center justify-center gap-6 rounded-xl bg-gray-800 px-2 py-12">
             <p className="text-body3-regular text-center text-gray-200">
               아직 프로필 정보가 없어요
