@@ -39,6 +39,34 @@ export async function createCrew(body: CrewRequestBody) {
   const { data }: ResponseData<Crew> = await response.json();
   return data;
 }
+export async function joinCrew(crewId: number) {
+  // const accessToken = '';
+  const response = await fetch(`/api/crews/${crewId}/join`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
+    } else {
+      throw new Error('서버에 연결할 수 없습니다.');
+    }
+  }
+
+  type JoinCrewResponseData = {
+    crewId: number;
+    userId: number;
+    role: 'MEMBER';
+    joinedAt: string;
+  };
+
+  const { data }: ResponseData<JoinCrewResponseData> = await response.json();
+  return data;
+}
 
 export async function getCrews(queryParams?: CrewListFilters) {
   const query = new URLSearchParams(
@@ -216,6 +244,29 @@ export async function updateMemberRole(
         message: '운영진에서 해제되었습니다.';
       };
   const { data }: ResponseData<RoleUpdateResponseData> = await response.json();
+  return data;
+}
+
+export async function leaveCrew(crewId: number) {
+  // const accessToken = '';
+  const response = await fetch(`/api/crews/${crewId}/leave`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
+    } else {
+      throw new Error('서버에 연결할 수 없습니다.');
+    }
+  }
+
+  type leaveResponseData = {
+    message: string;
+  };
+
+  const { data }: ResponseData<leaveResponseData> = await response.json();
   return data;
 }
 

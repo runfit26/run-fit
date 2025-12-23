@@ -5,6 +5,8 @@ import {
   delegateCrewLeader,
   deleteCrew,
   expelMember,
+  joinCrew,
+  leaveCrew,
   updateCrewDetail,
   updateMemberRole,
   UpdateMemberRoleRequestBody,
@@ -40,11 +42,11 @@ export function useDelegateCrewLeader(crewId: number) {
 }
 
 // 크루 삭제
-export function useDeleteCrew() {
+export function useDeleteCrew(crewId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (crewId: number) => deleteCrew(crewId),
+    mutationFn: () => deleteCrew(crewId),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: crewQueries.all() }); // 크루 목록 캐시 무효화
@@ -58,6 +60,36 @@ export function useExpelMember(crewId: number) {
 
   return useMutation({
     mutationFn: (userId: number) => expelMember(crewId, userId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: crewQueries.members(crewId).all(), // 크루 멤버 목록 캐시 무효화
+      });
+    },
+  });
+}
+
+// 크루 가입
+export function useJoinCrew(crewId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => joinCrew(crewId),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: crewQueries.members(crewId).all(), // 크루 멤버 목록 캐시 무효화
+      });
+    },
+  });
+}
+
+// 크루 탈퇴
+export function useLeaveCrew(crewId: number) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => leaveCrew(crewId),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -84,12 +116,17 @@ export function useUpdateCrewDetail(crewId: number) {
 }
 
 // 멤버 역할 변경 (운영진 <-> 멤버)
-export function useUpdateMemberRole(crewId: number, userId: number) {
+export function useUpdateMemberRole(crewId: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: UpdateMemberRoleRequestBody) =>
-      updateMemberRole(crewId, userId, body),
+    mutationFn: ({
+      userId,
+      body,
+    }: {
+      userId: number;
+      body: UpdateMemberRoleRequestBody;
+    }) => updateMemberRole(crewId, userId, body),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
