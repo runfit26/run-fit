@@ -31,53 +31,17 @@ import { Crew, Review } from '@/types';
 import { Session } from '@/types/session';
 
 export default function Page() {
-  const { id } = useParams();
-  const {
-    data: session,
-    error,
-    isLoading,
-  } = useQuery(sessionQueries.detail(Number(id)));
-  const crewId = session?.crewId;
-
-  const { data: participantsResponse } = useQuery(
-    sessionQueries.participants(Number(id))
-  );
-
-  const { data: crew } = useQuery({
-    ...crewQueries.detail(Number(crewId)),
-    enabled: !!crewId,
-  });
-
-  const { data: reviews } = useQuery({
-    ...crewQueries.reviews(Number(crewId)).list({ page: 0, size: 1 }),
-    enabled: !!crewId,
-  });
-
   const { ref, height } = useFixedBottomBar();
-
-  if (isLoading) return null;
-  if (error) return null;
-  if (!session) return null;
-
-  if (!participantsResponse) return null;
-  if (!crew) return null;
-  if (!reviews) return null;
-
-  const { participants } = participantsResponse;
-  const review = reviews?.content[0] || null;
+  const { id } = useParams();
+  const sessionId = Number(id);
 
   return (
     <>
       <main
         className="h-main laptop:bg-gray-900 bg-gray-800"
-        style={{ paddingBottom: 96 }}
+        style={{ paddingBottom: height }}
       >
-        <SessionDetailView
-          session={session}
-          crew={crew}
-          review={review}
-          participants={participants}
-        />
+        <SessionDetailView id={sessionId} />
       </main>
       <FixedBottomBar ref={ref}>
         <div className="flex items-center gap-7">
@@ -94,18 +58,40 @@ export default function Page() {
   );
 }
 
-function SessionDetailView({
-  session,
-  crew,
-  review,
-  participants,
-}: {
-  session: Session;
-  crew: Crew;
-  review: Review;
-  participants: Session['participants'];
-}) {
+function SessionDetailView({ id }: { id: number }) {
+  const {
+    data: session,
+    error,
+    isLoading,
+  } = useQuery(sessionQueries.detail(id));
+  const crewId = Number(session?.crewId);
+
+  const { data: participantsResponse } = useQuery(
+    sessionQueries.participants(id)
+  );
+
+  const { data: crew } = useQuery({
+    ...crewQueries.detail(crewId),
+    enabled: !!crewId,
+  });
+
+  const { data: reviews } = useQuery({
+    ...crewQueries.reviews(crewId).list({ page: 0, size: 1 }),
+    enabled: !!crewId,
+  });
+
   const isLaptopUp = useMediaQuery({ min: 'laptop' });
+
+  if (isLoading) return null;
+  if (error) return null;
+  if (!session) return null;
+
+  if (!participantsResponse) return null;
+  if (!crew) return null;
+  if (!reviews) return null;
+
+  const { participants } = participantsResponse;
+  const review = reviews?.content[0] || null;
 
   return (
     <>
