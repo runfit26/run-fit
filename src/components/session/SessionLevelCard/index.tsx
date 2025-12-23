@@ -69,7 +69,10 @@ export default function SessionLevelCard({
             className={cn(
               'flex items-center gap-0.5',
               'text-body3-semibold px-3 py-3',
-              'tablet:pt-5 tabel:pb-4 tablet:px-3 tablet:text-body2-semibold'
+              'tablet:pt-5 tabel:pb-4 tablet:px-3 tablet:text-body2-semibold',
+              level === 'BEGINNER' && 'text-level-beginner',
+              level === 'INTERMEDIATE' && 'text-level-intermediate',
+              level === 'ADVANCED' && 'text-level-advanced'
             )}
           >
             <LevelIcon className="tablet:size-5 size-4" />
