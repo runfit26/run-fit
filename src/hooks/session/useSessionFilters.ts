@@ -49,7 +49,6 @@ export function useSessionFilters() {
     }
 
     return {
-      page: Number(searchParams.get('page')) || DEFAULT_SESSION_FILTER.page,
       sort:
         (searchParams.get('sort') as SessionSort) ??
         DEFAULT_SESSION_FILTER.sort,
@@ -76,7 +75,7 @@ export function useSessionFilters() {
   }, [searchParams]);
 
   const queryFilters: SessionListFilters = useMemo(() => {
-    const { region, date, time, level, sort, page } = filters;
+    const { region, date, time, level, sort } = filters;
 
     const timeFrom = time ? formatMinutesToHHmm(time[0]) : undefined;
     const rawTimeTo = time ? time[1] : undefined;
@@ -94,17 +93,15 @@ export function useSessionFilters() {
       timeFrom,
       timeTo,
       sort,
-      page,
     };
   }, [filters]);
 
   const applyFilters = (next: SessionFilterState) => {
-    const { region, date, time, level, sort, page } = next;
+    const { region, date, time, level, sort } = next;
     const params = new URLSearchParams();
 
     if (level) params.set('level', level);
     if (sort) params.set('sort', sort);
-    if (page != null) params.set('page', String(page));
 
     // 다중 지역 설정
     if (region) {

@@ -26,8 +26,6 @@ export type FilterTab = {
 };
 
 export type SessionFilterState = {
-  page: number;
-  // TODO: size 추가하기
   sort: SessionSort;
   region?: RegionFilterValue;
   date?: DateRange;
@@ -59,7 +57,6 @@ export const FILTER_TABS = [
 ] as const satisfies readonly FilterTab[];
 
 export const DEFAULT_SESSION_FILTER = {
-  page: 0,
   sort: 'createdAtDesc',
   region: undefined,
   date: undefined,
