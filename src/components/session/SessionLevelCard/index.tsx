@@ -10,7 +10,6 @@ import { Level } from '@/types';
 interface SessionLevelCardProps
   extends VariantProps<typeof sessionLevelCardVariants> {
   level: Level;
-  description: string;
   checked: boolean;
   disabled?: boolean;
   onClick: () => void;
