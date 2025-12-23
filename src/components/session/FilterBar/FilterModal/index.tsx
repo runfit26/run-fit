@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@/components/ui/Button';
 import Calendar from '@/components/ui/Calendar';
 import Checkbox from '@/components/ui/Checkbox';
@@ -69,6 +69,15 @@ export default function FilterModal({ children }: FilterModalProps) {
     });
   };
 
+  // 모달 열 때: draft 기준으로 temp 상태만 초기화
+  const initializeFromDraft = () => {
+    setTempRegion(draft.region);
+    setTempDate(draft.date);
+    setTempTime(draft.time);
+    setTempLevel(draft.level);
+    setActiveSido('서울');
+  };
+
   const resetAll = () => {
     reset();
     setTempRegion(DEFAULT_SESSION_FILTER.region);
@@ -78,10 +87,17 @@ export default function FilterModal({ children }: FilterModalProps) {
     setActiveSido('서울');
   };
 
+  useEffect(() => {
+    setTempRegion(draft.region);
+    setTempDate(draft.date);
+    setTempTime(draft.time);
+    setTempLevel(draft.level);
+  }, [draft]);
+
   return (
     <Modal
       onOpenChange={(open) => {
-        if (open) resetAll();
+        if (open) initializeFromDraft();
       }}
     >
       <Modal.Trigger asChild>{children}</Modal.Trigger>
