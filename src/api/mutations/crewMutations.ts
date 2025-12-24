@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import {
   createCrew,
   CrewRequestBody,
@@ -44,12 +45,18 @@ export function useDelegateCrewLeader(crewId: number) {
 // 크루 삭제
 export function useDeleteCrew(crewId: number) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: () => deleteCrew(crewId),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: crewQueries.all() }); // 크루 목록 캐시 무효화
+      router.push('/crews');
+    },
+    onError: (error) => {
+      console.error('크루 삭제 실패:', error);
+      router.refresh(); // 현재 페이지 새로 고침
     },
   });
 }
@@ -87,6 +94,7 @@ export function useJoinCrew(crewId: number) {
 // 크루 탈퇴
 export function useLeaveCrew(crewId: number) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   return useMutation({
     mutationFn: () => leaveCrew(crewId),
@@ -95,6 +103,11 @@ export function useLeaveCrew(crewId: number) {
       queryClient.invalidateQueries({
         queryKey: crewQueries.members(crewId).all(), // 크루 멤버 목록 캐시 무효화
       });
+      router.push('/crews');
+    },
+    onError: (error) => {
+      console.error('크루 탈퇴 실패:', error);
+      router.refresh(); // 현재 페이지 새로 고침
     },
   });
 }
