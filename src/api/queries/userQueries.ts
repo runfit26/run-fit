@@ -10,7 +10,14 @@ import {
   getUserProfile,
 } from '@/api/fetch/user';
 import { normalizeParams } from '@/lib/utils';
-import { PaginationQueryParams } from '@/types';
+import {
+  Crew,
+  InfiniteQueryPageParam,
+  PaginationQueryParams,
+  Review,
+  Session,
+  SliceData,
+} from '@/types';
 
 export const userQueries = {
   all: () => ['users'],
@@ -27,25 +34,44 @@ export const userQueries = {
         staleTime: 1000 * 60 * 30, // 내 정보는 자주 변하지 않으므로 30분동안 fresh 상태
       }),
 
-    // 내가 작성한 리뷰 목록
-    reviews: (params: PaginationQueryParams) => {
-      const cleanParams = normalizeParams(params);
-      return queryOptions({
-        queryKey: [...userQueries.me.all(), 'reviews', cleanParams],
-        queryFn: () => getMyReviews(cleanParams),
-        placeholderData: (previousData) => previousData,
-      });
+    // 내가 작성한 리뷰 목록(무한 스크롤)
+    reviews: () => {
+      return {
+        queryKey: [...userQueries.me.all(), 'reviews', 'infinite'],
+        queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+          getMyReviews({ page: pageParam, size: 10 }),
+        getNextPageParam: (
+          lastPage: SliceData<Review>,
+          allPages: SliceData<Review>[]
+        ) => {
+          if (!lastPage.hasNext) return undefined;
+          return allPages.length;
+        },
+        initialPageParam: 0,
+        staleTime: 1000 * 60,
+      };
     },
 
-    // 찜한 세션
+    // 찜한 세션 목록(무한 스크롤)
     likeAll: () => [...userQueries.me.all(), 'likes'],
-    likes: (params: PaginationQueryParams) => {
-      const cleanParams = normalizeParams(params);
-      return queryOptions({
-        queryKey: [...userQueries.me.all(), 'likes', cleanParams],
-        queryFn: () => getMyLikedSessions(cleanParams),
-        placeholderData: (previousData) => previousData,
-      });
+    likes: () => {
+      return {
+        queryKey: [...userQueries.me.all(), 'likes', 'infinite'],
+        queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+          getMyLikedSessions({
+            page: pageParam,
+            size: 18,
+          }),
+        getNextPageParam: (
+          lastPage: SliceData<Session>,
+          allPages: SliceData<Session>[]
+        ) => {
+          if (!lastPage.hasNext) return undefined;
+          return allPages.length;
+        },
+        initialPageParam: 0,
+        staleTime: 1000 * 60,
+      };
     },
 
     // 크루 관련 (Owned / Joined)
@@ -58,45 +84,75 @@ export const userQueries = {
           placeholderData: (previousData) => previousData,
         });
       },
-      joined: (params: PaginationQueryParams) => {
-        const cleanParams = normalizeParams(params);
-        return queryOptions({
-          queryKey: [...userQueries.me.all(), 'crews', 'joined', cleanParams],
-          queryFn: () => getMyJoinedCrews(cleanParams),
-          placeholderData: (previousData) => previousData,
-        });
+      // 무한 스크롤
+      joined: () => {
+        return {
+          queryKey: [...userQueries.me.all(), 'crews', 'joined', 'infinite'],
+          queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+            getMyJoinedCrews({ page: pageParam, size: 10 }),
+          getNextPageParam: (
+            lastPage: SliceData<Crew>,
+            allPages: SliceData<Crew>[]
+          ) => {
+            if (!lastPage.hasNext) return undefined;
+            return allPages.length;
+          },
+          initialPageParam: 0,
+          staleTime: 1000 * 60,
+        };
       },
     },
 
-    // 세션 관련 (Created / Participating)
+    // 세션 관련 (Created / Participating) (무한 스크롤)
     sessions: {
-      created: (params: PaginationQueryParams) => {
-        const cleanParams = normalizeParams(params);
-        return queryOptions({
+      created: () => {
+        return {
           queryKey: [
             ...userQueries.me.all(),
             'sessions',
             'created',
-            cleanParams,
+            'infinite',
           ],
-          queryFn: () => getMyCreatedSessions(cleanParams),
-          placeholderData: (previousData) => previousData,
-        });
+          queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+            getMyCreatedSessions({
+              page: pageParam,
+              size: 18,
+            }),
+          getNextPageParam: (
+            lastPage: SliceData<Session>,
+            allPages: SliceData<Session>[]
+          ) => {
+            if (!lastPage.hasNext) return undefined;
+            return allPages.length;
+          },
+          initialPageParam: 0,
+          staleTime: 1000 * 60,
+        };
       },
-      participating: (
-        params: PaginationQueryParams & { status: 'SCHEDULED' | 'COMPLETED' }
-      ) => {
-        const cleanParams = normalizeParams(params);
-        return queryOptions({
+      participating: (status: 'SCHEDULED' | 'COMPLETED') => {
+        return {
           queryKey: [
             ...userQueries.me.all(),
             'sessions',
             'participating',
-            cleanParams,
+            'infinite',
           ],
-          queryFn: () => getMyParticipatingSessions(cleanParams),
-          placeholderData: (previousData) => previousData,
-        });
+          queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+            getMyParticipatingSessions({
+              page: pageParam,
+              size: 18,
+              status,
+            }),
+          getNextPageParam: (
+            lastPage: SliceData<Session>,
+            allPages: SliceData<Session>[]
+          ) => {
+            if (!lastPage.hasNext) return undefined;
+            return allPages.length;
+          },
+          initialPageParam: 0,
+          staleTime: 1000 * 60,
+        };
       },
     },
   },

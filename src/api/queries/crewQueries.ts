@@ -11,6 +11,7 @@ import { normalizeParams } from '@/lib/utils';
 import {
   Crew,
   CrewListFilters,
+  InfiniteQueryPageParam,
   MemberRoleFilters,
   PaginationQueryParams,
   SliceData,
@@ -21,23 +22,13 @@ export const crewQueries = {
 
   // 크루 목록 조회
   lists: () => [...crewQueries.all(), 'list'],
-  list: (filters: CrewListFilters) => {
-    const cleanFilters = normalizeParams(filters);
-    return queryOptions({
-      queryKey: [...crewQueries.lists(), cleanFilters],
-      queryFn: () => getCrews(filters),
-      placeholderData: (previousData) => previousData, // 필터가 변경되어 데이터를 새로 불러올 때 화면이 깜빡이는 현상 방지
-      staleTime: 1000 * 60, // 1분동안 fresh 상태
-    });
-  },
-
-  listInfinite: (filters: Omit<CrewListFilters, 'page'>) => {
+  // 크루 목록 조회(무한 스크롤)
+  list: (filters: Omit<CrewListFilters, 'page' | 'size'>) => {
     const cleanFilters = normalizeParams(filters);
     return {
       queryKey: [...crewQueries.lists(), 'infinite', cleanFilters],
-      queryFn: async ({ pageParam = 0 }): Promise<SliceData<Crew>> => {
-        return await getCrews({ ...cleanFilters, page: pageParam });
-      },
+      queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+        getCrews({ ...cleanFilters, page: pageParam, size: 10 }),
       getNextPageParam: (
         lastPage: SliceData<Crew>,
         allPages: SliceData<Crew>[]
