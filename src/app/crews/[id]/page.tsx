@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import {
   useParams,
@@ -13,7 +9,6 @@ import {
   useSearchParams,
 } from 'next/navigation';
 import { useState } from 'react';
-import { getCrewReviews } from '@/api/fetch/crews';
 import { useJoinCrew, useLeaveCrew } from '@/api/mutations/crewMutations';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
@@ -31,6 +26,8 @@ import Modal from '@/components/ui/Modal';
 import Pagination from '@/components/ui/Pagination';
 import Tabs from '@/components/ui/Tabs';
 import { CrewDetailContext, useCrewRole } from '@/context/CrewDetailContext';
+import { useReviewPagination } from '@/hooks/crew/useReviewPagination';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { CrewMember } from '@/types';
 
@@ -43,9 +40,11 @@ export default function Page() {
     ? Number(searchParams.get('page')) - 1
     : 0;
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const [currentPage, setCurrentPage] = useState(pageFilter);
+
+  // Detect mobile screen size
+  const isMobile = !useMediaQuery({ min: 'tablet' });
 
   // fetch queries
   const { data: crew } = useQuery(crewQueries.detail(crewId));
@@ -67,108 +66,25 @@ export default function Page() {
     enabled: !!myProfile?.id,
   });
 
-  const { data } = useQuery(
+  // Fetch crew reviews with simple useQuery
+  const { data: crewReviewsData, isLoading } = useQuery(
     crewQueries.reviews(crewId).list({ page: currentPage, size: 4 })
   );
-  const { data: crewReviewsPageData, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: [...crewQueries.reviews(crewId).all(), 'infinite-list'],
-    queryFn: ({ pageParam }) =>
-      getCrewReviews(crewId, { page: pageParam, size: 4 }),
-    initialPageParam: pageFilter,
-    getNextPageParam: (lastPage) => {
-      return lastPage?.hasNext ? lastPage.page + 1 : undefined;
+
+  const reviews = crewReviewsData?.content || [];
+  const totalElements = crewReviewsData?.totalElements ?? 0;
+  const totalPages = crewReviewsData?.totalPages ?? 0;
+
+  // Pagination logic
+  const pagination = useReviewPagination({
+    currentPage,
+    totalPages,
+    onPageChange: (page) => {
+      setCurrentPage(page);
+      router.push(`/crews/${crewId}?page=${page + 1}`);
     },
-    getPreviousPageParam: (firstPage) => {
-      return firstPage?.hasPrevious ? firstPage.page - 1 : undefined;
-    },
-    enabled: !!crewId,
-    maxPages: undefined, // Allow unlimited pages to be cached
+    isMobile,
   });
-
-  // Find the page data for currentPage by checking pageParams
-  const pageParams = crewReviewsPageData?.pageParams ?? [];
-  const pageIndex = pageParams.indexOf(currentPage);
-  const currentPageData =
-    pageIndex !== -1 ? crewReviewsPageData?.pages[pageIndex] : undefined;
-
-  const crewReviewsData = currentPageData?.content || [];
-  const totalElements = currentPageData?.totalElements ?? 0;
-  const totalPages = currentPageData?.totalPages ?? 0;
-
-  // Calculate actual navigation availability based on current page
-  const canGoPrevious = currentPage > 0;
-  const canGoNext = currentPage < totalPages - 1;
-
-  // Helper function to calculate which page numbers to display
-  const getDisplayedPages = (
-    current: number,
-    total: number,
-    maxDisplay: number = 5
-  ): number[] => {
-    if (total <= maxDisplay) {
-      return Array.from({ length: total }, (_, i) => i);
-    }
-
-    const pages: number[] = [];
-    const lastPage = total - 1;
-
-    // Always include first page
-    pages.push(0);
-
-    if (current <= 2) {
-      // Near the start: show 0, 1, 2, 3, lastPage
-      for (let i = 1; i < maxDisplay - 1; i++) {
-        pages.push(i);
-      }
-    } else if (current >= lastPage - 2) {
-      // Near the end: show 0, lastPage-3, lastPage-2, lastPage-1, lastPage
-      for (let i = lastPage - (maxDisplay - 2); i < lastPage; i++) {
-        if (i > 0) pages.push(i);
-      }
-    } else {
-      // In the middle: show 0, current-1, current, current+1, lastPage
-      pages.push(current - 1);
-      pages.push(current);
-      pages.push(current + 1);
-    }
-
-    // Always include last page (if not already included)
-    if (!pages.includes(lastPage)) {
-      pages.push(lastPage);
-    }
-
-    return [...new Set(pages)].sort((a, b) => a - b);
-  };
-
-  // Helper function to navigate to a specific page
-  const goToPage = async (targetPageIndex: number) => {
-    // Check if the target page is already in pageParams
-    const isPageLoaded = pageParams.includes(targetPageIndex);
-
-    if (!isPageLoaded) {
-      // Fetch the specific page directly and add it to the infinite query cache
-      const newPageData = await getCrewReviews(crewId, {
-        page: targetPageIndex,
-        size: 4,
-      });
-
-      // Manually update the infinite query data
-      queryClient.setQueryData<typeof crewReviewsPageData>(
-        [...crewQueries.reviews(crewId).all(), 'infinite-list'],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            pages: [...old.pages, newPageData],
-            pageParams: [...old.pageParams, targetPageIndex],
-          };
-        }
-      );
-    }
-
-    setCurrentPage(targetPageIndex);
-    router.push(`/crews/${crewId}?page=${targetPageIndex + 1}`);
-  };
 
   const { ref, height } = useFixedBottomBar();
 
@@ -254,7 +170,7 @@ export default function Page() {
                       </span>
                     </div>
                     <div className="flex flex-col divide-y divide-dashed divide-gray-500 *:pb-2 not-first:*:pt-2">
-                      {crewReviewsData.map((review) => (
+                      {reviews.map((review) => (
                         <ReviewCard key={review?.id} data={review} />
                       ))}
                     </div>
@@ -267,81 +183,64 @@ export default function Page() {
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
-                                if (canGoPrevious && !isFetchingNextPage) {
-                                  goToPage(currentPage - 1);
-                                }
+                                if (!isLoading) pagination.goToPrevious();
                               }}
                               className={cn(
-                                !canGoPrevious || isFetchingNextPage
+                                !pagination.canGoPrevious || isLoading
                                   ? 'pointer-events-none opacity-50'
                                   : ''
                               )}
-                              isActive={canGoPrevious}
+                              isActive={pagination.canGoPrevious}
                             />
                           </Pagination.Item>
-                          {/* Page Numbers with Ellipsis */}
-                          {(() => {
-                            const displayedPages = getDisplayedPages(
-                              currentPage,
-                              totalPages
-                            );
-                            const items: React.ReactNode[] = [];
 
-                            displayedPages.forEach((pageNum, index) => {
-                              // Add ellipsis if there's a gap
-                              if (
-                                index > 0 &&
-                                pageNum - displayedPages[index - 1] > 1
-                              ) {
-                                items.push(
-                                  <Pagination.Item key={`ellipsis-${pageNum}`}>
-                                    <Pagination.Ellipsis />
-                                  </Pagination.Item>
-                                );
-                              }
+                          {/* Page Numbers */}
+                          {pagination.shouldShowStartEllipsis && (
+                            <Pagination.Item>
+                              <Pagination.Ellipsis />
+                            </Pagination.Item>
+                          )}
 
-                              // Add page number
-                              items.push(
-                                <Pagination.Item key={pageNum}>
-                                  <Pagination.Link
-                                    href="#"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      if (!isFetchingNextPage) {
-                                        goToPage(pageNum);
-                                      }
-                                    }}
-                                    isActive={pageNum === currentPage}
-                                    className={cn(
-                                      isFetchingNextPage
-                                        ? 'pointer-events-none opacity-50'
-                                        : ''
-                                    )}
-                                  >
-                                    {pageNum + 1}
-                                  </Pagination.Link>
-                                </Pagination.Item>
-                              );
-                            });
+                          {pagination.displayedPages.map((pageNum) => (
+                            <Pagination.Item key={pageNum}>
+                              <Pagination.Link
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (!isLoading) pagination.goToPage(pageNum);
+                                }}
+                                isActive={pageNum === pagination.currentPage}
+                                className={cn(
+                                  isLoading
+                                    ? 'pointer-events-none opacity-50'
+                                    : ''
+                                )}
+                              >
+                                {pageNum + 1}
+                              </Pagination.Link>
+                            </Pagination.Item>
+                          ))}
 
-                            return items;
-                          })()}
+                          {pagination.shouldShowEndEllipsis && (
+                            <Pagination.Item>
+                              <Pagination.Ellipsis />
+                            </Pagination.Item>
+                          )}
+
                           {/* Next */}
                           <Pagination.Item>
                             <Pagination.Next
                               href="#"
                               onClick={(e) => {
                                 e.preventDefault();
-                                if (canGoNext && !isFetchingNextPage) {
-                                  goToPage(currentPage + 1);
-                                }
+                                if (!isLoading) pagination.goToNext();
                               }}
                               className={cn(
-                                !canGoNext || isFetchingNextPage
+                                !pagination.canGoNext || isLoading
                                   ? 'pointer-events-none opacity-50'
                                   : ''
                               )}
-                              isActive={canGoNext}
+                              isActive={pagination.canGoNext}
                             />
                           </Pagination.Item>
                         </Pagination.Content>
