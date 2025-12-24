@@ -115,11 +115,32 @@ export default function Page() {
               <div className="laptop:flex-row laptop:gap-10 flex w-full flex-col-reverse">
                 {/* Crew Crew Info */}
                 <div className="laptop:px-3 flex w-full flex-col gap-y-10 px-6">
-                  <Tabs defaultValue="1" className="">
+                  <Tabs
+                    defaultValue="1"
+                    className="tablet:top-[60px] sticky top-[56px]"
+                  >
                     <Tabs.List>
-                      <Tabs.Trigger value="1">상세 정보</Tabs.Trigger>
-                      <Tabs.Trigger value="2">모집 중인 세션</Tabs.Trigger>
-                      <Tabs.Trigger value="3">후기</Tabs.Trigger>
+                      <Tabs.Trigger
+                        value="1"
+                        onClick={() => router.push('#detail')}
+                        className="bg-gray-900"
+                      >
+                        상세 정보
+                      </Tabs.Trigger>
+                      <Tabs.Trigger
+                        value="2"
+                        onClick={() => router.push('#session')}
+                        className="bg-gray-900"
+                      >
+                        모집 중인 세션
+                      </Tabs.Trigger>
+                      <Tabs.Trigger
+                        value="3"
+                        onClick={() => router.push('#review')}
+                        className="bg-gray-900"
+                      >
+                        후기
+                      </Tabs.Trigger>
                     </Tabs.List>
                   </Tabs>
                   <div id="detail" className="flex flex-col gap-2">
@@ -130,7 +151,7 @@ export default function Page() {
                       {crew?.description}
                     </div>
                   </div>
-                  <div id="sessions" className="flex flex-col gap-4">
+                  <div id="session" className="flex flex-col gap-4">
                     <span className="text-title3-semibold text-gray-50">
                       모집중인 세션
                     </span>
