@@ -67,6 +67,9 @@ export default function Page() {
     enabled: !!myProfile?.id,
   });
 
+  const { data } = useQuery(
+    crewQueries.reviews(crewId).list({ page: currentPage, size: 4 })
+  );
   const { data: crewReviewsPageData, isFetchingNextPage } = useInfiniteQuery({
     queryKey: [...crewQueries.reviews(crewId).all(), 'infinite-list'],
     queryFn: ({ pageParam }) =>
