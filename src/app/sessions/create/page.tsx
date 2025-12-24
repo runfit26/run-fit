@@ -84,14 +84,14 @@ function SessionCreateForm() {
           <DateTimeInputField />
         </div>
         <DetailInputField />
-      </div>
-      <div className="laptop:mt-12 mt-10 flex flex-col items-center gap-3">
-        <Button type="button" className="w-full" size="sm" disabled>
-          생성하기
-        </Button>
-        <p className="text-caption-medium text-gray-300">
-          세션 생성 후에는 ‘이름/설명/이미지’만 수정할 수 있어요
-        </p>
+        <div className="laptop:mt-5 mt-4 flex flex-col items-center gap-3">
+          <Button type="button" className="w-full" size="sm" disabled>
+            생성하기
+          </Button>
+          <p className="text-caption-medium text-gray-300">
+            세션 생성 후에는 ‘이름/설명/이미지’만 수정할 수 있어요
+          </p>
+        </div>
       </div>
     </form>
   );
