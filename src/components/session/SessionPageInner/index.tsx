@@ -44,8 +44,7 @@ export default function SessionPageInner() {
           applyFilters={applyFilters}
           activeFilterCount={activeFilterCount}
         />
-        <SessionList data={data?.sessions} />
-        <div ref={loadMoreRef} />
+        <SessionList data={data?.sessions} loadMoreRef={loadMoreRef} />
       </PageLayout>
     </SessionFilterProvider>
   );
