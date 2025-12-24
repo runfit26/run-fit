@@ -24,6 +24,7 @@ export interface Session<City extends Sido = Sido> {
   maxParticipantCount: number;
   currentParticipantCount: number;
   createdAt: string;
+  ranks: number;
   liked: boolean;
   participants: CrewMember[];
 }
