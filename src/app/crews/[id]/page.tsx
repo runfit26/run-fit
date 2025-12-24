@@ -81,7 +81,7 @@ export default function Page() {
     totalPages,
     onPageChange: (page) => {
       setCurrentPage(page);
-      router.push(`/crews/${crewId}?page=${page + 1}`);
+      router.push(`/crews/${crewId}?page=${page + 1}`, { scroll: false });
     },
     isMobile,
   });
@@ -203,14 +203,15 @@ export default function Page() {
                               {/* Previous */}
                               <Pagination.Item>
                                 <Pagination.Previous
-                                  href="#"
+                                  href="#review"
+                                  scroll={false}
                                   onClick={(e) => {
                                     e.preventDefault();
                                     if (!isLoading) pagination.goToPrevious();
                                   }}
                                   className={cn(
                                     !pagination.canGoPrevious || isLoading
-                                      ? 'pointer-events-none opacity-50'
+                                      ? 'pointer-events-none cursor-not-allowed opacity-50'
                                       : ''
                                   )}
                                   isActive={pagination.canGoPrevious}
@@ -238,7 +239,7 @@ export default function Page() {
                                         }
                                         className={cn(
                                           isLoading
-                                            ? 'pointer-events-none opacity-50'
+                                            ? 'pointer-events-none cursor-not-allowed opacity-50'
                                             : ''
                                         )}
                                       >
