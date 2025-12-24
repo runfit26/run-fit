@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { useState } from 'storybook/internal/preview-api';
+import { useState } from 'react';
 import TimePicker from '.';
 
 /**
