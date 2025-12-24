@@ -5,6 +5,7 @@ import { useState } from 'react';
 import ShevronLeft from '@/assets/icons/chevron-left.svg?react';
 import Button from '@/components/ui/Button';
 import { useDaumPostcode } from '@/provider/DaumPostcodeProvider';
+import AddressInput from './_components/AddressInput';
 import DateTimeInputField from './_components/DateTimeInputField';
 import DetailInputField from './_components/DetailInputField';
 import FakeTextInputField from './_components/FakeTextInputField';
@@ -57,37 +58,40 @@ function SessionCreateForm() {
   return (
     <form className="laptop:flex-row laptop:gap-20 flex w-full flex-col items-stretch">
       <div>
-        <NameInputField />
-        <ImageInputField />
-        <DateTimeInputField />
-        <div className="flex flex-col gap-3">
-          <FakeTextInputField location={location} />
-          <SearchAddressButton
+        <div className="tablet:gap-6 mb-6 flex flex-col gap-5">
+          <NameInputField />
+          <ImageInputField />
+        </div>
+        <div className="laptop:gap-5 laoptop:mb-0 mb-6 flex flex-col gap-6">
+          <DateTimeInputField />
+          <AddressInput
             location={location}
-            onClick={() =>
-              openAddressSearch((data) => {
-                setLocation(data.address);
-                setCity(data.sido);
-                setDistrict(data.sigungu);
-              })
-            }
+            openAddressSearch={openAddressSearch}
+            setLocation={setLocation}
+            setCity={setCity}
+            setDistrict={setDistrict}
           />
+          <DetailInputField />
+        </div>
+      </div>
+      <div className="laptop:flex-1 laptop:gap-7 flex flex-col gap-6">
+        <PaceInputField />
+        <hr className="text-gray-800" />
+        <LevelInputField />
+        <hr className="text-gray-800" />
+        <MaxParticipantsInputField />
+        <div className="flex">
+          <DateTimeInputField />
         </div>
         <DetailInputField />
       </div>
-      <div className="laptop:flex-1">
-        <PaceInputField />
-        <LevelInputField />
-        <hr className="text-gray-500" />
-        <MaxParticipantsInputField />
-        <div className="flex">
-          <RegisterByInputField date={date} />
-        </div>
-        <DetailInputField />
+      <div className="laptop:mt-12 mt-10 flex flex-col items-center gap-3">
         <Button type="button" className="w-full" size="sm" disabled>
           생성하기
         </Button>
-        <p>세션 생성 후에는 ‘이름/설명/이미지’만 수정할 수 있어요</p>
+        <p className="text-caption-medium text-gray-300">
+          세션 생성 후에는 ‘이름/설명/이미지’만 수정할 수 있어요
+        </p>
       </div>
     </form>
   );
