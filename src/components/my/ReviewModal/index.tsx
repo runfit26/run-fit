@@ -11,6 +11,7 @@ import Button from '@/components/ui/Button';
 import ReviewImageUploader from '@/components/ui/ImageUploader/ReviewImageUploader';
 import Modal from '@/components/ui/Modal';
 import Rating from '@/components/ui/Rating';
+import Spinner from '@/components/ui/Spinner';
 import Textarea from '@/components/ui/Textarea';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Session } from '@/types';
@@ -18,7 +19,7 @@ import { Session } from '@/types';
 interface ReviewModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  session: Session;
+  session: Session | null;
 }
 
 export default function ReviewModal({
@@ -38,6 +39,9 @@ export default function ReviewModal({
   const { mutateAsync: createReview } = useCreateSessionReview(session?.id);
   const { mutateAsync: uploadImage } = useUploadImage();
 
+  if (!open | !session) {
+    return null;
+  }
   const handleSubmit = async () => {
     if (isSubmitting) return;
 
@@ -152,9 +156,10 @@ export default function ReviewModal({
             <Button
               onClick={handleSubmit}
               disabled={isDisabled}
-              className="flex-1"
+              className="flex-1 has-[>svg]:px-6"
             >
-              등록하기
+              {isSubmitting ? '등록하는 중..' : '등록하기'}
+              {isSubmitting && <Spinner className="ml-3" />}
             </Button>
           </div>
         </Modal.Footer>
