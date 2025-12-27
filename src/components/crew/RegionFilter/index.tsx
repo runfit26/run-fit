@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import Popover from '@/components/ui/FilterPopover';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { SIDO_LIST } from '@/types/region';
 
 interface RegionFilterProps {
@@ -12,6 +13,8 @@ interface RegionFilterProps {
 }
 
 export default function RegionFilter({ value, onChange }: RegionFilterProps) {
+  const isMobile = useMediaQuery({ max: 'tablet' });
+
   const [open, setOpen] = useState(false);
   const [tempSelected, setTempSelected] = useState<string[]>(value || []);
 
@@ -38,12 +41,14 @@ export default function RegionFilter({ value, onChange }: RegionFilterProps) {
   };
 
   const getLabel = () => {
-    if (!value || value.length === 0) return '지역 전체';
+    const defaultLabel = isMobile ? '지역' : '지역 전체';
+
+    if (!value || value.length === 0) return defaultLabel;
 
     const [first, ...rest] = value;
     if (rest.length === 0) return first;
 
-    return `${first} 외 ${rest.length}곳`;
+    return `${first} 외 ${rest.length}`;
   };
 
   return (

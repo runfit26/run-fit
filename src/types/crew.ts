@@ -1,5 +1,4 @@
 import { PaginationQueryParams } from './api';
-import { Sido } from './region';
 import { Profile } from './user';
 
 export interface Crew {
@@ -7,7 +6,7 @@ export interface Crew {
   name: string;
   description: string;
   city: string;
-  image?: string | null;
+  image?: string;
   createdAt: string;
   memberCount: number;
 }

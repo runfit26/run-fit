@@ -97,7 +97,7 @@ function CrewList({
       )}
     >
       {crews?.length ? (
-        <div className="grid w-full grid-cols-1 border-b border-gray-700">
+        <div className="tablet:gap-0 grid w-full grid-cols-1 gap-5 border-b border-gray-700">
           {crews.map((crew) => (
             <CrewCard key={crew.id} crew={crew} />
           ))}
