@@ -1,13 +1,14 @@
 'use client';
 
 import FilterButton from '@/components/ui/FilterButton';
-import { SessionFilterState } from '@/constants/session-filter';
+import OptionDropdown from '@/components/ui/OptionDropdown';
+import { SESSION_SORT_OPTIONS } from '@/constants/session';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { SessionFilterState } from '@/types';
 import DateFilter from './DateFilter';
 import FilterModal from './FilterModal';
 import LevelFilter from './LevelFilter';
 import RegionFilter from './RegionFilter';
-import SortOptions from './SortOptions';
 import TimeFilter from './TimeFilter';
 
 interface FilterBarProps {
@@ -68,18 +69,20 @@ export default function FilterBar({
             </FilterModal>
           )}
           {!isMobile && (
-            <SortOptions
+            <OptionDropdown
               value={filters.sort}
               onChange={(sort) => applyFilters({ ...filters, sort })}
+              options={SESSION_SORT_OPTIONS}
             />
           )}
         </div>
       </div>
       {isMobile && (
         <div className="mt-4 mb-2 flex w-full shrink-0 justify-end">
-          <SortOptions
+          <OptionDropdown
             value={filters.sort}
             onChange={(sort) => applyFilters({ ...filters, sort })}
+            options={SESSION_SORT_OPTIONS}
           />
         </div>
       )}

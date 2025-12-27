@@ -1,10 +1,8 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import {
-  DEFAULT_SESSION_FILTER,
-  type SessionFilterState,
-} from '@/constants/session-filter';
+import { DEFAULT_SESSION_FILTER } from '@/constants/session';
+import { SessionFilterState } from '@/types';
 
 type Ctx = {
   draft: SessionFilterState;
