@@ -4,23 +4,23 @@ import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import Popover from '@/components/ui/FilterPopover';
-import { Sido, SIDO_LIST } from '@/types/region';
+import { SIDO_LIST } from '@/types/region';
 
 interface RegionFilterProps {
-  value?: Sido[];
-  onChange: (value?: Sido[]) => void;
+  value?: string[];
+  onChange: (value?: string[]) => void;
 }
 
 export default function RegionFilter({ value, onChange }: RegionFilterProps) {
   const [open, setOpen] = useState(false);
-  const [tempSelected, setTempSelected] = useState<Sido[]>(value || []);
+  const [tempSelected, setTempSelected] = useState<string[]>(value || []);
 
   const handleOpenChange = (isOpen: boolean) => {
     setOpen(isOpen);
     if (isOpen) setTempSelected(value || []);
   };
 
-  const handleToggle = (sido: Sido, checked: boolean) => {
+  const handleToggle = (sido: string, checked: boolean) => {
     setTempSelected((prev) =>
       checked ? [...prev, sido] : prev.filter((v) => v !== sido)
     );

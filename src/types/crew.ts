@@ -1,4 +1,5 @@
 import { PaginationQueryParams } from './api';
+import { Sido } from './region';
 import { Profile } from './user';
 
 export interface Crew {
@@ -12,7 +13,7 @@ export interface Crew {
 }
 
 export type CrewListFilters = PaginationQueryParams & {
-  city?: string;
+  city?: string[];
   keyword?: string;
   sort?: CrewSortKey;
 };
