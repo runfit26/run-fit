@@ -31,7 +31,7 @@ function EmptyState() {
   return (
     <div className="flex w-full flex-1 flex-col items-center justify-center gap-10">
       <Image
-        src="/assets/empty-session.png"
+        src="/assets/session-default.png"
         alt="No Sessions"
         width={300}
         height={150}
