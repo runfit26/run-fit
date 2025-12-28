@@ -247,7 +247,7 @@ export async function getMyParticipatingSessions(
 
   const {
     data,
-  }: ResponseData<
+  }: SuccessResponse<
     SliceData<Omit<Session, 'description'> & { reviewed: boolean }>
   > = await response.json();
   return data;
