@@ -41,13 +41,11 @@ type Story = StoryObj<typeof SessionLevelCard>;
  */
 export const Default: Story = {
   render: (args) => {
-    const [checked, setChecked] = useState(args.checked ?? false);
-
     return (
       <RadioGroup>
         <SessionLevelCard
           {...args}
-          checked={checked}
+          checked={false}
           level="INTERMEDIATE"
           value="INTERMEDIATE"
         />
