@@ -4,7 +4,13 @@ import Image from 'next/image';
 import { Session } from '@/types';
 import SessionCard from '../SessionCard';
 
-export default function SessionList({ data: sessions }: { data?: Session[] }) {
+export default function SessionList({
+  data: sessions,
+  loadMoreRef,
+}: {
+  data?: Session[];
+  loadMoreRef?: React.RefObject<HTMLDivElement | null>;
+}) {
   return (
     <div className="mt-6 flex w-full flex-1">
       {sessions?.length ? (
@@ -12,6 +18,7 @@ export default function SessionList({ data: sessions }: { data?: Session[] }) {
           {sessions.map((session) => (
             <SessionCard key={session.id} session={session} />
           ))}
+          <div ref={loadMoreRef} className="h-1" />
         </div>
       ) : (
         <EmptyState />

@@ -39,3 +39,5 @@ export interface PaginationQueryParams {
   page?: number;
   size?: number;
 }
+// 무한 스크롤 쿼리 파라미터
+export type InfiniteQueryPageParam = { pageParam: number };

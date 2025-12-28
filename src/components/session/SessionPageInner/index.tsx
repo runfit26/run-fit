@@ -1,9 +1,10 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { useSessionFilters } from '@/hooks/session/useSessionFilters';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { SessionFilterProvider } from '@/provider/SessionFilterProvider';
@@ -14,16 +15,10 @@ export default function SessionPageInner() {
   const { filters, queryFilters, applyFilters, activeFilterCount } =
     useSessionFilters();
 
-  const {
-    data: sessions,
-    isLoading,
-    isError,
-  } = useQuery(
-    sessionQueries.list({
-      size: 10,
-      ...queryFilters,
-    })
-  );
+  const { data, fetchNextPage, hasNextPage, isLoading, isError } =
+    useInfiniteQuery(sessionQueries.infiniteList({ ...queryFilters }));
+
+  const loadMoreRef = useInfiniteScroll(() => fetchNextPage(), hasNextPage);
 
   if (isLoading) {
     return (
@@ -49,7 +44,7 @@ export default function SessionPageInner() {
           applyFilters={applyFilters}
           activeFilterCount={activeFilterCount}
         />
-        <SessionList data={sessions?.content} />
+        <SessionList data={data?.sessions} loadMoreRef={loadMoreRef} />
       </PageLayout>
     </SessionFilterProvider>
   );

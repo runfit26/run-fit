@@ -63,7 +63,7 @@ export default function Page() {
     })
   );
   const { data: crewSessions } = useQuery(
-    sessionQueries.list({ crewId, sort: 'registerByAsc' })
+    sessionQueries.list({ page: 0, size: 3, crewId, sort: 'registerByAsc' })
   );
   // const { data: crewReviews } = useQuery(crewQueries.reviews(crewId).list({}));
   // TODO:
@@ -126,7 +126,7 @@ export default function Page() {
                   모집중인 세션
                 </span>
                 <div className="grid grid-cols-3 gap-3">
-                  {crewSessions?.content.slice(0, 3).map((session) => (
+                  {crewSessions?.content.map((session) => (
                     <SessionCard
                       key={session.id}
                       session={session}
@@ -140,7 +140,7 @@ export default function Page() {
                   마감된 세션
                 </span>
                 <div className="flex flex-col divide-y divide-gray-700 *:py-2">
-                  {crewSessions?.content.slice(0, 3).map((session) => (
+                  {crewSessions?.content.map((session) => (
                     <CompletedSessionCard key={session.id} session={session} />
                   ))}
                 </div>

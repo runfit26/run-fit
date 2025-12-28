@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { InfiniteData, queryOptions } from '@tanstack/react-query';
 import {
   getCrewDetail,
   getCrewMemberCount,
@@ -9,9 +9,12 @@ import {
 } from '@/api/fetch/crews';
 import { normalizeParams } from '@/lib/utils';
 import {
+  Crew,
   CrewListFilters,
+  InfiniteQueryPageParam,
   MemberRoleFilters,
   PaginationQueryParams,
+  SliceData,
 } from '@/types';
 
 export const crewQueries = {
@@ -19,14 +22,30 @@ export const crewQueries = {
 
   // 크루 목록 조회
   lists: () => [...crewQueries.all(), 'list'],
-  list: (filters: CrewListFilters) => {
+  // 크루 목록 조회(무한 스크롤)
+  list: (filters: Omit<CrewListFilters, 'page' | 'size'>) => {
     const cleanFilters = normalizeParams(filters);
-    return queryOptions({
+    return {
       queryKey: [...crewQueries.lists(), cleanFilters],
-      queryFn: () => getCrews(filters),
-      placeholderData: (previousData) => previousData, // 필터가 변경되어 데이터를 새로 불러올 때 화면이 깜빡이는 현상 방지
-      staleTime: 1000 * 60, // 1분동안 fresh 상태
-    });
+      queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+        getCrews({ ...cleanFilters, page: pageParam, size: 10 }),
+      getNextPageParam: (
+        lastPage: SliceData<Crew>,
+        allPages: SliceData<Crew>[]
+      ) => {
+        if (!lastPage.hasNext) return undefined;
+        return allPages.length;
+      },
+      initialPageParam: 0,
+      staleTime: 1000 * 60,
+
+      select: (data: InfiniteData<SliceData<Crew>>) => {
+        return {
+          ...data,
+          crews: data.pages.flatMap((p) => p.content),
+        };
+      },
+    };
   },
 
   // 크루 상세 정보 조회

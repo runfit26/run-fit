@@ -1,18 +1,16 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { crewQueries } from '@/api/queries/crewQueries';
 import CrewCard from '@/components/crew/CrewCard';
 import Dropdown from '@/components/ui/Dropdown';
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function Page() {
-  const { data, isLoading, isError } = useQuery(
-    crewQueries.list({
-      page: 0,
-      size: 10,
-      sort: 'createdAtDesc',
-    })
-  );
+  const { data, fetchNextPage, hasNextPage, isLoading, isError } =
+    useInfiniteQuery(crewQueries.list({ sort: 'createdAtDesc' }));
+
+  const loadMoreRef = useInfiniteScroll(() => fetchNextPage(), hasNextPage);
 
   if (isLoading) {
     return (
@@ -59,13 +57,14 @@ export default function Page() {
           </Dropdown>
         </div>
         <div className="grid w-full grid-cols-1 gap-6">
-          {data?.content && data.content.length > 0 ? (
-            data.content.map((crew) => <CrewCard key={crew.id} crew={crew} />)
+          {data?.crews && data.crews.length > 0 ? (
+            data.crews.map((crew) => <CrewCard key={crew.id} crew={crew} />)
           ) : (
             <div className="flex h-40 items-center justify-center text-gray-400">
               등록된 크루가 없습니다.
             </div>
           )}
+          <div ref={loadMoreRef} />
         </div>
       </section>
     </main>

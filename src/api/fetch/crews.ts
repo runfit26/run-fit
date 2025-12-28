@@ -5,10 +5,10 @@ import {
   CrewMemberRoleData,
   MemberRoleFilters,
   PaginationQueryParams,
-  SuccessResponse,
   Review,
   Role,
   SliceData,
+  SuccessResponse,
 } from '@/types';
 
 export type CrewRequestBody = Pick<
@@ -96,7 +96,8 @@ export async function getCrewMembers(
     members: CrewMember[];
   };
 
-  const { data }: SuccessResponse<CrewMembersResponseData> = await response.json();
+  const { data }: SuccessResponse<CrewMembersResponseData> =
+    await response.json();
   return data;
 }
 
@@ -170,7 +171,8 @@ export async function delegateCrewLeader(
     oldLeaderId: number;
     newLeaderId: number;
   };
-  const { data }: SuccessResponse<DelegateCrewLeaderData> = await response.json();
+  const { data }: SuccessResponse<DelegateCrewLeaderData> =
+    await response.json();
   return data;
 }
 
@@ -214,7 +216,8 @@ export async function updateMemberRole(
         newRole: 'MEMBER';
         message: '운영진에서 해제되었습니다.';
       };
-  const { data }: SuccessResponse<RoleUpdateResponseData> = await response.json();
+  const { data }: SuccessResponse<RoleUpdateResponseData> =
+    await response.json();
   return data;
 }
 
@@ -292,7 +295,8 @@ export async function deleteCrew(crewId: number) {
     message: string;
   };
 
-  const { data }: SuccessResponse<DeleteCrewResponseData> = await response.json();
+  const { data }: SuccessResponse<DeleteCrewResponseData> =
+    await response.json();
   return data;
 }
 

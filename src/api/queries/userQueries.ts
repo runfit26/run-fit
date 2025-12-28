@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { InfiniteData, queryOptions } from '@tanstack/react-query';
 import {
   getMyCreatedSessions,
   getMyJoinedCrews,
@@ -10,7 +10,16 @@ import {
   getUserProfile,
 } from '@/api/fetch/user';
 import { normalizeParams } from '@/lib/utils';
-import { PaginationQueryParams } from '@/types';
+import {
+  Crew,
+  InfiniteQueryPageParam,
+  LikeSessions,
+  PageData,
+  PaginationQueryParams,
+  Review,
+  Session,
+  SliceData,
+} from '@/types';
 
 export const userQueries = {
   all: () => ['users'],
@@ -27,25 +36,58 @@ export const userQueries = {
         staleTime: 1000 * 60 * 30, // 내 정보는 자주 변하지 않으므로 30분동안 fresh 상태
       }),
 
-    // 내가 작성한 리뷰 목록
-    reviews: (params: PaginationQueryParams) => {
-      const cleanParams = normalizeParams(params);
-      return queryOptions({
-        queryKey: [...userQueries.me.all(), 'reviews', cleanParams],
-        queryFn: () => getMyReviews(cleanParams),
-        placeholderData: (previousData) => previousData,
-      });
+    // 내가 작성한 리뷰 목록(무한 스크롤)
+    reviews: () => {
+      return {
+        queryKey: [...userQueries.me.all(), 'reviews'],
+        queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+          getMyReviews({ page: pageParam, size: 10 }),
+        getNextPageParam: (
+          lastPage: PageData<Review>,
+          allPages: PageData<Review>[]
+        ) => {
+          if (!lastPage.hasNext) return undefined;
+          return allPages.length;
+        },
+        initialPageParam: 0,
+        staleTime: 1000 * 60,
+
+        select: (data: InfiniteData<PageData<Review>>) => {
+          return {
+            ...data,
+            reviews: data.pages.flatMap((p) => p.content),
+          };
+        },
+      };
     },
 
-    // 찜한 세션
+    // 찜한 세션 목록(무한 스크롤)
     likeAll: () => [...userQueries.me.all(), 'likes'],
-    likes: (params: PaginationQueryParams) => {
-      const cleanParams = normalizeParams(params);
-      return queryOptions({
-        queryKey: [...userQueries.me.all(), 'likes', cleanParams],
-        queryFn: () => getMyLikedSessions(cleanParams),
-        placeholderData: (previousData) => previousData,
-      });
+    likes: () => {
+      return {
+        queryKey: [...userQueries.me.all(), 'likes'],
+        queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+          getMyLikedSessions({
+            page: pageParam,
+            size: 18,
+          }),
+        getNextPageParam: (
+          lastPage: SliceData<LikeSessions>,
+          allPages: SliceData<LikeSessions>[]
+        ) => {
+          if (!lastPage.hasNext) return undefined;
+          return allPages.length;
+        },
+        initialPageParam: 0,
+        staleTime: 1000 * 60,
+
+        select: (data: InfiniteData<SliceData<LikeSessions>>) => {
+          return {
+            ...data,
+            sessions: data.pages.flatMap((p) => p.content),
+          };
+        },
+      };
     },
 
     // 크루 관련 (Owned / Joined)
@@ -58,45 +100,95 @@ export const userQueries = {
           placeholderData: (previousData) => previousData,
         });
       },
-      joined: (params: PaginationQueryParams) => {
-        const cleanParams = normalizeParams(params);
-        return queryOptions({
-          queryKey: [...userQueries.me.all(), 'crews', 'joined', cleanParams],
-          queryFn: () => getMyJoinedCrews(cleanParams),
-          placeholderData: (previousData) => previousData,
-        });
+      // 무한 스크롤
+      joined: () => {
+        return {
+          queryKey: [...userQueries.me.all(), 'crews', 'joined'],
+          queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+            getMyJoinedCrews({ page: pageParam, size: 10 }),
+          getNextPageParam: (
+            lastPage: SliceData<Crew>,
+            allPages: SliceData<Crew>[]
+          ) => {
+            if (!lastPage.hasNext) return undefined;
+            return allPages.length;
+          },
+          initialPageParam: 0,
+          staleTime: 1000 * 60,
+
+          select: (data: InfiniteData<SliceData<Crew>>) => {
+            return {
+              ...data,
+              crews: data.pages.flatMap((p) => p.content),
+            };
+          },
+        };
       },
     },
 
-    // 세션 관련 (Created / Participating)
+    // 세션 관련 (Created / Participating) (무한 스크롤)
     sessions: {
-      created: (params: PaginationQueryParams) => {
-        const cleanParams = normalizeParams(params);
-        return queryOptions({
-          queryKey: [
-            ...userQueries.me.all(),
-            'sessions',
-            'created',
-            cleanParams,
-          ],
-          queryFn: () => getMyCreatedSessions(cleanParams),
-          placeholderData: (previousData) => previousData,
-        });
+      created: () => {
+        return {
+          queryKey: [...userQueries.me.all(), 'sessions', 'created'],
+          queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+            getMyCreatedSessions({
+              page: pageParam,
+              size: 18,
+            }),
+          getNextPageParam: (
+            lastPage: SliceData<Omit<Session, 'description'>>,
+            allPages: SliceData<Omit<Session, 'description'>>[]
+          ) => {
+            if (!lastPage.hasNext) return undefined;
+            return allPages.length;
+          },
+          initialPageParam: 0,
+          staleTime: 1000 * 60,
+
+          select: (
+            data: InfiniteData<SliceData<Omit<Session, 'description'>>>
+          ) => {
+            return {
+              ...data,
+              sessions: data.pages.flatMap((p) => p.content),
+            };
+          },
+        };
       },
-      participating: (
-        params: PaginationQueryParams & { status: 'SCHEDULED' | 'COMPLETED' }
-      ) => {
-        const cleanParams = normalizeParams(params);
-        return queryOptions({
+      participating: (status: 'SCHEDULED' | 'COMPLETED') => {
+        return {
           queryKey: [
             ...userQueries.me.all(),
             'sessions',
             'participating',
-            cleanParams,
+            status,
           ],
-          queryFn: () => getMyParticipatingSessions(cleanParams),
-          placeholderData: (previousData) => previousData,
-        });
+          queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+            getMyParticipatingSessions({
+              page: pageParam,
+              size: 18,
+              status,
+            }),
+          getNextPageParam: (
+            lastPage: SliceData<Omit<Session, 'description'>>,
+            allPages: SliceData<Omit<Session, 'description'>>[]
+          ) => {
+            if (!lastPage.hasNext) return undefined;
+            return allPages.length;
+          },
+          initialPageParam: 0,
+          staleTime: 1000 * 60,
+
+          select: (
+            data: InfiniteData<SliceData<Omit<Session, 'description'>>>
+          ) => {
+            return {
+              ...data,
+              sessions: data.pages.flatMap((p) => p.content),
+            };
+          },
+        };
       },
     },
   },
