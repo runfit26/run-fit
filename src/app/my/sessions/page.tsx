@@ -154,8 +154,10 @@ export default function Page() {
 
         <div className="tablet:gap-3 flex flex-col gap-2">
           {completedSessions?.sessions.map((session) => {
-            const showReviewButton =
-              !session.reviewed && session.hostUserId !== userInfo?.id;
+            const isHost = userInfo
+              ? session.hostUserId === userInfo.id
+              : false;
+            const showReviewButton = !session.reviewed && userInfo && !isHost;
 
             return (
               <div key={session.id} className="flex flex-col gap-3">
