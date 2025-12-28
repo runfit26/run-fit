@@ -1,8 +1,10 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { PlusIcon } from 'lucide-react';
 import { crewQueries } from '@/api/queries/crewQueries';
 import CrewCard from '@/components/crew/CrewCard';
+import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
@@ -67,6 +69,9 @@ export default function Page() {
           <div ref={loadMoreRef} />
         </div>
       </section>
+      <Button className="fixed right-16 bottom-16 flex size-18 items-center justify-center rounded-3xl">
+        <PlusIcon className="size-8 text-white" />
+      </Button>
     </main>
   );
 }
