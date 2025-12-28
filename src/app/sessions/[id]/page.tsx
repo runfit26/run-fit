@@ -8,8 +8,6 @@ import { useState } from 'react';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
-import HeartOutline from '@/assets/icons/heart-outline.svg?react';
-import Share from '@/assets/icons/share.svg?react';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import FixedBottomBar, {
   useFixedBottomBar,
@@ -28,6 +26,7 @@ import { cn } from '@/lib/utils';
 import { Crew } from '@/types';
 import { Session } from '@/types/session';
 import CopyUrlButton from './_components/CopyUrlButton';
+import LikeButton from './_components/LikeButton';
 
 export default function Page() {
   const { id } = useParams();
@@ -60,7 +59,7 @@ export default function Page() {
       <FixedBottomBar ref={ref}>
         <div className="flex items-center gap-7">
           <div className="flex items-center gap-4">
-            <HeartOutline className="block size-7 text-[#9CA3AF]" />
+            <LikeButton liked={session.liked} sessionId={session.id} />
             <CopyUrlButton />
           </div>
           <Button variant="default" className="flex-1">
@@ -188,7 +187,7 @@ function SessionShortInfo({
       <hr className="text-gray-500" />
       <div className="laptop:flex hidden items-center gap-7">
         <div className="flex items-center gap-4">
-          <HeartOutline className="block size-7 text-[#9CA3AF]" />
+          <LikeButton liked={session.liked} sessionId={session.id} />
           <CopyUrlButton />
         </div>
         <Button variant="default" className="flex-1">
