@@ -11,14 +11,23 @@ import {
 } from '@/api/fetch/crews';
 import { crewQueries } from '@/api/queries/crewQueries';
 
+export interface UseCrewMutationOptions {
+  onSuccess?: () => void;
+  onError?: (message: string) => void;
+}
+
 // 크루 생성
-export function useCreateCrew() {
+export function useCreateCrew(options?: UseCrewMutationOptions) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createCrew,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: crewQueries.all() }); // 크루 목록 캐시 무효화 (새 크루 목록에 반영)
+      options?.onSuccess?.();
+    },
+    onError: (error: Error) => {
+      options?.onError?.(error.message ?? '크루 생성에 실패했습니다.');
     },
   });
 }
