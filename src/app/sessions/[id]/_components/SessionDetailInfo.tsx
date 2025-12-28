@@ -61,17 +61,7 @@ export default function SessionDetailInfo({ session }: { session: Session }) {
         </div>
       </div>
 
-      <div className="tablet:gap-2 flex flex-col gap-1">
-        <h2 className="text-body2-semibold tablet:text-title3-semibold text-gray-50">
-          참여 멤버&nbsp;
-          <span className="text-brand-300">{currentParticipantCount}</span>
-        </h2>
-        <ParticipantsList sessionId={Number(session.id)} />
-
-        <Button variant="neutral" size="sm" className="w-full">
-          더보기
-        </Button>
-      </div>
+      <ParticipantsList sessionId={session.id} />
     </div>
   );
 }
