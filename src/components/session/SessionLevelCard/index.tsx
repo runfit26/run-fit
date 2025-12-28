@@ -62,7 +62,7 @@ export default function SessionLevelCard({
             <LevelIcon className="tablet:size-5 size-4" />
             {LEVEL_COPY[level].label}
           </p>
-          <p className="text-caption-medium text-gray-300">
+          <p className="text-caption-medium line-clamp-1 text-gray-300">
             {LEVEL_COPY[level].description}
           </p>
         </div>
