@@ -61,7 +61,7 @@ export const Checked: Story = {
   args: { checked: true },
   render: (args) => (
     <RadioGroup>
-      <SessionLevelCard {...args} />
+      <SessionLevelCard {...args} value={args.level} />
     </RadioGroup>
   ),
 };
@@ -73,7 +73,7 @@ export const Disabled: Story = {
   args: { disabled: true },
   render: (args) => (
     <RadioGroup>
-      <SessionLevelCard {...args} />
+      <SessionLevelCard {...args} value={args.level} />
     </RadioGroup>
   ),
 };
