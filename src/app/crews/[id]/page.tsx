@@ -16,6 +16,7 @@ import { userQueries } from '@/api/queries/userQueries';
 import Share from '@/assets/icons/share.svg';
 import CrewMemberList from '@/components/crew/CrewMemberList';
 import ReviewCard from '@/components/crew/ReviewCard';
+import ReviewPagination from '@/components/crew/ReviewPagination';
 import FixedBottomBar, {
   useFixedBottomBar,
 } from '@/components/layout/FixedBottomBar';
@@ -23,10 +24,8 @@ import CompletedSessionCard from '@/components/session/CompletedSessionCard';
 import SessionCard from '@/components/session/SessionCard';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import Pagination from '@/components/ui/Pagination';
 import Tabs from '@/components/ui/Tabs';
 import { CrewDetailContext, useCrewRole } from '@/context/CrewDetailContext';
-import { useReviewPagination } from '@/hooks/crew/useReviewPagination';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { CrewMember } from '@/types';
@@ -48,7 +47,7 @@ export default function Page() {
   }, [pageFilter]);
 
   // Detect mobile screen size
-  const isMobile = !useMediaQuery({ min: 'tablet' });
+  const isMobile = useMediaQuery({ max: 'tablet' });
 
   // fetch queries
   const { data: crew } = useQuery(crewQueries.detail(crewId));
@@ -78,17 +77,6 @@ export default function Page() {
   const reviews = crewReviewsData?.content || [];
   const totalElements = crewReviewsData?.totalElements ?? 0;
   const totalPages = crewReviewsData?.totalPages ?? 0;
-
-  // Pagination logic
-  const pagination = useReviewPagination({
-    currentPage,
-    totalPages,
-    onPageChange: (page) => {
-      setCurrentPage(page);
-      router.push(`/crews/${crewId}?page=${page + 1}`, { scroll: false });
-    },
-    isMobile,
-  });
 
   const { ref, height } = useFixedBottomBar();
 
@@ -201,77 +189,18 @@ export default function Page() {
                             <ReviewCard key={review.id} data={review} />
                           ))}
                         </div>
-                        <div className="tablet:mt-4 mt-3 flex justify-center">
-                          <Pagination>
-                            <Pagination.Content>
-                              {/* Previous */}
-                              <Pagination.Item>
-                                <Pagination.Previous
-                                  href="#review"
-                                  scroll={false}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    if (!isLoading) pagination.goToPrevious();
-                                  }}
-                                  className={cn(
-                                    !pagination.canGoPrevious || isLoading
-                                      ? 'pointer-events-none cursor-not-allowed opacity-50'
-                                      : ''
-                                  )}
-                                  isActive={pagination.canGoPrevious}
-                                />
-                              </Pagination.Item>
-
-                              {/* Page Numbers with Ellipsis (-1 represents ellipsis) */}
-                              {pagination.displayedPages.map(
-                                (pageNum, index) =>
-                                  pageNum === -1 ? (
-                                    <Pagination.Item key={`ellipsis-${index}`}>
-                                      <Pagination.Ellipsis />
-                                    </Pagination.Item>
-                                  ) : (
-                                    <Pagination.Item key={pageNum}>
-                                      <Pagination.Link
-                                        href="#"
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          if (!isLoading)
-                                            pagination.goToPage(pageNum);
-                                        }}
-                                        isActive={
-                                          pageNum === pagination.currentPage
-                                        }
-                                        className={cn(
-                                          isLoading
-                                            ? 'pointer-events-none cursor-not-allowed opacity-50'
-                                            : ''
-                                        )}
-                                      >
-                                        {pageNum + 1}
-                                      </Pagination.Link>
-                                    </Pagination.Item>
-                                  )
-                              )}
-
-                              {/* Next */}
-                              <Pagination.Item>
-                                <Pagination.Next
-                                  href="#"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    if (!isLoading) pagination.goToNext();
-                                  }}
-                                  className={cn(
-                                    !pagination.canGoNext || isLoading
-                                      ? 'pointer-events-none opacity-50'
-                                      : ''
-                                  )}
-                                  isActive={pagination.canGoNext}
-                                />
-                              </Pagination.Item>
-                            </Pagination.Content>
-                          </Pagination>
-                        </div>
+                        <ReviewPagination
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          onPageChange={(page) => {
+                            setCurrentPage(page);
+                            router.push(`/crews/${crewId}?page=${page + 1}`, {
+                              scroll: false,
+                            });
+                          }}
+                          isMobile={isMobile}
+                          isLoading={isLoading}
+                        />
                       </>
                     )}
                   </div>
