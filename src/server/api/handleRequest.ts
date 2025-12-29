@@ -1,34 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAccessToken, getRefreshToken, setAccessToken } from './cookie';
+import { getAccessToken, getRefreshToken } from '../cookies';
+import { refreshAccessToken } from './refresh';
+import { getBackendUrl, getSafeHeaders } from './utils';
 
-export const getBackendUrl = (url: URL) => {
-  const backendBaseUrl = process.env.API_URL;
-  return new URL(`${url.pathname}${url.search}`, backendBaseUrl);
-};
-
-export const getSafeHeaders = (incomingHeaders: Headers, token?: string) => {
-  const newHeaders = new Headers(incomingHeaders);
-
-  // 보안 및 호환성을 위해 제거해야 할 홉 바이 홉(hop-by-hop) 헤더
-  const headersToSkip = [
-    'host',
-    'connection',
-    'content-length',
-    'origin',
-    'referer',
-    'host-header',
-  ];
-  headersToSkip.forEach((h) => newHeaders.delete(h));
-
-  newHeaders.set('Accept', 'application/json');
-  if (token) {
-    newHeaders.set('Authorization', `Bearer ${token}`);
-  }
-
-  return newHeaders;
-};
-
-export async function handleRequest(
+export default async function handleRequest(
   request: NextRequest,
   requiresAuth: boolean = true
 ) {
@@ -66,10 +41,7 @@ export async function handleRequest(
     if (requiresAuth && refreshToken && response.status === 401) {
       console.log('Access token expired, attempting to refresh token...');
 
-      const isRefreshed = await refreshAccessToken(
-        getBackendUrl(new URL('/api/auth/refresh', 'http://localhost:3000'))
-      );
-      console.log(isRefreshed);
+      const isRefreshed = await refreshAccessToken();
 
       if (isRefreshed) {
         const newAccessToken = await getAccessToken();
@@ -85,28 +57,5 @@ export async function handleRequest(
     return response;
   } catch {
     return NextResponse.json({ error: 'Proxy Server Error' }, { status: 500 });
-  }
-}
-
-async function refreshAccessToken(url: URL): Promise<boolean> {
-  const refreshToken = await getRefreshToken();
-  if (!refreshToken) return false;
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': `refreshToken=${refreshToken}`,
-      },
-      cache: 'no-store',
-    });
-    if (!response.ok) return false;
-
-    const { data } = await response.json();
-    await setAccessToken(data.token);
-    return true;
-  } catch {
-    return false;
   }
 }

@@ -24,7 +24,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 }
 
 export default async function request<T>(
-  url: string,
+  url: string | URL,
   options?: RequestInit
 ): Promise<T> {
   const response = await fetch(url, options);

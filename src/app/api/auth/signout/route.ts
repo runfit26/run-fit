@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getBackendUrl } from '@/lib/api';
-import { getAccessToken } from '@/lib/cookie';
+import { getBackendUrl } from '@/server/api/utils';
+import { getAccessToken } from '@/server/cookies';
 
 export async function POST(request: NextRequest) {
   try {

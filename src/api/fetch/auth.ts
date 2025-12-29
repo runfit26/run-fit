@@ -25,14 +25,6 @@ export async function postSignin(body: UserCredentials) {
   });
 }
 
-type RefreshResponseData = { token: string };
-
-export async function postRefresh() {
-  return request<RefreshResponseData>('/api/auth/refresh', {
-    method: 'POST',
-  });
-}
-
 type SignoutResponseData = { message: string };
 
 export async function postSignout() {
