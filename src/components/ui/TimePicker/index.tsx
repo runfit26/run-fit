@@ -75,7 +75,7 @@ export default function TimePicker({
           sideOffset={4}
           className="w-(--radix-popover-trigger-width) overflow-hidden rounded-lg border border-gray-500 bg-gray-700"
         >
-          <div className="h-56 overflow-y-auto">
+          <div className="h-56 overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-track]:bg-transparent">
             {timeList.map((t) => (
               <button
                 key={t.value}
