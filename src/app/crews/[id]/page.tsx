@@ -109,7 +109,7 @@ export default function Page() {
                 <div className="laptop:px-3 flex w-full flex-col gap-y-10 px-6">
                   <Tabs
                     defaultValue="1"
-                    className="tablet:top-15 sticky top-14"
+                    className="tablet:top-15 sticky top-14 z-10"
                   >
                     <Tabs.List>
                       <Tabs.Trigger
@@ -371,14 +371,17 @@ function PageAction({ className }: { className?: string }) {
                   취소
                 </Button>
               </Modal.Close>
-              <Modal.Close asChild>
-                <Button
-                  className="w-full shrink"
-                  onClick={() => leaveCrew.mutate()}
-                >
-                  나가기
-                </Button>
-              </Modal.Close>
+              <Button
+                className="w-full shrink"
+                disabled={leaveCrew.isPending}
+                onClick={() => {
+                  leaveCrew.mutate(undefined, {
+                    onSettled: () => setCurrentModal(null),
+                  });
+                }}
+              >
+                {leaveCrew.isPending ? '처리 중...' : '나가기'}
+              </Button>
             </div>
           </Modal.Footer>
         </Modal.Content>
