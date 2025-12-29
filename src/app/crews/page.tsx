@@ -84,6 +84,7 @@ export default function Page() {
       <Button
         className="fixed right-16 bottom-16 flex size-18 items-center justify-center rounded-3xl"
         onClick={openModal}
+        aria-label="크루 생성하기"
       >
         <PlusIcon className="size-8 text-white" />
       </Button>
