@@ -1,3 +1,4 @@
+import { buildQueryParams } from '@/lib/utils';
 import {
   Crew,
   CrewListFilters,
@@ -40,21 +41,7 @@ export async function createCrew(body: CrewRequestBody) {
 }
 
 export async function getCrews(queryParams?: CrewListFilters) {
-  const searchParams = new URLSearchParams();
-
-  if (queryParams) {
-    Object.entries(queryParams).forEach(([key, value]) => {
-      if (value === undefined || value === null) return;
-
-      if (Array.isArray(value)) {
-        value.forEach((v) => searchParams.append(key, v));
-        return;
-      }
-
-      searchParams.set(key, String(value));
-    });
-  }
-
+  const searchParams = buildQueryParams<CrewListFilters>(queryParams);
   const queryString = searchParams.toString();
 
   const response = await fetch(`/api/crews?${queryString}`);
