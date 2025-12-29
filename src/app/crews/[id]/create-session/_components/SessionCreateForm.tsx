@@ -58,7 +58,7 @@ export default function SessionCreateForm({ crewId }: { crewId?: number }) {
           }
         )}
       >
-        <div>
+        <div className="laptop:w-[380px]">
           <div className="tablet:gap-6 mb-6 flex flex-col gap-5">
             <NameInputField />
             <ImageInputField />

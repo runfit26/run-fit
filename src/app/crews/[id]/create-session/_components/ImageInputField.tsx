@@ -3,13 +3,20 @@ import { useUploadImage } from '@/api/mutations/imageMutations';
 import { CoverImageUploader } from '@/components/ui/ImageUploader';
 import { SessionCreateFormValues } from '../_others/schema';
 
-export default function ImageInputField() {
+interface ImageInputFieldProps {
+  className?: string;
+}
+
+export default function ImageInputField({ className }: ImageInputFieldProps) {
   const { setValue } = useFormContext<SessionCreateFormValues>();
 
   const upload = useUploadImage();
 
   return (
     <CoverImageUploader
+      className={className}
+      label="세션 대표 이미지"
+      maxSizeMB={10}
       onFileChange={async (file) => {
         if (!file) {
           setValue('image', '', { shouldDirty: true, shouldValidate: true });

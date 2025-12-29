@@ -5,10 +5,12 @@ export default function CoverImageUploader({
   label = '크루의 대표 이미지를 설정해주세요',
   maxSizeMB = 5,
   onFileChange: onChange,
+  className,
 }: {
   label?: string;
   maxSizeMB?: number;
   onFileChange?: (file: File | null) => void;
+  className?: string;
 }) {
   const { inputRef, items, open, addFiles, acceptAttr } = useImageUploader({
     maxFiles: 1,
@@ -18,7 +20,7 @@ export default function CoverImageUploader({
   const has = items.length > 0;
 
   return (
-    <div className="w-full">
+    <div className={className}>
       <input
         ref={inputRef}
         type="file"
