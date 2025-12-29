@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Level } from '@/types';
-import { DdayBadge, LevelBadge, PaceBadge } from '.';
+import { DdayBadge, LevelBadge, PaceBadge, RoleBadge } from '.';
 
 const meta: Meta = {
   title: 'UI/Badges',
@@ -72,6 +72,15 @@ export const Ddays: Story = {
   ),
 };
 
+export const Roles: Story = {
+  render: () => (
+    <div className="flex items-center gap-2">
+      <RoleBadge role="LEADER" />
+      <RoleBadge role="STAFF" />
+    </div>
+  ),
+};
+
 export const InContext: Story = {
   name: 'In Context (Session Card snippet)',
   render: () => (
@@ -79,6 +88,7 @@ export const InContext: Story = {
       <DdayBadge dday="D-2" size="responsive" />
       <PaceBadge paceSeconds={360} size="responsive" />
       <LevelBadge level="INTERMEDIATE" size="responsive" />
+      <RoleBadge role="LEADER" />
     </div>
   ),
 };
