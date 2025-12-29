@@ -53,7 +53,7 @@ export default function MyCrewsPage() {
           width={isMobile ? 240 : 300}
           height={isMobile ? 118 : 147}
           src={'/assets/crew-default.png'}
-          alt="세션 없음"
+          alt="크루 없음"
         />
         <p className="tablet:text-body2-medium text-body3-regular text-center text-gray-300">
           아직 소속된 크루가 없어요
