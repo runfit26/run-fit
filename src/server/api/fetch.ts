@@ -1,5 +1,5 @@
 import 'server-only';
-import request from '@/lib/request';
+import { SuccessResponse } from '@/types';
 import { getBackendUrl } from './utils';
 
 type refreshResponse = {
@@ -7,7 +7,7 @@ type refreshResponse = {
 };
 
 export async function postRefresh(refreshToken: string) {
-  return request<refreshResponse>(getBackendUrl('/api/auth/refresh'), {
+  const res = await fetch(getBackendUrl('/api/auth/refresh'), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -15,4 +15,12 @@ export async function postRefresh(refreshToken: string) {
     },
     cache: 'no-store',
   });
+
+  if (!res.ok) {
+    throw new Error('Failed to refresh token');
+  }
+
+  const data: SuccessResponse<refreshResponse> = await res.json();
+
+  return data.data;
 }

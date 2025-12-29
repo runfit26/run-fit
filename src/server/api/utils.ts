@@ -1,10 +1,12 @@
 import 'server-only';
 
+const backendBaseUrl = process.env.API_URL;
+
 export const getBackendUrl = (url: string | URL) => {
   if (typeof url === 'string') {
-    url = new URL(url);
+    url = new URL(url, backendBaseUrl);
   }
-  const backendBaseUrl = process.env.API_URL;
+
   return new URL(`${url.pathname}${url.search}`, backendBaseUrl);
 };
 
