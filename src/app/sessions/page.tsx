@@ -5,7 +5,6 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import SessionPageContent from '@/components/session/SessionPageContent';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { cn } from '@/lib/utils';
 
 export default function Page() {
   return (
@@ -32,42 +31,26 @@ export default function Page() {
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
-  const isDesktop = useMediaQuery({ min: 'laptop' });
-  const isTablet = useMediaQuery({ min: 'tablet', max: 'laptop' });
-  const isMobile = useMediaQuery({ max: 'tablet' });
-
   return (
     <main
-      className={cn(
-        'h-main mx-auto flex max-w-[1120px] flex-col items-center justify-start',
-        isMobile && 'px-4 pt-6',
-        isTablet && 'px-8',
-        isDesktop && 'px-0'
-      )}
+      className={
+        'h-main desktop:px-0 tablet:px-8 tablet:pt-0 mx-auto flex max-w-[1120px] flex-col items-center justify-start px-4 pt-6'
+      }
     >
-      <Header isMobile={isMobile} isTablet={isTablet} isDesktop={isDesktop} />
+      <Header />
       {children}
     </main>
   );
 }
 
-function Header({
-  isMobile,
-  isTablet,
-  isDesktop,
-}: {
-  isMobile: boolean;
-  isTablet: boolean;
-  isDesktop: boolean;
-}) {
+function Header() {
+  const isDesktop = useMediaQuery({ min: 'laptop' });
+
   return (
     <div
-      className={cn(
-        'flex w-full items-center justify-between',
-        isMobile && 'hidden',
-        isTablet && 'py-[26px]',
-        isDesktop && 'pt-[33px]'
-      )}
+      className={
+        'desktop:pt-[33px] tablet:py-[26px] mobile:hidden flex w-full items-center justify-between'
+      }
     >
       <div>
         <h2 className="text-title1-bold mb-4 italic">
