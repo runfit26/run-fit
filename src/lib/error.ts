@@ -1,11 +1,11 @@
 export type ApiErrorOptions = {
   message: string;
-  status: number;
+  status: string;
   code?: string;
 };
 
 export class ApiError extends Error {
-  status: number;
+  status: string;
   code?: string;
 
   constructor({ message, status, code }: ApiErrorOptions) {
