@@ -108,66 +108,110 @@ export default function CrewMemberList({
 
 function CrewMenuActions() {
   const { crewId, myRole } = useCrewRole();
+  const [currentModal, setCurrentModal] = useState<
+    'leave' | 'delete' | 'edit' | 'delegate' | null
+  >(null);
 
   const leaveCrew = useLeaveCrew(crewId ?? 0);
-  const updateCrewDetail = useUpdateCrewDetail(crewId ?? 0);
-  const delegateCrewLeader = useDelegateCrewLeader(crewId ?? 0);
+  // TODO: updateCrewDetail: 크루 생성 추가 후 구현 예정
+  // const updateCrewDetail = useUpdateCrewDetail(crewId ?? 0);
+  // TODO: delegateCrewLeader: 현재 - 디자인 없음, API 있음; 추후 구현
+  // const delegateCrewLeader = useDelegateCrewLeader(crewId ?? 0);
   const deleteCrew = useDeleteCrew(crewId ?? 0);
 
   return (
-    <Dropdown size="lg">
-      <Dropdown.TriggerNoArrow>
-        <VerticalEllipsis className="size-6" />
-      </Dropdown.TriggerNoArrow>
-      <Dropdown.Content className="z-60 *:w-[120px]">
-        {myRole !== 'LEADER' && (
-          <Modal>
-            <Dropdown.Item onClick={() => leaveCrew.mutate()}>
+    <>
+      <Dropdown size="lg">
+        <Dropdown.TriggerNoArrow>
+          <VerticalEllipsis className="size-6" />
+        </Dropdown.TriggerNoArrow>
+        <Dropdown.Content className="z-60 *:w-[120px]">
+          {myRole !== 'LEADER' && (
+            <Dropdown.Item onSelect={() => setCurrentModal('leave')}>
               크루 나가기
             </Dropdown.Item>
-          </Modal>
-        )}
-        {myRole === 'LEADER' && (
-          <>
-            {/* TODO: 수정 및 변경은 Modal이 떠야함 */}
-            <Dropdown.Item>수정하기</Dropdown.Item>
-            <Dropdown.Item className="text-error-100">
-              크루장 변경
-            </Dropdown.Item>
-            <Modal>
-              <Modal.Trigger aria-label="크루 삭제하기" asChild>
-                <Dropdown.Item className="text-error-100">
-                  삭제하기
-                </Dropdown.Item>
-              </Modal.Trigger>
-              <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
-                <Modal.Title />
-                <Modal.CloseButton />
-                <Modal.Description className="flex flex-col items-center justify-center">
-                  <span>삭제 후에는 되돌릴 수 없어요</span>
-                  <span>정말 삭제하시겠어요?</span>
-                </Modal.Description>
-                <Modal.Footer className="w-full flex-row">
-                  <div className="flex flex-row gap-2">
-                    <Modal.Close asChild>
-                      <Button className="w-full" variant="neutral">
-                        취소
-                      </Button>
-                      <Button
-                        className="w-full"
-                        onClick={() => deleteCrew.mutate()}
-                      >
-                        삭제
-                      </Button>
-                    </Modal.Close>
-                  </div>
-                </Modal.Footer>
-              </Modal.Content>
-            </Modal>
-          </>
-        )}
-      </Dropdown.Content>
-    </Dropdown>
+          )}
+          {myRole === 'LEADER' && (
+            <>
+              {/* TODO: 수정 및 변경은 Modal이 떠야함 */}
+              <Dropdown.Item onSelect={() => setCurrentModal('edit')}>
+                수정하기
+              </Dropdown.Item>
+              <Dropdown.Item
+                className="text-error-100"
+                onSelect={() => setCurrentModal('delegate')}
+              >
+                크루장 변경
+              </Dropdown.Item>
+              <Dropdown.Item
+                className="text-error-100"
+                onSelect={() => setCurrentModal('delete')}
+              >
+                삭제하기
+              </Dropdown.Item>
+            </>
+          )}
+        </Dropdown.Content>
+      </Dropdown>
+
+      {/* Leave Crew Modal */}
+      <Modal
+        open={currentModal === 'leave'}
+        onOpenChange={(open) => !open && setCurrentModal(null)}
+      >
+        <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
+          <Modal.Title />
+          <Modal.CloseButton />
+          <Modal.Description>정말 탈퇴하시겠어요?</Modal.Description>
+          <Modal.Footer className="w-full flex-row">
+            <div className="flex flex-row gap-2">
+              <Modal.Close asChild>
+                <Button className="w-full" variant="neutral">
+                  취소
+                </Button>
+              </Modal.Close>
+              <Modal.Close asChild>
+                <Button className="w-full" onClick={() => leaveCrew.mutate()}>
+                  삭제
+                </Button>
+              </Modal.Close>
+            </div>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+
+      {/* Delete Crew Modal */}
+      <Modal
+        open={currentModal === 'delete'}
+        onOpenChange={(open) => !open && setCurrentModal(null)}
+      >
+        <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
+          <Modal.Title />
+          <Modal.CloseButton />
+          <Modal.Description className="flex flex-col items-center justify-center">
+            <span>삭제 후에는 되돌릴 수 없어요</span>
+            <span>정말 삭제하시겠어요?</span>
+          </Modal.Description>
+          <Modal.Footer className="w-full flex-row">
+            <div className="flex flex-row gap-2">
+              <Modal.Close asChild>
+                <Button className="w-full" variant="neutral">
+                  취소
+                </Button>
+              </Modal.Close>
+              <Modal.Close asChild>
+                <Button className="w-full" onClick={() => deleteCrew.mutate()}>
+                  삭제
+                </Button>
+              </Modal.Close>
+            </div>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+
+      {/* TODO: Edit Crew Modal - 크루 생성 추가 후 구현 예정 */}
+      {/* TODO: Delegate Leader Modal - 디자인 없음, API 있음; 추후 구현 */}
+    </>
   );
 }
 
@@ -253,36 +297,40 @@ function CrewMemberListItem({
               </Dropdown>
             )}
           </div>
-          <Modal>
-            <Modal.Trigger aria-label="멤버 추방" asChild>
-              <span className="text-body3-medium text-error-100 shrink-0 px-3 py-2">
-                삭제하기
-              </span>
-            </Modal.Trigger>
-            <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
-              <Modal.Title />
-              <Modal.CloseButton />
-              <Modal.Description className="flex flex-col items-center justify-center">
-                <span>삭제 후에는 되돌릴 수 없어요</span>
-                <span>정말 삭제하시겠어요?</span>
-              </Modal.Description>
-              <Modal.Footer className="w-full flex-row">
-                <div className="flex flex-row gap-2">
-                  <Modal.Close asChild>
-                    <Button className="w-full" variant="neutral">
-                      취소
-                    </Button>
-                    <Button
-                      className="w-full"
-                      onClick={() => expelMember.mutate(member.userId)}
-                    >
-                      확인
-                    </Button>
-                  </Modal.Close>
-                </div>
-              </Modal.Footer>
-            </Modal.Content>
-          </Modal>
+          {member.role !== 'LEADER' && (
+            <Modal>
+              <Modal.Trigger aria-label="멤버 추방" asChild>
+                <span className="text-body3-medium text-error-100 shrink-0 px-3 py-2">
+                  삭제하기
+                </span>
+              </Modal.Trigger>
+              <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
+                <Modal.Title />
+                <Modal.CloseButton />
+                <Modal.Description className="flex flex-col items-center justify-center">
+                  <span>삭제 후에는 되돌릴 수 없어요</span>
+                  <span>정말 삭제하시겠어요?</span>
+                </Modal.Description>
+                <Modal.Footer className="w-full flex-row">
+                  <div className="flex flex-row gap-2">
+                    <Modal.Close asChild>
+                      <Button className="w-full" variant="neutral">
+                        취소
+                      </Button>
+                    </Modal.Close>
+                    <Modal.Close asChild>
+                      <Button
+                        className="w-full"
+                        onClick={() => expelMember.mutate(member.userId)}
+                      >
+                        확인
+                      </Button>
+                    </Modal.Close>
+                  </div>
+                </Modal.Footer>
+              </Modal.Content>
+            </Modal>
+          )}
         </div>
       )}
     </div>

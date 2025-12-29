@@ -311,10 +311,9 @@ function PageAction({ className }: { className?: string }) {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [isActionModalOpen, setIsActionModalOpen] = useState(false);
-  const [actionModalData, setActionModalData] = useState({
-    description: '',
-  });
+  const [currentModal, setCurrentModal] = useState<
+    'share' | 'join' | 'leave' | null
+  >(null);
 
   const { crewId, myRole } = useCrewRole();
   const isCrewAdmin = myRole === 'LEADER' || myRole === 'STAFF';
@@ -327,41 +326,68 @@ function PageAction({ className }: { className?: string }) {
       const pageUrl = `${new URL(pathname, process.env.NEXT_PUBLIC_APP_URL)}`;
       try {
         await navigator.clipboard.writeText(pageUrl);
+        setCurrentModal('share');
       } catch (error) {
         console.error('클립보드 복사 실패:', error);
       }
     }
   };
+
   const handleCreateSession = () => {
     router.push('/sessions/create');
   };
+
   const handleJoinCrew = () => {
     joinCrew.mutate(undefined, {
       onError: () => {
-        setIsActionModalOpen(true);
-        setActionModalData({
-          description: '크루에 가입하려면 로그인이 필요해요!',
-        });
+        setCurrentModal('join');
       },
     });
   };
+
   const handleLeaveCrew = () => {
-    setIsActionModalOpen(true);
-    setActionModalData({
-      description: '정말 탈퇴하시겠어요?',
-    });
+    setCurrentModal('leave');
   };
 
   return (
-    <div className={cn('flex items-center gap-7', className)}>
-      <Modal>
-        <Modal.Trigger
+    <>
+      <div className={cn('flex items-center gap-7', className)}>
+        <Share
+          className="size-6 cursor-pointer stroke-[#9CA3AF]"
           aria-label="크루 링크 공유하기"
-          asChild
           onClick={handleShare}
-        >
-          <Share className="size-6 stroke-[#9CA3AF]" />
-        </Modal.Trigger>
+        />
+
+        {!myRole ? (
+          <Button
+            className="text-body2-semibold flex-1 px-6 py-3"
+            onClick={handleJoinCrew}
+          >
+            가입하기
+          </Button>
+        ) : isCrewAdmin ? (
+          <Button
+            className="text-body2-semibold flex-1 px-6 py-3"
+            onClick={handleCreateSession}
+          >
+            세션 생성하기
+          </Button>
+        ) : (
+          <Button
+            variant="outlined"
+            className="text-body2-semibold flex-1 px-6 py-3"
+            onClick={handleLeaveCrew}
+          >
+            크루 나가기
+          </Button>
+        )}
+      </div>
+
+      {/* Share Modal */}
+      <Modal
+        open={currentModal === 'share'}
+        onOpenChange={(open) => !open && setCurrentModal(null)}
+      >
         <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
           <Modal.Title />
           <Modal.CloseButton />
@@ -373,82 +399,61 @@ function PageAction({ className }: { className?: string }) {
           </Modal.Footer>
         </Modal.Content>
       </Modal>
-      {/* modal for actions */}
-      <Modal open={isActionModalOpen}>
-        {!myRole ? (
-          <Modal.Trigger aria-label="크루 가입하기" asChild>
-            <Button
-              className="text-body2-semibold flex-1 px-6 py-3"
-              onClick={handleJoinCrew}
-            >
-              가입하기
-            </Button>
-          </Modal.Trigger>
-        ) : isCrewAdmin ? (
-          <Modal.Trigger aria-label="세션 생성하기" asChild>
-            <Button
-              className="text-body2-semibold flex-1 px-6 py-3"
-              onClick={handleCreateSession}
-            >
-              세션 생성하기
-            </Button>
-          </Modal.Trigger>
-        ) : (
-          <Modal.Trigger aria-label="크루 나가기" asChild>
-            <Button
-              variant="outlined"
-              className="text-body2-semibold flex-1 px-6 py-3"
-              onClick={handleLeaveCrew}
-            >
-              크루 나가기
-            </Button>
-          </Modal.Trigger>
-        )}
+
+      {/* Join Crew Modal (Login Required) */}
+      <Modal
+        open={currentModal === 'join'}
+        onOpenChange={(open) => !open && setCurrentModal(null)}
+      >
         <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
           <Modal.Title />
-          <Modal.CloseButton onClick={() => setIsActionModalOpen(false)} />
-          <Modal.Description>{actionModalData.description}</Modal.Description>
-          {!myRole ? (
-            <Modal.Footer>
+          <Modal.CloseButton />
+          <Modal.Description>
+            크루에 가입하려면 로그인이 필요해요!
+          </Modal.Description>
+          <Modal.Footer>
+            <Modal.Close asChild>
+              <Button
+                className="text-body2-semibold flex-1 px-6 py-3"
+                onClick={() => {
+                  router.push(`/signin?redirect=${pathname}`);
+                }}
+              >
+                로그인 하기
+              </Button>
+            </Modal.Close>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+
+      {/* Leave Crew Modal */}
+      <Modal
+        open={currentModal === 'leave'}
+        onOpenChange={(open) => !open && setCurrentModal(null)}
+      >
+        <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
+          <Modal.Title />
+          <Modal.CloseButton />
+          <Modal.Description>정말 탈퇴하시겠어요?</Modal.Description>
+          <Modal.Footer className="w-full flex-row">
+            <div className="flex w-full flex-row gap-2">
               <Modal.Close asChild>
-                {/* 가입하기 */}
-                <Button
-                  className="text-body2-semibold flex-1 px-6 py-3"
-                  onClick={() => {
-                    router.push(`/signin?redirect=${pathname}`);
-                  }}
-                >
-                  로그인 하기
+                <Button className="w-full shrink" variant="neutral">
+                  취소
                 </Button>
               </Modal.Close>
-            </Modal.Footer>
-          ) : isCrewAdmin ? null : (
-            <Modal.Footer className="w-full flex-row">
-              <div className="flex w-full flex-row gap-2">
-                {/* 크루 나가기 */}
+              <Modal.Close asChild>
                 <Button
                   className="w-full shrink"
-                  variant="neutral"
-                  onClick={() => {
-                    leaveCrew.mutate();
-                    setIsActionModalOpen(false);
-                  }}
+                  onClick={() => leaveCrew.mutate()}
                 >
                   나가기
                 </Button>
-                <Button
-                  className="w-full shrink"
-                  onClick={() => {
-                    setIsActionModalOpen(false);
-                  }}
-                >
-                  취소
-                </Button>
-              </div>
-            </Modal.Footer>
-          )}
+              </Modal.Close>
+            </div>
+          </Modal.Footer>
         </Modal.Content>
       </Modal>
-    </div>
+    </>
   );
 }
