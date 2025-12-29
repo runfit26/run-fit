@@ -71,7 +71,9 @@ export default function CrewMemberList({
                 {myRole === 'LEADER' && (
                   <Settings
                     className="size-5 fill-gray-300"
-                    onClick={() => setEditMode('edit')}
+                    onClick={() =>
+                      setEditMode((prev) => (prev === 'view' ? 'edit' : 'view'))
+                    }
                   />
                 )}
               </div>
@@ -82,7 +84,7 @@ export default function CrewMemberList({
           </Modal.Title>
           <Modal.CloseButton onClick={() => setEditMode('view')} />
           <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-gray-700" />
-          <Modal.Description className="flex w-full flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
+          <Modal.Description className="flex w-full flex-1 flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
             {members.map((member) => (
               <CrewMemberListItem
                 key={member.userId}
@@ -217,7 +219,7 @@ function LeaderTag() {
   return (
     <Badge variant="none" size="md" className="bg-brand-900">
       <span className="text-brand-200 font-700 text-[10px] leading-none">
-        크루장
+        {ROLE_LABEL['LEADER']}
       </span>
     </Badge>
   );
@@ -227,7 +229,7 @@ function StaffTag() {
   return (
     <Badge variant="none" size="md" className="bg-gray-700">
       <span className="font-700 text-[10px] leading-none text-gray-200">
-        운영진
+        {ROLE_LABEL['STAFF']}
       </span>
     </Badge>
   );
@@ -245,7 +247,7 @@ function CrewMemberListItem({
   const expelMember = useExpelMember(crewId ?? 0);
   const updateMemberRole = useUpdateMemberRole(crewId ?? 0);
   const handleSelect = (roleTo: 'STAFF' | 'MEMBER') => {
-    if (roleTo === member.role) return;
+    if (updateMemberRole.isPending) return;
 
     updateMemberRole.mutate({ userId: member.userId, body: { role: roleTo } });
   };
