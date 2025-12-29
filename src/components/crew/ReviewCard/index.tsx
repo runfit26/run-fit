@@ -9,7 +9,7 @@ import UserAvatar from '@/components/ui/UserAvatar';
 import { Review } from '@/types';
 
 interface ReviewCardProps {
-  data: Review;
+  data?: Review & { sessionName?: string };
   showUser?: boolean;
 }
 
@@ -17,9 +17,13 @@ export default function ReviewCard({
   data: review,
   showUser = true,
 }: ReviewCardProps) {
-  const { data: userSession } = useQuery(
-    sessionQueries.detail(review.sessionId)
-  );
+  const { data: userSession } = useQuery({
+    ...sessionQueries.detail(review?.sessionId ?? 0),
+    enabled: !!review,
+  });
+
+  if (!review) return;
+
   const createdAt = new Date(review.createdAt);
   const createdAtText = `${createdAt.getFullYear()}.${createdAt.getMonth() + 1}.${createdAt.getDate()}`;
   return (
