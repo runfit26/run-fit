@@ -1,3 +1,5 @@
+'use client';
+
 import { DefaultProps, DefaultPropsProvider } from '@suspensive/react';
 import Spinner from '@/components/ui/Spinner';
 
