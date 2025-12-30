@@ -1,7 +1,7 @@
 import { RadioGroup } from '@radix-ui/react-radio-group';
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
-import { Level } from '@/types';
+import { SessionLevel } from '@/types';
 import SessionLevelCard from '.';
 
 /**
@@ -83,13 +83,13 @@ export const Disabled: Story = {
  */
 export const LevelList: Story = {
   render: (args) => {
-    const [selected, setSelected] = useState<Level>('INTERMEDIATE');
+    const [selected, setSelected] = useState<SessionLevel>('INTERMEDIATE');
 
     return (
       <RadioGroup
         value={selected}
         onValueChange={(val) => {
-          setSelected(val as Level);
+          setSelected(val as SessionLevel);
         }}
         className="flex w-[327px] flex-col gap-4"
       >
