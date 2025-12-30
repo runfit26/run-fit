@@ -9,13 +9,11 @@ async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const status = String(response.status);
 
-    const message =
-      (typeof resData === 'object' ? resData?.error?.message : resData) ||
-      '서버 에러가 발생했습니다.';
+    const errorInfo = typeof resData === 'object' ? resData?.error : null;
+    const stringError = typeof resData === 'string' ? resData : null;
 
-    const code =
-      (typeof resData === 'object' ? resData?.error?.code : resData) ||
-      (typeof resData === 'string' ? resData : undefined);
+    const message = errorInfo?.message || '서버 에러가 발생했습니다.';
+    const code = errorInfo?.code || stringError;
 
     throw new ApiError({ message, status, code });
   }
