@@ -17,7 +17,9 @@ export async function postRefresh(refreshToken: string) {
   });
 
   if (!res.ok) {
-    throw new Error('Failed to refresh token');
+    const errorData = await res.json().catch(() => null);
+    const message = errorData?.error?.message || 'Failed to refresh token';
+    throw new Error(`Token refresh failed: ${message} (status: ${res.status})`);
   }
 
   const data: SuccessResponse<refreshResponse> = await res.json();
