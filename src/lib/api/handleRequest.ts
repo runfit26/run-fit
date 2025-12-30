@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAccessToken, getRefreshToken } from '../cookies';
-import { refreshAccessToken } from './refresh';
-import { getBackendUrl, getSafeHeaders } from './utils';
+import { refreshAccessToken } from '@/lib/api/utils/refresh';
+import { getBackendUrl, getSafeHeaders } from './utils/auth';
+import { getAccessToken, getRefreshToken } from './utils/cookies';
 
 export default async function handleRequest(
   request: NextRequest,

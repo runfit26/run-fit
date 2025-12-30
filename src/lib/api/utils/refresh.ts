@@ -1,5 +1,5 @@
-import { getRefreshToken, setAccessToken } from '../cookies';
-import { postRefresh } from './fetch';
+import { postRefresh } from '../fetch/auth.server';
+import { getRefreshToken, setAccessToken } from './cookies';
 
 export async function refreshAccessToken() {
   const refreshToken = await getRefreshToken();
