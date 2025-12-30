@@ -1,4 +1,4 @@
-import { PaginationQueryParams } from './api';
+import { PaginationQueryParams } from '@/lib/api/types';
 import { CrewMember } from './crew';
 import { Sido, Sigungu } from './region';
 

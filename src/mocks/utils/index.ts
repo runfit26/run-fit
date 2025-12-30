@@ -1,4 +1,4 @@
-import type { ErrorResponse, SuccessResponse } from '@/types/api';
+import type { ErrorResponse, SuccessResponse } from '@/lib/api/types';
 
 export function parseIdParam(
   id: string | readonly string[] | undefined

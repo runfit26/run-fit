@@ -1,4 +1,4 @@
-import { PaginationQueryParams } from './api';
+import { PaginationQueryParams } from '@/lib/api/types';
 import { Profile } from './user';
 
 export interface Crew {
