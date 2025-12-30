@@ -3,6 +3,8 @@ import { QueryProvider } from '@/provider/QueryProvider';
 import './globals.css';
 import Header from '@/components/layout/Header';
 import MockProvider from '@/mocks/browser/Provider';
+import { KakaoMapProvider } from '@/provider/KakaoMapProvider';
+import SuspensiveDefaultPropsProvider from '@/provider/SuspensiveDefaultPropsProvider';
 import ToastProvider from '@/provider/ToastProvider';
 
 export const metadata: Metadata = {
@@ -20,11 +22,15 @@ export default function RootLayout({
     <html lang="ko">
       <body className="bg-gray-900 text-white antialiased">
         <MockProvider>
-          <QueryProvider>
-            <ToastProvider />
-            <Header />
-            {children}
-          </QueryProvider>
+          <SuspensiveDefaultPropsProvider>
+            <QueryProvider>
+              <KakaoMapProvider>
+                <ToastProvider />
+                <Header />
+                {children}
+              </KakaoMapProvider>
+            </QueryProvider>
+          </SuspensiveDefaultPropsProvider>
         </MockProvider>
       </body>
     </html>

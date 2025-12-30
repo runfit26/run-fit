@@ -1,7 +1,8 @@
 import LevelIcon from '@/assets/icons/level.svg?react';
 import { formatPaceText, splitSecondsToMinutesAndSeconds } from '@/lib/pace';
 import { cn } from '@/lib/utils';
-import { CrewMemberRole, Level } from '@/types';
+import { CrewMemberRole } from '@/types';
+import { type SessionLevel } from '@/types/session';
 
 type BaseBadgeProps = React.ComponentProps<'div'>;
 
@@ -53,7 +54,7 @@ export function PaceBadge({
 }
 
 type LevelBadgeProps = BaseBadgeProps & {
-  level: Level;
+  level: SessionLevel;
   size?: 'sm' | 'md' | 'lg' | 'responsive';
 };
 

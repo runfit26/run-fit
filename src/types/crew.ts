@@ -12,20 +12,29 @@ export interface Crew {
 }
 
 export type CrewListFilters = PaginationQueryParams & {
-  city?: string;
+  city?: string[];
   keyword?: string;
-  sort?:
-    | 'memberCountDesc'
-    | 'lastSessionDesc'
-    | 'createdAtDesc'
-    | 'nameAsc'
-    | 'nameDesc';
+  sort?: CrewSortKey;
 };
+
+export type CrewSortKey =
+  | 'memberCountDesc'
+  | 'lastSessionDesc'
+  | 'createdAtDesc'
+  | 'nameAsc'
+  | 'nameDesc';
 
 export type MemberRoleFilters = {
   role?: 'leader' | 'staff' | 'general';
   sort?: 'joinedAtAsc' | 'roleAsc';
 };
+
+export const ROLE_LABEL = {
+  LEADER: '크루장',
+  STAFF: '운영진',
+  MEMBER: '일반',
+} as const;
+export type CrewRole = keyof typeof ROLE_LABEL;
 
 export interface CrewMember {
   userId: number;
