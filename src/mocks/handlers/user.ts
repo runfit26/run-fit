@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { UpdateMyProfileRequestBody } from '@/api/fetch/user';
+import { UpdateMyProfileRequestBody } from '@/lib/api/fetch/user';
 import { AuthMode, requireAuth } from '../core/auth';
 import { type PathFn } from '../core/path';
 import { faker, users } from '../data';

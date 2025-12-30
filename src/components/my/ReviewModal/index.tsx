@@ -4,8 +4,6 @@ import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useUploadImage } from '@/api/mutations/imageMutations';
-import { useCreateSessionReview } from '@/api/mutations/reviewMutations';
 import ChevronLeft from '@/assets/icons/chevron-left.svg';
 import Button from '@/components/ui/Button';
 import ReviewImageUploader from '@/components/ui/ImageUploader/ReviewImageUploader';
@@ -14,6 +12,8 @@ import Rating from '@/components/ui/Rating';
 import Spinner from '@/components/ui/Spinner';
 import Textarea from '@/components/ui/Textarea';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useUploadImage } from '@/lib/api/mutations/imageMutations';
+import { useCreateSessionReview } from '@/lib/api/mutations/reviewMutations';
 import { Session } from '@/types';
 
 const formatTime = (time: string) => {

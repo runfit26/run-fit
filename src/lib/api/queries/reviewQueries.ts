@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query';
-import { getSessionReviews } from '@/api/fetch/reviews';
+import { getSessionReviews } from '@/lib/api/fetch/reviews';
 import { normalizeParams } from '@/lib/utils'; // userQueries 예시([3])를 참고하여 유틸 함수 적용
 import { PaginationQueryParams } from '@/types';
 

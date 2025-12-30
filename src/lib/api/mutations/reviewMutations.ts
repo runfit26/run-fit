@@ -4,8 +4,8 @@ import {
   createSessionReview,
   deleteSessionReview,
   type CreateSessionReviewRequestBody,
-} from '@/api/fetch/reviews';
-import { reviewQueries } from '@/api/queries/reviewQueries';
+} from '@/lib/api/fetch/reviews';
+import { reviewQueries } from '@/lib/api/queries/reviewQueries';
 import { sessionQueries } from '../queries/sessionQueries';
 import { userQueries } from '../queries/userQueries';
 

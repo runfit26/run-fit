@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
-import { crewQueries } from '@/api/queries/crewQueries';
-import { userQueries } from '@/api/queries/userQueries';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import Badge, { LevelBadge, PaceBadge } from '@/components/ui/Badge';
 import Dropdown from '@/components/ui/Dropdown';

@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { useUploadImage } from '@/api/mutations/imageMutations';
-import { useUpdateMyProfile } from '@/api/mutations/userMutations';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import TagInput from '@/components/my/TagInput';
 import Button from '@/components/ui/Button';
@@ -15,6 +13,8 @@ import PaceSlider from '@/components/ui/PaceSlider';
 import Spinner from '@/components/ui/Spinner';
 import Textarea from '@/components/ui/Textarea';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useUploadImage } from '@/lib/api/mutations/imageMutations';
+import { useUpdateMyProfile } from '@/lib/api/mutations/userMutations';
 import { Profile } from '@/types';
 import { SIDO_LIST } from '@/types/region';
 

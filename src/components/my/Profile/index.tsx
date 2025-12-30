@@ -3,8 +3,8 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useState } from 'react';
-import { userQueries } from '@/api/queries/userQueries';
 import Button from '@/components/ui/Button';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import { formatPaceText, secondsToMinutes } from '@/lib/pace';
 import type { Profile as ProfileType } from '@/types';
 import ProfileEdit from '../ProfileEdit';

@@ -1,6 +1,6 @@
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useRouter } from 'next/navigation';
-import { useDeleteSession } from '@/api/mutations/sessionMutations';
+import { useDeleteSession } from '@/lib/api/mutations/sessionMutations';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 

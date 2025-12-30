@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { useLikeSession } from '@/api/mutations/likeMutations';
-import { userQueries } from '@/api/queries/userQueries';
+import { useLikeSession } from '@/lib/api/mutations/likeMutations';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import HeartOutline from '@/assets/icons/heart-outline.svg?react';
 

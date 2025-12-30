@@ -2,7 +2,7 @@ import { http, HttpResponse } from 'msw';
 import {
   CreateSessionRequestBody,
   UpdateSessionDetailRequestBody,
-} from '@/api/fetch/sessions';
+} from '@/lib/api/fetch/sessions';
 import { AuthMode, requireAuth } from '../core/auth';
 import { type PathFn } from '../core/path';
 import { faker, sessions } from '../data';

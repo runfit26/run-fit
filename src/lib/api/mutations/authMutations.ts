@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { postSignin, postSignout, postSignup } from '@/api/fetch/auth';
-import { userQueries } from '@/api/queries/userQueries';
+import { postSignin, postSignout, postSignup } from '@/lib/api/fetch/auth';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 export interface UseAuthFormOptions {
   onSuccess?: () => void;

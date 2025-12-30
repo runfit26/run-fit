@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { crewQueries } from '@/api/queries/crewQueries';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
 import Rating from '@/components/ui/Rating';
 import SafeImage from '@/components/ui/SafeImage';
 import { Crew } from '@/types';

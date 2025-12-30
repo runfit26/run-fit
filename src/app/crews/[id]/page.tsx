@@ -13,11 +13,11 @@ import {
   useSearchParams,
 } from 'next/navigation';
 import { useState } from 'react';
-import { getCrewReviews } from '@/api/fetch/crews';
-import { useJoinCrew, useLeaveCrew } from '@/api/mutations/crewMutations';
-import { crewQueries } from '@/api/queries/crewQueries';
-import { sessionQueries } from '@/api/queries/sessionQueries';
-import { userQueries } from '@/api/queries/userQueries';
+import { getCrewReviews } from '@/lib/api/fetch/crews';
+import { useJoinCrew, useLeaveCrew } from '@/lib/api/mutations/crewMutations';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import Share from '@/assets/icons/share.svg';
 import CrewMemberList from '@/components/crew/CrewMemberList';
 import ReviewCard from '@/components/crew/ReviewCard';

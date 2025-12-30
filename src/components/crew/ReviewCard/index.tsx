@@ -1,10 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { sessionQueries } from '@/api/queries/sessionQueries';
 import SessionInfo from '@/components/session/SessionInfo';
 import Rating from '@/components/ui/Rating';
 import UserAvatar from '@/components/ui/UserAvatar';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 import { Review } from '@/types';
 
 interface ReviewCardProps {

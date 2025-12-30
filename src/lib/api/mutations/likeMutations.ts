@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteLikeSession, postLikeSession } from '@/api/fetch/sessions';
-import { sessionQueries } from '@/api/queries/sessionQueries';
-import { userQueries } from '@/api/queries/userQueries';
+import { deleteLikeSession, postLikeSession } from '@/lib/api/fetch/sessions';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 // 세션 찜/취소
 export function useLikeSession(sessionId: number) {

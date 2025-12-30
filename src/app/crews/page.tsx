@@ -1,7 +1,7 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { crewQueries } from '@/api/queries/crewQueries';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
 import CrewCard from '@/components/crew/CrewCard';
 import Dropdown from '@/components/ui/Dropdown';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';

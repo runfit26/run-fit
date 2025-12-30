@@ -2,10 +2,10 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { sessionQueries } from '@/api/queries/sessionQueries';
 import { useSessionFilters } from '@/hooks/session/useSessionFilters';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 import { cn } from '@/lib/utils';
 import { SessionFilterProvider } from '@/provider/SessionFilterProvider';
 import FilterBar from '../FilterBar';

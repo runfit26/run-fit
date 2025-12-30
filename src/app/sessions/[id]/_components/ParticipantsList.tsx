@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { sessionQueries } from '@/api/queries/sessionQueries';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';

@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import {
   useRegisterSession,
   useUnregisterSession,
-} from '@/api/mutations/sessionMutations';
-import { sessionQueries } from '@/api/queries/sessionQueries';
-import { userQueries } from '@/api/queries/userQueries';
+} from '@/lib/api/mutations/sessionMutations';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import Button from '@/components/ui/Button';
 
 interface ParticipateButtonProps {

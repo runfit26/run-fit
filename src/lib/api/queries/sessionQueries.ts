@@ -3,7 +3,7 @@ import {
   getSessionDetail,
   getSessionParticipants,
   getSessions,
-} from '@/api/fetch/sessions';
+} from '@/lib/api/fetch/sessions';
 import { normalizeParams } from '@/lib/utils';
 import {
   InfiniteQueryPageParam,

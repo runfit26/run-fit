@@ -6,8 +6,8 @@ import {
   unregisterFromSession,
   updateSessionDetail,
   UpdateSessionDetailRequestBody,
-} from '@/api/fetch/sessions';
-import { sessionQueries } from '@/api/queries/sessionQueries';
+} from '@/lib/api/fetch/sessions';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 
 // 세션 생성
 export function useCreateSession() {

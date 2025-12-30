@@ -3,12 +3,12 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useSignout } from '@/api/mutations/authMutations';
-import { userQueries } from '@/api/queries/userQueries';
 import LogoDefault from '@/assets/icons/logo-default.svg?react';
 import LogoLarge from '@/assets/icons/logo-large.svg?react';
 import Dropdown from '@/components/ui/Dropdown';
 import SafeImage from '@/components/ui/SafeImage';
+import { useSignout } from '@/lib/api/mutations/authMutations';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import { cn } from '@/lib/utils';
 import { type Profile } from '@/types';
 

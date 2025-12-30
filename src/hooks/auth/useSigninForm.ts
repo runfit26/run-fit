@@ -6,7 +6,7 @@ import * as z from 'zod/v4';
 import {
   useSignin,
   type UseAuthFormOptions,
-} from '@/api/mutations/authMutations';
+} from '@/lib/api/mutations/authMutations';
 
 const signinSchema = z.object({
   email: z

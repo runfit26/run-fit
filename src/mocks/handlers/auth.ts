@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import { SignupRequestBody } from '@/api/fetch/auth';
+import { SignupRequestBody } from '@/lib/api/fetch/auth';
 import { AuthMode, requireAuth, resetAuth, setAuth } from '../core/auth';
 import { PathFn } from '../core/path';
 import { users } from '../data';

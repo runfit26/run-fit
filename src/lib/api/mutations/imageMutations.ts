@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { getPresignedUrl, uploadToPresignedUrl } from '@/api/fetch/image';
+import { getPresignedUrl, uploadToPresignedUrl } from '@/lib/api/fetch/image';
 
 export function useUploadImage() {
   return useMutation({

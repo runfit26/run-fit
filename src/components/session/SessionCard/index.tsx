@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { crewQueries } from '@/api/queries/crewQueries';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
 import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import Location from '@/assets/icons/location.svg?react';
 import { formatTimeToKorean } from '@/lib/time';

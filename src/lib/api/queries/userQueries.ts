@@ -8,7 +8,7 @@ import {
   getMyProfile,
   getMyReviews,
   getUserProfile,
-} from '@/api/fetch/user';
+} from '@/lib/api/fetch/user';
 import { normalizeParams } from '@/lib/utils';
 import {
   Crew,

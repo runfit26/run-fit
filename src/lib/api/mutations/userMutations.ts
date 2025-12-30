@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateMyProfile } from '@/api/fetch/user';
-import { userQueries } from '@/api/queries/userQueries';
+import { updateMyProfile } from '@/lib/api/fetch/user';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 // 내 정보 수정
 export function useUpdateMyProfile() {

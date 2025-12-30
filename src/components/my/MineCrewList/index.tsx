@@ -4,11 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { userQueries } from '@/api/queries/userQueries';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import Spinner from '@/components/ui/Spinner';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 export default function MineCrewList() {
   const [open, setOpen] = useState(false);

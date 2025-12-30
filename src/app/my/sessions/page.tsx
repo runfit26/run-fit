@@ -4,13 +4,13 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { userQueries } from '@/api/queries/userQueries';
 import ReviewModal from '@/components/my/ReviewModal';
 import CompletedSessionCard from '@/components/session/CompletedSessionCard';
 import SessionCard from '@/components/session/SessionCard';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import { ParticipatingSession, Session } from '@/types';
 
 export default function Page() {

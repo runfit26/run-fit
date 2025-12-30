@@ -2,8 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import { crewQueries } from '@/api/queries/crewQueries';
-import { sessionQueries } from '@/api/queries/sessionQueries';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 import FixedBottomBar, {
   useFixedBottomBar,
 } from '@/components/layout/FixedBottomBar';

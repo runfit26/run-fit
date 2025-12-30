@@ -1,12 +1,4 @@
 import { useState } from 'react';
-import {
-  useDelegateCrewLeader,
-  useDeleteCrew,
-  useExpelMember,
-  useLeaveCrew,
-  useUpdateCrewDetail,
-  useUpdateMemberRole,
-} from '@/api/mutations/crewMutations';
 import Settings from '@/assets/icons/settings.svg?react';
 import VerticalEllipsis from '@/assets/icons/vertical-ellipsis.svg?react';
 import Badge from '@/components/ui/Badge';
@@ -15,6 +7,14 @@ import Dropdown from '@/components/ui/Dropdown';
 import Modal from '@/components/ui/Modal';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { useCrewRole } from '@/context/CrewDetailContext';
+import {
+  useDelegateCrewLeader,
+  useDeleteCrew,
+  useExpelMember,
+  useLeaveCrew,
+  useUpdateCrewDetail,
+  useUpdateMemberRole,
+} from '@/lib/api/mutations/crewMutations';
 import { Crew, CrewMember } from '@/types';
 
 interface CrewMemberListProps {

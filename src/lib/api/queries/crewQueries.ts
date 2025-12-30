@@ -6,7 +6,7 @@ import {
   getCrewMembers,
   getCrewReviews,
   getCrews,
-} from '@/api/fetch/crews';
+} from '@/lib/api/fetch/crews';
 import { normalizeParams } from '@/lib/utils';
 import {
   Crew,
