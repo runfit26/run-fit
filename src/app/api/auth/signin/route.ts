@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
       path: '/',
-      maxAge: 60 * 10, // 10 minutes
+      maxAge: 60 * 60, // 1 hour
     });
 
     const proxySetCookies = proxyResponse.headers.getSetCookie();
