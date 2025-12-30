@@ -16,6 +16,7 @@ import {
   LikeSessions,
   PageData,
   PaginationQueryParams,
+  ParticipatingSession,
   Review,
   Session,
   SliceData,
@@ -167,12 +168,12 @@ export const userQueries = {
           queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
             getMyParticipatingSessions({
               page: pageParam,
-              size: 18,
+              size: 6,
               status,
             }),
           getNextPageParam: (
-            lastPage: SliceData<Omit<Session, 'description'>>,
-            allPages: SliceData<Omit<Session, 'description'>>[]
+            lastPage: SliceData<ParticipatingSession>,
+            allPages: SliceData<ParticipatingSession>[]
           ) => {
             if (!lastPage.hasNext) return undefined;
             return allPages.length;
@@ -180,9 +181,7 @@ export const userQueries = {
           initialPageParam: 0,
           staleTime: 1000 * 60,
 
-          select: (
-            data: InfiniteData<SliceData<Omit<Session, 'description'>>>
-          ) => {
+          select: (data: InfiniteData<SliceData<ParticipatingSession>>) => {
             return {
               ...data,
               sessions: data.pages.flatMap((p) => p.content),

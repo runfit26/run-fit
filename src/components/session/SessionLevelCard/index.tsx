@@ -4,12 +4,12 @@ import { RadioGroupItem } from '@radix-ui/react-radio-group';
 import { cva, type VariantProps } from 'class-variance-authority';
 import LevelIcon from '@/assets/icons/level.svg?react';
 import { cn } from '@/lib/utils';
-import { Level } from '@/types';
+import { SessionLevel } from '@/types';
 
 interface SessionLevelCardProps
   extends VariantProps<typeof sessionLevelCardVariants> {
-  level: Level;
-  value: Level;
+  level: SessionLevel;
+  value: SessionLevel;
   checked: boolean;
   disabled?: boolean;
 }

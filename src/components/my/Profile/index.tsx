@@ -15,9 +15,9 @@ export default function Profile() {
 
   function isEmptyProfile(profile: ProfileType) {
     return (
-      !profile.introduction ||
-      !profile.city ||
-      profile.pace === null ||
+      !profile.introduction &&
+      !profile.city &&
+      profile.pace === null &&
       (profile.styles?.length ?? 0) === 0
     );
   }
