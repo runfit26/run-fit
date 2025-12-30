@@ -6,8 +6,12 @@ import {
   SignupRequestBody,
 } from '@/api/fetch/auth';
 import { userQueries } from '@/api/queries/userQueries';
-import { ApiError } from '@/lib/error';
-import type { SigninResponse, User, UserCredentials } from '@/types';
+import type {
+  ErrorResponse,
+  SigninResponse,
+  User,
+  UserCredentials,
+} from '@/types';
 
 export interface UseAuthFormOptions {
   onSuccess?: () => void;
@@ -16,13 +20,13 @@ export interface UseAuthFormOptions {
 
 // 회원가입
 export function useSignup(options?: UseAuthFormOptions) {
-  return useMutation<User | null, ApiError, SignupRequestBody>({
+  return useMutation<User | null, ErrorResponse, SignupRequestBody>({
     mutationFn: postSignup,
     onSuccess: () => {
       options?.onSuccess?.();
     },
     onError: (error) => {
-      options?.onError?.(error.message);
+      options?.onError?.(error.error.message);
     },
   });
 }
@@ -31,7 +35,7 @@ export function useSignup(options?: UseAuthFormOptions) {
 export function useSignin(options?: UseAuthFormOptions) {
   const queryClient = useQueryClient();
 
-  return useMutation<SigninResponse | null, ApiError, UserCredentials>({
+  return useMutation<SigninResponse | null, ErrorResponse, UserCredentials>({
     mutationFn: postSignin,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -40,7 +44,7 @@ export function useSignin(options?: UseAuthFormOptions) {
       options?.onSuccess?.();
     },
     onError: (error) => {
-      options?.onError?.(error.message);
+      options?.onError?.(error.error.message);
     },
   });
 }

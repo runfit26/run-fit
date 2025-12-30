@@ -1,46 +1,33 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createSession,
-  CreateSessionRequestBody,
-  CreateSessionResponse,
   deleteSession,
-  DeleteSessionResponse,
   registerForSession,
-  RegisterForSessionResponse,
   unregisterFromSession,
-  UnregisterFromSessionResponse,
   updateSessionDetail,
   UpdateSessionDetailRequestBody,
-  UpdateSessionDetailResponse,
 } from '@/api/fetch/sessions';
 import { sessionQueries } from '@/api/queries/sessionQueries';
-import { ApiError } from '@/lib/error';
 
 // 세션 생성
 export function useCreateSession() {
   const queryClient = useQueryClient();
 
-  return useMutation<CreateSessionResponse, ApiError, CreateSessionRequestBody>(
-    {
-      mutationFn: createSession,
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: sessionQueries.lists(), // 세션 목록 캐시 무효화
-        });
-      },
-    }
-  );
+  return useMutation({
+    mutationFn: createSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: sessionQueries.lists(), // 세션 목록 캐시 무효화
+      });
+    },
+  });
 }
 
 // 세션 정보 수정
 export function useUpdateSession(sessionId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    UpdateSessionDetailResponse,
-    ApiError,
-    UpdateSessionDetailRequestBody
-  >({
+  return useMutation({
     mutationFn: (body: UpdateSessionDetailRequestBody) =>
       updateSessionDetail(sessionId, body),
     onSuccess: () => {
@@ -58,7 +45,7 @@ export function useUpdateSession(sessionId: number) {
 export function useRegisterSession(sessionId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation<RegisterForSessionResponse, ApiError, void>({
+  return useMutation({
     mutationFn: () => registerForSession(sessionId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -75,7 +62,7 @@ export function useRegisterSession(sessionId: number) {
 export function useUnregisterSession(sessionId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation<UnregisterFromSessionResponse, ApiError, void>({
+  return useMutation({
     mutationFn: () => unregisterFromSession(sessionId),
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -92,7 +79,7 @@ export function useUnregisterSession(sessionId: number) {
 export function useDeleteSession(sessionId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation<DeleteSessionResponse, ApiError, void>({
+  return useMutation({
     mutationFn: () => deleteSession(sessionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: sessionQueries.lists() });

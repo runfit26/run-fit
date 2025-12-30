@@ -1,24 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  deleteLikeSession,
-  GetSessionDetailResponse,
-  LikeSessionResponse,
-  postLikeSession,
-} from '@/api/fetch/sessions';
+import { deleteLikeSession, postLikeSession } from '@/api/fetch/sessions';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
-import { ApiError } from '@/lib/error';
 
 // 세션 찜/취소
 export function useLikeSession(sessionId: number) {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    LikeSessionResponse,
-    ApiError,
-    boolean,
-    { previousSessionData: GetSessionDetailResponse | undefined }
-  >({
+  return useMutation({
     mutationFn: (isLiked: boolean) =>
       isLiked ? deleteLikeSession(sessionId) : postLikeSession(sessionId),
 

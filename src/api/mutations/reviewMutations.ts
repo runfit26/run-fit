@@ -2,13 +2,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createSessionReview,
-  CreateSessionReviewResponse,
   deleteSessionReview,
   type CreateSessionReviewRequestBody,
 } from '@/api/fetch/reviews';
 import { reviewQueries } from '@/api/queries/reviewQueries';
-import { ApiError } from '@/lib/error';
-import { DeleteSessionResponse } from '../fetch/sessions';
 import { sessionQueries } from '../queries/sessionQueries';
 import { userQueries } from '../queries/userQueries';
 
@@ -16,11 +13,7 @@ import { userQueries } from '../queries/userQueries';
 export const useCreateSessionReview = (sessionId?: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    CreateSessionReviewResponse,
-    ApiError,
-    CreateSessionReviewRequestBody
-  >({
+  return useMutation({
     mutationFn: (body: CreateSessionReviewRequestBody) => {
       if (!sessionId) {
         throw new Error('sessionId 알 수 없음');
@@ -47,7 +40,7 @@ export const useCreateSessionReview = (sessionId?: number) => {
 export const useDeleteReview = (sessionId?: number) => {
   const queryClient = useQueryClient();
 
-  return useMutation<DeleteSessionResponse, ApiError, number>({
+  return useMutation({
     mutationFn: (reviewId: number) => deleteSessionReview(reviewId),
     onSuccess: () => {
       queryClient.invalidateQueries({
