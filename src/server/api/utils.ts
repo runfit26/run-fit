@@ -20,7 +20,6 @@ export const getSafeHeaders = (incomingHeaders: Headers, token?: string) => {
     'content-length',
     'origin',
     'referer',
-    'host-header',
   ];
   headersToSkip.forEach((h) => newHeaders.delete(h));
 
