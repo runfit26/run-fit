@@ -106,7 +106,7 @@ export default function Page() {
           src={'/assets/empty-session.png'}
           alt="세션 없음"
         />
-        <p className="tablet:text-body2-medium text-body3-regular text-gray-300">
+        <p className="tablet:text-body2-medium text-body3-regular text-center text-gray-300">
           아직 예정되거나 완료한 세션이 없어요
           <br />
           다양한 세션을 구경하러 가볼까요?
