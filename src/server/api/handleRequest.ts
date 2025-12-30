@@ -9,7 +9,12 @@ export default async function handleRequest(
 ) {
   if (!process.env.API_URL) {
     return NextResponse.json(
-      { error: 'Proxy Configuration Error' },
+      {
+        error: {
+          code: 'SERVER_ERROR',
+          message: 'API_URL is not defined in environment variables.',
+        },
+      },
       { status: 500 }
     );
   }
@@ -19,7 +24,15 @@ export default async function handleRequest(
   const refreshToken = await getRefreshToken();
 
   if (requiresAuth && !refreshToken) {
-    return NextResponse.json('UNAUTHORIZED', { status: 401 });
+    return NextResponse.json(
+      {
+        error: {
+          code: 'UNAUTHORIZED',
+          message: '인증이 필요합니다.',
+        },
+      },
+      { status: 401 }
+    );
   }
 
   const { method } = request;
