@@ -4,7 +4,7 @@ import useImageUploader from './useImageUploader';
 interface CoverImageUploaderProps {
   label?: string;
   maxSizeMB?: number;
-  onChange?: (file: File | null) => void;
+  onFileChange?: (file: File | null) => void;
   className?: string;
 }
 
@@ -13,12 +13,7 @@ export default function CoverImageUploader({
   maxSizeMB = 5,
   onFileChange: onChange,
   className,
-}: {
-  label?: string;
-  maxSizeMB?: number;
-  onFileChange?: (file: File | null) => void;
-  className?: string;
-}) {
+}: CoverImageUploaderProps) {
   const { inputRef, items, open, addFiles, acceptAttr } = useImageUploader({
     maxFiles: 1,
     maxSizeMB,
@@ -27,7 +22,7 @@ export default function CoverImageUploader({
   const has = items.length > 0;
 
   return (
-    <div className={className}>
+    <div>
       <input
         ref={inputRef}
         type="file"
