@@ -15,14 +15,12 @@ interface LikeButtonProps {
 }
 
 export default function LikeButton({ liked, sessionId }: LikeButtonProps) {
-  const { handleClick, isLoginModalOpen, setIsLoginModalOpen } = useLikeButton({
-    liked,
-    sessionId,
-  });
+  const { handleClick, isLoginModalOpen, setIsLoginModalOpen } =
+    useLikeButton();
 
   return (
     <>
-      <button onClick={handleClick}>
+      <button onClick={() => handleClick(sessionId, liked)} type="button">
         {liked ? (
           <HeartFill className="text-brand-500 block size-7" />
         ) : (
@@ -35,51 +33,48 @@ export default function LikeButton({ liked, sessionId }: LikeButtonProps) {
   );
 }
 
-export const useLikeButton = ({
-  liked,
-  sessionId,
-}: {
-  liked: boolean;
-  sessionId: number;
-}) => {
-  const mutation = useLikeSession(sessionId);
+export const useLikeButton = () => {
+  const mutation = useLikeSession();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const handleClick = () => {
-    mutation.mutate(liked, {
-      onSuccess: () => {
-        toast.success(
-          liked
-            ? '찜한 세션에서 제외되었습니다.'
-            : '찜한 세션에 추가되었습니다.'
-        );
-      },
+  const handleClick = (sessionId: number, liked: boolean) => {
+    mutation.mutate(
+      { sessionId, liked },
+      {
+        onSuccess: () => {
+          toast.success(
+            liked
+              ? '찜한 세션에서 제외되었습니다.'
+              : '찜한 세션에 추가되었습니다.'
+          );
+        },
 
-      onError: (error) => {
-        const status = error.status;
-        const code = error.code;
-        const message = error.message;
+        onError: (error) => {
+          const status = error.status;
+          const code = error.code;
+          const message = error.message;
 
-        if (status === '401' || code === 'UNAUTHORIZED') {
-          setIsLoginModalOpen(true);
-          return;
-        }
+          if (status === '401' || code === 'UNAUTHORIZED') {
+            setIsLoginModalOpen(true);
+            return;
+          }
 
-        if (code === 'ALREADY_LIKED_SESSION') {
-          toast.error(message || '이미 찜한 세션입니다.');
-          return;
-        }
+          if (code === 'ALREADY_LIKED_SESSION') {
+            toast.error(message || '이미 찜한 세션입니다.');
+            return;
+          }
 
-        if (code === 'SESSION_LIKE_NOT_FOUND') {
-          toast.error(message || '찜한 세션을 찾을 수 없습니다.');
-          return;
-        }
+          if (code === 'SESSION_LIKE_NOT_FOUND') {
+            toast.error(message || '찜한 세션을 찾을 수 없습니다.');
+            return;
+          }
 
-        toast.error(
-          '알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
-        );
-      },
-    });
+          toast.error(
+            '알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+          );
+        },
+      }
+    );
   };
 
   return { handleClick, isLoginModalOpen, setIsLoginModalOpen };

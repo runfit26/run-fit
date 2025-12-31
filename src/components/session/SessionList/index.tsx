@@ -1,6 +1,10 @@
 'use client';
 
 import Image from 'next/image';
+import {
+  LoginModal,
+  useLikeButton,
+} from '@/app/sessions/[id]/_components/LikeButton';
 import { Session } from '@/types';
 import SessionCard from '../SessionCard';
 
@@ -11,19 +15,29 @@ export default function SessionList({
   data?: Session[];
   loadMoreRef?: React.RefObject<HTMLDivElement | null>;
 }) {
+  const { handleClick, isLoginModalOpen, setIsLoginModalOpen } =
+    useLikeButton();
+
   return (
-    <div className="tablet:mt-6 mt-2 flex w-full flex-1">
-      {sessions?.length ? (
-        <div className="laptop:grid-cols-3 grid w-full grid-cols-2 gap-6">
-          {sessions.map((session) => (
-            <SessionCard key={session.id} session={session} />
-          ))}
-          <div ref={loadMoreRef} className="h-1" />
-        </div>
-      ) : (
-        <EmptyState />
-      )}
-    </div>
+    <>
+      <div className="tablet:mt-6 mt-2 flex w-full flex-1">
+        {sessions?.length ? (
+          <div className="laptop:grid-cols-3 grid w-full grid-cols-2 gap-6">
+            {sessions.map((session) => (
+              <SessionCard
+                key={session.id}
+                session={session}
+                onLikeButtonClick={handleClick}
+              />
+            ))}
+            <div ref={loadMoreRef} className="h-1" />
+          </div>
+        ) : (
+          <EmptyState />
+        )}
+      </div>
+      <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
+    </>
   );
 }
 
