@@ -15,6 +15,33 @@ interface LikeButtonProps {
 }
 
 export default function LikeButton({ liked, sessionId }: LikeButtonProps) {
+  const { handleClick, isLoginModalOpen, setIsLoginModalOpen } = useLikeButton({
+    liked,
+    sessionId,
+  });
+
+  return (
+    <>
+      <button onClick={handleClick}>
+        {liked ? (
+          <HeartFill className="text-brand-500 block size-7" />
+        ) : (
+          <HeartOutline className="block size-7 text-[#9CA3AF]" />
+        )}
+      </button>
+
+      <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
+    </>
+  );
+}
+
+export const useLikeButton = ({
+  liked,
+  sessionId,
+}: {
+  liked: boolean;
+  sessionId: number;
+}) => {
   const mutation = useLikeSession(sessionId);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
@@ -55,20 +82,8 @@ export default function LikeButton({ liked, sessionId }: LikeButtonProps) {
     });
   };
 
-  return (
-    <>
-      <button onClick={handleClick}>
-        {liked ? (
-          <HeartFill className="text-brand-500 block size-7" />
-        ) : (
-          <HeartOutline className="block size-7 text-[#9CA3AF]" />
-        )}
-      </button>
-
-      <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
-    </>
-  );
-}
+  return { handleClick, isLoginModalOpen, setIsLoginModalOpen };
+};
 
 export function LoginModal({
   isOpen,
