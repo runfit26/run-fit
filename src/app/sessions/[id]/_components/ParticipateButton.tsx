@@ -1,4 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useState } from 'react';
 import {
   useRegisterSession,
   useUnregisterSession,
@@ -6,45 +8,156 @@ import {
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
 import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 
 interface ParticipateButtonProps {
   className?: string;
   sessionId: number;
 }
 
-export default function ParticipateButton({
-  className,
-  sessionId,
-}: ParticipateButtonProps) {
-  const data = useQuery({
+/**
+ 세션 참여/참여취소 버튼 컴포넌트
+ 사용자가 참여한 상태인지에 따라 버튼 동작이 달라짐
+ 참여 상태 구하는 법: 세션 참가자 목록 API 조회 후 현재 사용자 ID와 비교
+  - 참여한 상태: "참여취소" 버튼, 클릭 시 세션 참여 취소 뮤테이션 실행
+  - 참여하지 않은 상태: "참여하기" 버튼, 클릭 시 세션 참여 뮤테이션 실행
+
+  세션 API 활용
+  - 세션이 시간이 마감된 경우 버튼 비활성화
+  - 세션 인원이 가득 찬 경우에도 버튼 비활성화
+
+  버튼 클릭 시 크루에 가입하지 않았으면(API 응답으로 제공됨) 크루 가입부터 유도하는 모달이 뜨도록 함
+ */
+
+export function useSessionAction(sessionId: number) {
+  const [isCrewModalOpen, setIsCrewModalOpen] = useState(false);
+
+  const { data: user } = useQuery({ ...userQueries.me.info() });
+  const { data: detail } = useQuery({ ...sessionQueries.detail(sessionId) });
+  const { data: participantsData } = useQuery({
     ...sessionQueries.participants(sessionId),
-  });
-  const user = useQuery({
-    ...userQueries.me.info(),
+    enabled: !!user,
   });
 
-  const isParticipating = data.data?.participants.find(
-    (participant) => participant.userId === user.data?.id
+  const isParticipating = !!participantsData?.participants.find(
+    (p) => p.userId === user?.id
   );
 
-  const registerMutation = useRegisterSession(sessionId);
+  const isClosed = detail ? new Date(detail.registerBy) < new Date() : false;
+  const isFull = detail
+    ? detail.currentParticipantCount >= detail.maxParticipantCount
+    : false;
+
+  const registerMutation = useRegisterSession(sessionId, {
+    onError: (error) => {
+      const status = error.status;
+      const errorCode = error.code;
+
+      if (status === '403' || errorCode === 'NOT_CREW_MEMBER') {
+        setIsCrewModalOpen(true);
+      }
+    },
+  });
+
   const unregisterMutation = useUnregisterSession(sessionId);
 
-  return isParticipating ? (
-    <Button
-      variant="outlined"
-      className={className}
-      onClick={() => unregisterMutation.mutate()}
-    >
-      참여취소
-    </Button>
-  ) : (
-    <Button
-      variant="default"
-      className={className}
-      onClick={() => registerMutation.mutate()}
-    >
-      참여하기
-    </Button>
+  return {
+    states: {
+      isParticipating,
+      isClosed,
+      isFull,
+      isLoading: !detail || !participantsData,
+      isCrewModalOpen, // 모달 상태 반환
+    },
+    actions: {
+      register: registerMutation.mutate,
+      unregister: unregisterMutation.mutate,
+      setIsOpen: (open: boolean) => setIsCrewModalOpen(open), // 모달 닫기 기능 반환
+    },
+    detail: detail!,
+  };
+}
+
+export default function ParticipateButton({
+  sessionId,
+  className,
+}: ParticipateButtonProps) {
+  const { states, actions, detail } = useSessionAction(sessionId);
+
+  if (states.isLoading)
+    return (
+      <Button disabled className={className}>
+        확인 중...
+      </Button>
+    );
+
+  if (states.isParticipating) {
+    return (
+      <Button
+        variant="outlined"
+        className={className}
+        onClick={() => actions.unregister()}
+      >
+        참여취소
+      </Button>
+    );
+  }
+
+  const isDisabled = states.isClosed || states.isFull;
+  const buttonText = states.isClosed
+    ? '모집 마감'
+    : states.isFull
+      ? '정원 초과'
+      : '참여하기';
+
+  return (
+    <>
+      <Button
+        variant="default"
+        className={className}
+        disabled={isDisabled}
+        onClick={() => actions.register()}
+      >
+        {buttonText}
+      </Button>
+
+      <JoinCrewModal
+        isOpen={states.isCrewModalOpen}
+        setIsOpen={actions.setIsOpen}
+        crewId={detail?.crewId}
+      />
+    </>
+  );
+}
+
+export function JoinCrewModal({
+  isOpen,
+  setIsOpen,
+  crewId,
+}: {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  crewId: number;
+}) {
+  return (
+    <Modal open={isOpen}>
+      <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
+        <Modal.Title />
+
+        <Modal.CloseButton onClick={() => setIsOpen(false)} />
+
+        <Modal.Description>
+          세션에 참여하려면 먼저 크루에 가입해야 해요!
+        </Modal.Description>
+
+        <Modal.Footer>
+          <Modal.Close asChild>
+            <Button>
+              <Link href={`/crews/${crewId}`}>가입하러 가기</Link>
+            </Button>
+          </Modal.Close>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
   );
 }
