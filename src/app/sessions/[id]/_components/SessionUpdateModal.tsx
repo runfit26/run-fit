@@ -68,7 +68,7 @@ export default function SessionUpdateModal({
           <form
             id="update-session-form"
             onSubmit={methods.handleSubmit(onSubmit)}
-            className="w-full"
+            className="w-full flex-1"
           >
             <SessionUpdateFields />
           </form>
