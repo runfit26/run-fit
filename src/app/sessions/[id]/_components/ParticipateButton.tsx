@@ -98,16 +98,16 @@ export default function ParticipateButton({
         className={className}
         onClick={() => actions.unregister()}
       >
-        참여취소
+        참여 취소하기
       </Button>
     );
   }
 
   const isDisabled = states.isClosed || states.isFull;
   const buttonText = states.isClosed
-    ? '모집 마감'
+    ? '참여 마감'
     : states.isFull
-      ? '정원 초과'
+      ? '인원 모집 완료'
       : '참여하기';
 
   return (
