@@ -11,13 +11,11 @@ export default function ProfileImageUploader({
   onChange?: (file: File | null) => void;
   size?: number;
 }) {
-  const { inputRef, items, open, addFiles, acceptAttr } = useImageUploader({
+  const { inputRef, preview, open, addFiles, acceptAttr } = useImageUploader({
     maxFiles: 1,
     maxSizeMB: 5,
+    initialUrl: imageUrl,
   });
-
-  const displaySrc =
-    items[0]?.previewUrl || imageUrl || '/assets/profile-default.png';
 
   return (
     <div className="relative mx-auto" style={{ width: size, height: size }}>
@@ -36,7 +34,12 @@ export default function ProfileImageUploader({
         className="relative overflow-hidden rounded-full border-[1.5px] border-gray-700"
         style={{ width: size, height: size }}
       >
-        <Image src={displaySrc} alt="profile" fill className="object-cover" />
+        <Image
+          src={preview || '/assets/profile-default.png'}
+          alt="profile"
+          fill
+          className="object-cover"
+        />
       </div>
 
       <button
