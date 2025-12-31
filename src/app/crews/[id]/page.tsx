@@ -132,7 +132,7 @@ export default function Page() {
                     <span className="text-title3-semibold text-gray-50">
                       크루 소개
                     </span>
-                    <div className="text-body2-regular text-gray-100">
+                    <div className="text-body2-regular whitespace-pre-line text-gray-100">
                       {crew?.description}
                     </div>
                   </div>
