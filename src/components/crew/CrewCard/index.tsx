@@ -19,7 +19,7 @@ export default function CrewCard({ crew }: { crew: Crew }) {
   );
 
   return (
-    <div className="tablet:border-t tablet:border-gray-700 tablet:py-5 flex justify-between">
+    <div className="tablet:py-5 flex justify-between">
       <CrewCardLeft crew={crew} members={crewMembers?.members} />
       <CrewCardRight sessions={crewSessionData?.content} />
     </div>
@@ -80,7 +80,7 @@ function CrewCardInfo({
   members?: CrewMember[];
 }) {
   return (
-    <div className="tablet:w-[500px] flex flex-col justify-evenly gap-2 p-3">
+    <div className="tablet:w-[500px] flex flex-col justify-evenly gap-2 p-3 pb-1">
       <Link
         href={`/crews/${id}`}
         className="tablet:text-title3-semibold text-body2-semibold line-clamp-1 text-gray-50"
