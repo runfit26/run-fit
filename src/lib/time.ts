@@ -42,9 +42,10 @@ export function formatMinutesToHHmm(minutes: number) {
  * target: 목표 일시(ISO string 또는 Date)
  * base: 기준 일시(기본값: 현재)
  *
- * diff > 0 : D-남은일
- * diff = 0 : D-Day
- * diff < 0 : D+지난일
+ * 남은 시간 <= 0 : 마감됨
+ * 남은 시간 < 1시간 : 곧 마감
+ * 남은 시간 < 24시간 : n시간 후 마감
+ * 남은 시간 >= 24시간 : 마감 D-n
  */
 export function formatDDay(
   endDate: string | number | Date,

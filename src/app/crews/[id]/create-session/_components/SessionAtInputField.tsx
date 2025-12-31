@@ -25,7 +25,6 @@ function combineDateAndMinutesToLocalIso(dateOnly: Date, minutes: number) {
   const h = String(Math.floor(minutes / 60)).padStart(2, '0');
   const min = String(minutes % 60).padStart(2, '0');
 
-  // 🔥 로컬 시간 그대로
   return `${y}-${m}-${d}T${h}:${min}:00`;
 }
 
