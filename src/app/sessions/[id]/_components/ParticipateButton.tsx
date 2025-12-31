@@ -86,7 +86,7 @@ export function useSessionAction(sessionId: number) {
       setIsLoginModalOpen,
       setIsCrewModalOpen,
     },
-    detail: detail!,
+    detail,
   };
 }
 
@@ -132,19 +132,19 @@ export default function ParticipateButton({
       >
         {buttonText}
       </Button>
-
       {/* 로그인 유도 모달 */}
       <LoginModal
         isOpen={states.isLoginModalOpen}
         setIsOpen={actions.setIsLoginModalOpen}
       />
-
       {/* 크루 가입 유도 모달 */}
-      <JoinCrewModal
-        isOpen={states.isCrewModalOpen}
-        setIsOpen={actions.setIsCrewModalOpen}
-        crewId={detail?.crewId}
-      />
+      {detail && (
+        <JoinCrewModal
+          isOpen={states.isCrewModalOpen}
+          setIsOpen={actions.setIsCrewModalOpen}
+          crewId={detail.crewId}
+        />
+      )}
     </>
   );
 }
