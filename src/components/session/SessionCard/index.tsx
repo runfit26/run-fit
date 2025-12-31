@@ -8,6 +8,7 @@ import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import Location from '@/assets/icons/location.svg?react';
 import { DdayBadge, LevelBadge, PaceBadge } from '@/components/ui/Badge';
 import { formatTimeToKorean } from '@/lib/time';
+import { cn } from '@/lib/utils';
 import type { Session } from '@/types';
 import ProfileList from '../../user/ProfileList';
 
@@ -58,9 +59,10 @@ export default function SessionCard({
             src={image || '/assets/session-default.png'}
             alt="Session"
             fill
-            className={
-              'rounded-xl object-cover transition-opacity duration-300 hover:opacity-80'
-            }
+            className={cn(
+              'rounded-xl object-cover transition-opacity duration-300 hover:opacity-80',
+              session.image ? 'shadow-sm' : 'border border-gray-500'
+            )}
           />
         </Link>
         <div className="pointer-events-none absolute top-3 left-3">
