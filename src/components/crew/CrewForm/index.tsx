@@ -80,34 +80,39 @@ export default function CrewForm(props: CrewFormProps) {
   const { errors } = form.formState;
 
   return (
-    <form onSubmit={submit} className="flex w-full flex-col gap-4">
+    <form className="flex w-full flex-col gap-4" onSubmit={submit}>
       <CoverImageUploader
+        className="bg-gray-750"
         initialUrl={
           typeof defaultValues.image === 'string'
             ? defaultValues.image
             : undefined
         }
         onFileChange={handleImageChange}
-        className="bg-gray-750"
       />
 
       <Input
         label="크루 이름"
         {...form.register('name')}
-        placeholder="크루 이름을 작성해주세요"
-        errorMessage={errors.name?.message}
         className="bg-gray-750"
+        errorMessage={errors.name?.message}
+        placeholder="크루 이름을 작성해주세요"
       />
 
       <div className="flex flex-col gap-1">
         <Label>크루 소개</Label>
         <Textarea
           {...form.register('description')}
-          placeholder="크루에 대한 상세 설명을 작성해주세요"
           className="bg-gray-750"
+          placeholder="크루에 대한 상세 설명을 작성해주세요"
         />
         {errors.description && (
-          <p className="text-error-100 mt-2">{errors.description.message}</p>
+          <p
+            className="text-error-100 tablet:text-body3-semibold text-caption-semibold"
+            id="crew-description-error"
+          >
+            {errors.description.message}
+          </p>
         )}
       </div>
 
@@ -117,8 +122,9 @@ export default function CrewForm(props: CrewFormProps) {
           {SIDO_LIST.map((sido) => (
             <Chip
               key={sido}
-              tone={isPc ? 'secondary' : 'primary'}
+              aria-label={`${sido} ${selectedCity === sido ? '선택됨' : '선택'}`}
               state={selectedCity === sido ? 'active' : 'default'}
+              tone={isPc ? 'secondary' : 'primary'}
               onClick={() => handleSelectCity(sido)}
             >
               {sido}

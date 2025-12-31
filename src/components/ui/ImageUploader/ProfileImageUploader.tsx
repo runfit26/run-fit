@@ -21,9 +21,9 @@ export default function ProfileImageUploader({
     <div className="relative mx-auto" style={{ width: size, height: size }}>
       <input
         ref={inputRef}
-        type="file"
         accept={acceptAttr}
         className="hidden"
+        type="file"
         onChange={(e) => {
           addFiles(e.target.files, 'replace');
           onChange?.(e.target.files?.[0] ?? null);
@@ -35,19 +35,19 @@ export default function ProfileImageUploader({
         style={{ width: size, height: size }}
       >
         <Image
-          src={preview || '/assets/profile-default.png'}
           alt="profile"
-          fill
           className="object-cover"
+          fill
+          src={preview || '/assets/profile-default.png'}
         />
       </div>
 
       <button
+        className="absolute right-0 bottom-0 flex size-7 items-center justify-center rounded-full bg-gray-500"
         type="button"
         onClick={open}
-        className="absolute right-0 bottom-0 flex size-7 items-center justify-center rounded-full bg-gray-500"
       >
-        <Edit width={12} height={12} className="text-gray-50" />
+        <Edit className="text-gray-50" height={12} width={12} />
       </button>
     </div>
   );
