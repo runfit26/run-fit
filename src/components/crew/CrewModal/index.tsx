@@ -42,27 +42,26 @@ export default function CrewModal({
         </Modal.Header>
 
         <Modal.CloseButton
-          onClick={() => onOpenChange(false)}
           className="tablet:block top-[26px] right-6 hidden"
+          onClick={() => onOpenChange(false)}
         />
 
         <div className="scrollbar-hidden w-full overflow-y-auto px-0.5">
           {open && mode === 'create' && (
             <CrewForm
-              mode="create"
               defaultValues={{
                 name: '',
                 description: '',
                 city: '서울',
                 image: undefined,
               }}
+              mode="create"
               onSuccess={handleSuccess}
             />
           )}
 
           {open && mode === 'edit' && crewData && (
             <CrewForm
-              mode="edit"
               crewId={crewData.id}
               defaultValues={{
                 name: crewData.name,
@@ -70,6 +69,7 @@ export default function CrewModal({
                 city: crewData.city,
                 image: crewData.image || undefined,
               }}
+              mode="edit"
               onSuccess={handleSuccess}
             />
           )}
