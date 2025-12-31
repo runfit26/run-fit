@@ -122,16 +122,24 @@ export function useLeaveCrew(crewId: number) {
 }
 
 // 크루 상세 정보 수정
-export function useUpdateCrewDetail(crewId: number) {
+export function useUpdateCrewDetail(crewId?: number) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: CrewRequestBody) => updateCrewDetail(crewId, body),
+    mutationFn: (body: CrewRequestBody & { id?: number }) => {
+      const id = body.id ?? crewId; // body.id 우선, 없으면 crewId
+      if (!id) {
+        throw new Error('크루 ID가 필요합니다.');
+      }
+      return updateCrewDetail(id, body);
+    },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: crewQueries.detail(crewId).queryKey, // 크루 상세 정보 캐시 무효화
-      });
+      if (crewId) {
+        queryClient.invalidateQueries({
+          queryKey: crewQueries.detail(crewId).queryKey,
+        });
+      }
       queryClient.invalidateQueries({ queryKey: crewQueries.lists() }); // 전체 크루 목록 캐시 무효화
     },
   });
