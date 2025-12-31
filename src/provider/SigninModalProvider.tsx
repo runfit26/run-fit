@@ -22,11 +22,11 @@ export default function SigninModalProvider() {
           세션을 찜하려면 로그인이 필요해요!
         </Modal.Description>
         <Modal.Footer>
-          <Modal.Close asChild>
-            <Button asChild>
-              <Link href={`/signin`}>로그인하러 가기</Link>
-            </Button>
-          </Modal.Close>
+          <Button asChild>
+            <Link href="/signin" onClick={() => signInModal.close()}>
+              로그인하러 가기
+            </Link>
+          </Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal>
