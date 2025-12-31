@@ -1,7 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useLikeSession } from '@/api/mutations/likeMutations';
-import { userQueries } from '@/api/queries/userQueries';
 import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import HeartOutline from '@/assets/icons/heart-outline.svg?react';
 
@@ -11,15 +9,6 @@ interface LikeButtonProps {
 }
 
 export default function LikeButton({ liked, sessionId }: LikeButtonProps) {
-  const {
-    data: user,
-    isLoading,
-    isError,
-  } = useQuery({
-    ...userQueries.me.info(),
-    retry: false,
-  });
-
   const mutation = useLikeSession(sessionId);
 
   const handleClick = () => {
@@ -31,11 +20,16 @@ export default function LikeButton({ liked, sessionId }: LikeButtonProps) {
             : '찜한 세션에 추가되었습니다.'
         );
       },
+      onError: (error) => {
+        if (error.status === '401' || error.code === 'UNAUTHORIZED') {
+          toast.error('로그인이 필요합니다.');
+        }
+      },
     });
   };
 
   return (
-    <button onClick={handleClick} disabled={isLoading || isError || !user}>
+    <button onClick={handleClick}>
       {liked ? (
         <HeartFill className="text-brand-500 block size-7" />
       ) : (
