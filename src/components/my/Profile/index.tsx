@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { userQueries } from '@/api/queries/userQueries';
 import Button from '@/components/ui/Button';
-import { formatPaceText, secondsToMinutes } from '@/lib/pace';
+import { formatPaceText, splitSecondsToMinutesAndSeconds } from '@/lib/pace';
 import type { Profile as ProfileType } from '@/types';
 import ProfileEdit from '../ProfileEdit';
 
@@ -15,9 +15,9 @@ export default function Profile() {
 
   function isEmptyProfile(profile: ProfileType) {
     return (
-      !profile.introduction ||
-      !profile.city ||
-      profile.pace === null ||
+      !profile.introduction &&
+      !profile.city &&
+      profile.pace === null &&
       (profile.styles?.length ?? 0) === 0
     );
   }
@@ -31,15 +31,15 @@ export default function Profile() {
           <div className="flex items-center justify-between">
             <div className="relative size-20 overflow-hidden rounded-full border-[1.5px] border-gray-700">
               <Image
-                src={data?.image || '/assets/profile-default.png'}
                 alt="profile"
-                fill
                 className="object-cover"
+                fill
+                src={data?.image || '/assets/profile-default.png'}
               />
             </div>
             <Button
-              variant="neutral"
               className="text-caption-semibold tablet:text-body3-semibold tablet:h-9 tablet:px-3 h-8 px-3.5 py-2"
+              variant="neutral"
               onClick={() => setOpen(true)}
             >
               내 정보 수정
@@ -72,7 +72,9 @@ export default function Profile() {
                 <p className="text-caption-medium text-gray-300">러닝 페이스</p>
                 <p className="text-body2-semibold">
                   {data?.pace
-                    ? formatPaceText(...secondsToMinutes(data?.pace))
+                    ? formatPaceText(
+                        splitSecondsToMinutesAndSeconds(data?.pace)
+                      )
                     : '-'}
                 </p>
               </div>

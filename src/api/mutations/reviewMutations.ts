@@ -2,21 +2,27 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createSessionReview,
-  CreateSessionReviewResponseData,
   deleteSessionReview,
+  type CreateSessionReviewRequestBody,
 } from '@/api/fetch/reviews';
 import { reviewQueries } from '@/api/queries/reviewQueries';
 import { sessionQueries } from '../queries/sessionQueries';
 import { userQueries } from '../queries/userQueries';
 
 // 세션 리뷰 작성
-export const useCreateSessionReview = (sessionId: number) => {
+export const useCreateSessionReview = (sessionId?: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: CreateSessionReviewResponseData) =>
-      createSessionReview(sessionId, body),
+    mutationFn: (body: CreateSessionReviewRequestBody) => {
+      if (!sessionId) {
+        throw new Error('sessionId 알 수 없음');
+      }
+      return createSessionReview(sessionId, body);
+    },
     onSuccess: () => {
+      if (!sessionId) return;
+
       queryClient.invalidateQueries({
         queryKey: reviewQueries.session(sessionId).lists(), // 해당 세션 리뷰 목록 캐시 무효화
       });

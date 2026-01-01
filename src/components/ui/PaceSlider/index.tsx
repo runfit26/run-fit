@@ -2,7 +2,7 @@
 
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import * as React from 'react';
-import { formatTimeText, secondsToMinutes } from '@/lib/pace';
+import { formatTimeText, splitSecondsToMinutesAndSeconds } from '@/lib/pace';
 import { cn } from '@/lib/utils';
 
 const CIRCLE_COUNT = 9;
@@ -41,31 +41,31 @@ export default function PaceSlider({
       <div className="text-body2-semibold pt-3 pb-3.5 text-center text-white">
         {value === null
           ? '- 분/km'
-          : `${formatTimeText(...secondsToMinutes(value))}/km`}
+          : `${formatTimeText(splitSecondsToMinutesAndSeconds(value))}/km`}
       </div>
       <div className="flex items-center justify-between gap-2">
         <div className="text-body3-regular shrink-0 text-gray-300">
-          {formatTimeText(...secondsToMinutes(min))}
+          {formatTimeText(splitSecondsToMinutesAndSeconds(min))}
         </div>
         <SliderPrimitive.Root
-          data-slot="slider"
           aria-label="러닝 페이스 선택"
-          value={radixValue}
-          min={min}
-          max={max}
-          onValueChange={handleRadixValueChange}
           className={cn(
             'relative flex w-full touch-none items-center select-none data-disabled:opacity-50'
           )}
+          data-slot="slider"
+          max={max}
+          min={min}
           step={step}
+          value={radixValue}
+          onValueChange={handleRadixValueChange}
           {...props}
         >
           <SliderPrimitive.Track
-            data-slot="slider-track"
             className={cn(
               'relative grow overflow-hidden rounded-full bg-gray-800 data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:w-full',
               className
             )}
+            data-slot="slider-track"
           >
             {Array.from({ length: CIRCLE_COUNT }, (_, index) => {
               return (
@@ -80,12 +80,12 @@ export default function PaceSlider({
             })}
           </SliderPrimitive.Track>
           <SliderPrimitive.Thumb
-            data-slot="slider-thumb"
             className="border-brand-400 ring-brand-400/50 block size-6 shrink-0 rounded-full border-2 bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+            data-slot="slider-thumb"
           />
         </SliderPrimitive.Root>
         <div className="text-body3-regular shrink-0 text-gray-300">
-          {formatTimeText(...secondsToMinutes(max))}
+          {formatTimeText(splitSecondsToMinutesAndSeconds(max))}
         </div>
       </div>
     </div>

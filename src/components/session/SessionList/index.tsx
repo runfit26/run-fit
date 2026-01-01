@@ -12,9 +12,9 @@ export default function SessionList({
   loadMoreRef?: React.RefObject<HTMLDivElement | null>;
 }) {
   return (
-    <div className="mt-6 flex w-full flex-1">
+    <div className="tablet:mt-6 mt-2 flex w-full flex-1">
       {sessions?.length ? (
-        <div className="desktop:grid-cols-3 grid w-full grid-cols-2 gap-6">
+        <div className="laptop:grid-cols-3 grid w-full grid-cols-2 gap-6">
           {sessions.map((session) => (
             <SessionCard key={session.id} session={session} />
           ))}
@@ -31,10 +31,10 @@ function EmptyState() {
   return (
     <div className="flex w-full flex-1 flex-col items-center justify-center gap-10">
       <Image
-        src="/assets/empty-session.png"
         alt="No Sessions"
-        width={300}
         height={150}
+        src="/assets/session-default.png"
+        width={300}
       />
       <span className="text-body2-medium text-center text-gray-300">
         아직 생성된 세션이 없어요 <br /> 세션은 크루를 개설하거나 <br />

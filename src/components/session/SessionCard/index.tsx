@@ -4,11 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
 import { crewQueries } from '@/api/queries/crewQueries';
-import Liked from '@/assets/icons/liked.svg?react';
+import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import Location from '@/assets/icons/location.svg?react';
-import { formatTimeToKorean } from '@/lib/time';
+import { DdayBadge, LevelBadge, PaceBadge } from '@/components/ui/Badge';
+import { formatDDay, formatTimeToKorean } from '@/lib/time';
 import type { Session } from '@/types';
-import { DdayBadge, LevelBadge, PaceBadge } from '../../ui/Badge';
 import ProfileList from '../../user/ProfileList';
 
 interface SessionCardProps {
@@ -36,13 +36,6 @@ export default function SessionCard({
   } = session;
   const { data: crewData } = useQuery(crewQueries.detail(crewId));
 
-  const today = new Date();
-  const registerByDate = new Date(registerBy);
-  const timeDiff = registerByDate.getTime() - today.getTime();
-  const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-  const ddayText =
-    timeDiff < 0 ? '마감됨' : dayDiff > 0 ? `마감 D-${dayDiff}` : '마감 D-Day';
-
   const sessionAtDate = new Date(sessionAt);
   const sessionDate = `${sessionAtDate.getMonth() + 1}월 ${sessionAtDate.getDate()}일`;
   const sessionTime = formatTimeToKorean(
@@ -55,29 +48,26 @@ export default function SessionCard({
       <div className="tablet:aspect-video relative aspect-165/185 w-full cursor-pointer self-stretch overflow-hidden rounded-lg">
         <Link href={`/sessions/${sessionId}`}>
           <Image
-            src={image || '/assets/session-default.png'}
             alt="Session"
-            fill
             className={
               'rounded-xl object-cover transition-opacity duration-300 hover:opacity-80'
             }
+            fill
+            src={image || '/assets/session-default.png'}
           />
         </Link>
-        {/* prettier-ignore */}
-        <div className="absolute top-3 left-3 pointer-events-none">
-          <DdayBadge className="tablet:hidden" size="sm">{ddayText}</DdayBadge>
-          <DdayBadge className="hidden tablet:inline-flex laptop:hidden" size="md">{ddayText}</DdayBadge>
-          <DdayBadge className="hidden laptop:inline-flex" size="lg">{ddayText}</DdayBadge>
+        <div className="pointer-events-none absolute top-3 left-3">
+          <DdayBadge dday={formatDDay(registerBy)} />
         </div>
         <button
+          className="absolute top-3 right-3"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             // TODO: 좋아요 기능 구현
           }}
-          className="absolute top-3 right-3"
         >
-          <Liked className="stroke-offset-[-0.50px] size-6 fill-neutral-900/50 stroke-sky-100 stroke-1" />
+          <HeartFill className="stroke-offset-[-0.50px] size-6 fill-neutral-900/50 stroke-sky-100 stroke-1" />
         </button>
         <div className="absolute bottom-3 left-3 flex items-center gap-0.5 md:gap-1">
           <Location className="size-4 fill-gray-200" />
@@ -94,14 +84,9 @@ export default function SessionCard({
         <div className="text-caption-regular tablet:text-body3-regular mobile:mb-1 mb-2 text-gray-300">
           {`${sessionDate} • ${sessionTime}`}
         </div>
-        {/* prettier-ignore */}
-        <div className="flex gap-0.5 desktop:gap-1 items-center">
-          <PaceBadge pace={pace} size="sm" className="tablet:hidden" />
-          <LevelBadge level={level} size="sm" className="tablet:hidden" />
-          <PaceBadge pace={pace} size="md" className="hidden tablet:inline-flex laptop:hidden" />
-          <LevelBadge level={level} size="md" className="hidden tablet:inline-flex laptop:hidden" />
-          <PaceBadge pace={pace} size="lg" className="hidden laptop:inline-flex" />
-          <LevelBadge level={level} size="lg" className="hidden laptop:inline-flex" />
+        <div className="desktop:gap-1 flex items-center gap-0.5">
+          <PaceBadge paceSeconds={pace} />
+          <LevelBadge level={level} />
         </div>
       </div>
       {displayParticipants && (
