@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import BottomBar from './_components/BottomBar';
 import SessionDetailContainer from './_components/SessionDetailContainer';
 
@@ -7,6 +8,10 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const sessionId = Number((await params).id);
+
+  if (isNaN(sessionId)) {
+    notFound();
+  }
 
   return (
     <>
