@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import ProfileList from '@/components/user/ProfileList';
+import { generateNextImageSizes } from '@/lib/Image';
 import type { Crew, CrewMember, Session } from '@/types';
 
 export default function CrewCard({ crew }: { crew: Crew }) {
@@ -35,7 +36,7 @@ function CrewCardLeft({
 }) {
   return (
     <div className="tablet:flex-row flex w-full flex-col gap-3 rounded-xl">
-      <CrewCardImage id={id} image={image} />
+      <CrewCardImage id={id} image={image} name={name} />
       <CrewCardInfo
         city={city}
         description={description}
@@ -48,16 +49,28 @@ function CrewCardLeft({
   );
 }
 
-function CrewCardImage({ id, image }: { id: number; image?: string | null }) {
+function CrewCardImage({
+  id,
+  image,
+  name,
+}: {
+  id: number;
+  image?: string | null;
+  name: string;
+}) {
   return (
     <Link
-      className="tablet:w-60 tablet:aspect-video relative aspect-327/75 shrink-0 overflow-hidden rounded-xl"
+      className="tablet:w-60 tablet:aspect-240/148 relative aspect-327/132 h-[132px] shrink-0 overflow-hidden rounded-xl"
       href={`/crews/${id}`}
     >
       <Image
-        alt="Crew"
+        alt={`${name} 크루 이미지`}
         className="rounded-xl object-cover transition-opacity duration-300 hover:opacity-80"
         fill
+        sizes={generateNextImageSizes({
+          mobile: '327px',
+          tablet: '240px',
+        })}
         src={image || '/assets/crew-default.png'}
       />
     </Link>
