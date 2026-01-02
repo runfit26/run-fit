@@ -1,9 +1,8 @@
 'use client';
 
-import { ErrorBoundary, Suspense } from '@suspensive/react';
+import { ErrorBoundary } from '@suspensive/react';
 import MyInfo from '@/components/my/MyInfo';
 import MyTabs from '@/components/my/MyTabs';
-import Skeleton from '@/components/ui/Skeleton';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 function ErrorFallback() {
@@ -37,7 +36,7 @@ export default function MyLayout({ children }: { children: React.ReactNode }) {
         </div>
         <main className="flex-1">
           <ErrorBoundary fallback={ErrorFallback}>
-            <Suspense fallback={<Skeleton.Page />}>{children}</Suspense>
+            {children}
           </ErrorBoundary>
         </main>
       </div>
