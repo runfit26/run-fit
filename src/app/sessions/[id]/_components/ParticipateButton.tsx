@@ -10,6 +10,7 @@ import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import { signInModal } from '@/store/signinModal';
 
 interface ParticipateButtonProps {
   className?: string;
@@ -32,7 +33,6 @@ interface ParticipateButtonProps {
  */
 
 export function useSessionAction(sessionId: number) {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCrewModalOpen, setIsCrewModalOpen] = useState(false);
 
   const { data: user } = useQuery({ ...userQueries.me.info() });
@@ -70,7 +70,7 @@ export function useSessionAction(sessionId: number) {
 
       // 1. 비로그인 처리 (401)
       if (status === '401' || errorCode === 'UNAUTHORIZED') {
-        setIsLoginModalOpen(true);
+        signInModal.open();
         return;
       }
 
@@ -91,13 +91,11 @@ export function useSessionAction(sessionId: number) {
       isFull,
       isHost,
       isLoading: !detail || (!!user && !participantsData), // 유저가 있는데 데이터가 없으면 로딩
-      isLoginModalOpen,
       isCrewModalOpen,
     },
     actions: {
       register: registerMutation.mutate,
       unregister: unregisterMutation.mutate,
-      setIsLoginModalOpen,
       setIsCrewModalOpen,
     },
     detail,
@@ -147,11 +145,6 @@ export default function ParticipateButton({
       >
         {buttonText}
       </Button>
-      {/* 로그인 유도 모달 */}
-      <LoginModal
-        isOpen={states.isLoginModalOpen}
-        setIsOpen={actions.setIsLoginModalOpen}
-      />
       {/* 크루 가입 유도 모달 */}
       {detail && (
         <JoinCrewModal
@@ -161,33 +154,6 @@ export default function ParticipateButton({
         />
       )}
     </>
-  );
-}
-
-export function LoginModal({
-  isOpen,
-  setIsOpen,
-}: {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-}) {
-  return (
-    <Modal open={isOpen}>
-      <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
-        <Modal.Title />
-        <Modal.CloseButton onClick={() => setIsOpen(false)} />
-        <Modal.Description>
-          세션에 참여하려면 로그인이 필요해요!
-        </Modal.Description>
-        <Modal.Footer>
-          <Modal.Close asChild>
-            <Button asChild>
-              <Link href={`/signin`}>로그인하러 가기</Link>
-            </Button>
-          </Modal.Close>
-        </Modal.Footer>
-      </Modal.Content>
-    </Modal>
   );
 }
 
