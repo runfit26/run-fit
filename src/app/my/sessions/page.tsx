@@ -122,7 +122,10 @@ export default function Page() {
               key={session.id}
               className="laptop:w-[calc((100%-32px)/3)] tablet:w-[calc((100%-16px)/2)] w-[calc((100%-12px)/2)] shrink-0"
             >
-              <SessionCard session={normalizeSession(session)} />
+              <SessionCard
+                session={normalizeSession(session)}
+                isMySession={true}
+              />
             </div>
           ))}
           {isFetchingNextScheduled && (
@@ -137,7 +140,7 @@ export default function Page() {
         <h2 className="text-body1-semibold mb-5 text-gray-50">완료된 세션</h2>
 
         <div className="tablet:gap-3 flex flex-col gap-2">
-          {completedSessions?.sessions.map((session) => {
+          {completedSessions?.sessions.map((session, index) => {
             const isHost = userInfo
               ? session.hostUserId === userInfo.id
               : false;
@@ -166,7 +169,9 @@ export default function Page() {
                   }
                   actionPlacement={isMobile ? 'bottom' : 'side'}
                 />
-                <hr className="border-gray-750 w-full" />
+                {index !== completedSessions.sessions.length - 1 && (
+                  <hr className="border-gray-750 w-full" />
+                )}
               </div>
             );
           })}

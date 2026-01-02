@@ -8,17 +8,20 @@ import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import Location from '@/assets/icons/location.svg?react';
 import { DdayBadge, LevelBadge, PaceBadge } from '@/components/ui/Badge';
 import { formatTimeToKorean } from '@/lib/time';
+import { cn } from '@/lib/utils';
 import type { Session } from '@/types';
 import ProfileList from '../../user/ProfileList';
 
 interface SessionCardProps {
   session: Session;
   displayParticipants?: boolean;
+  isMySession?: boolean;
 }
 
 export default function SessionCard({
   session,
   displayParticipants = true,
+  isMySession = false,
 }: SessionCardProps) {
   const {
     crewId,
@@ -85,7 +88,14 @@ export default function SessionCard({
       </div>
 
       <div className="mobile:mb-2 desktop:mt-[18px] pointer-events-none my-3">
-        <span className="text-body3-semibold tablet:text-body2-semibold laptop:text-title3-semibold mb-0.5 line-clamp-1 text-gray-50">
+        <span
+          className={cn(
+            'mb-0.5 line-clamp-1 text-gray-50',
+            isMySession
+              ? 'text-body3-semibold tablet:text-body2-semibold'
+              : 'text-body3-semibold tablet:text-body2-semibold laptop:text-title3-semibold'
+          )}
+        >
           {name}
         </span>
         <div className="text-caption-regular tablet:text-body3-regular mobile:mb-1 mb-2 text-gray-300">
