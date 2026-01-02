@@ -28,7 +28,7 @@ export default function AddressInput({ className }: AddressInputProps) {
           openAddressSearch((data) => {
             const location = data.address;
             const cityParsed = citySchema.safeParse(data.sido);
-            const district = districtSchema.safeParse(data.sigungu);
+            const districtParsed = districtSchema.safeParse(data.sigungu);
 
             setValue('location', location, {
               shouldDirty: true,
@@ -44,8 +44,8 @@ export default function AddressInput({ className }: AddressInputProps) {
               setValue('city', '', { shouldDirty: true, shouldValidate: true });
             }
 
-            if (district.success) {
-              setValue('district', district.data, {
+            if (districtParsed.success) {
+              setValue('district', districtParsed.data, {
                 shouldDirty: true,
                 shouldValidate: true,
               });
