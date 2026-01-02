@@ -1,5 +1,17 @@
 echo "🚀 Push 전 안전 점검을 시작합니다..."
 
+echo "🧹 타입 캐시 정리 중..."
+if [ -d ".next/dev/types" ]; then
+    rm -rf .next/dev/types
+    echo "✓ .next/dev/types 디렉토리 삭제 완료"
+fi
+
+echo "🔄 타입 생성 중..."
+pnpm next typegen || {
+    echo "⚠️  타입 생성에 실패했습니다. push가 중단됩니다."
+    exit 1
+}
+
 echo "📦 TypeScript 타입 체크 중..."
 pnpm exec tsc --noEmit || {
     echo "⚠️  타입 에러가 있습니다. push가 중단됩니다."
@@ -13,7 +25,7 @@ git fetch origin main || {
 }
 
 echo "🧪 변경된 파일 기준 테스트 실행 중..."
-pnpm jest --changedSince=origin/main || {
+pnpm test --changedSince=origin/main || {
     echo "⚠️  테스트에 실패했습니다. push가 중단됩니다."
     exit 1
 }
