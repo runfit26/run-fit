@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   useDeleteCrew,
   useExpelMember,
@@ -14,7 +14,9 @@ import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import Modal from '@/components/ui/Modal';
 import UserAvatar from '@/components/ui/UserAvatar';
+import ProfileDetail from '@/components/user/ProfileDetail';
 import { useCrewRole } from '@/context/CrewDetailContext';
+import { cn } from '@/lib/utils';
 import { Crew, CrewMember, ROLE_LABEL } from '@/types';
 
 interface CrewMemberListProps {
@@ -29,6 +31,8 @@ export default function CrewMemberList({
 }: CrewMemberListProps) {
   const { myRole } = useCrewRole();
   const [editMode, setEditMode] = useState<'view' | 'edit'>('view');
+  const [isProfileDisplayed, setIsProfileDisplayed] = useState(false);
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-col">
@@ -61,7 +65,10 @@ export default function CrewMemberList({
           </Button>
         </Modal.Trigger>
         <Modal.Content
-          className="tablet:h-[620px] tablet:w-[400px] tablet:gap-4 flex flex-col gap-5 bg-gray-800"
+          className={cn(
+            'tablet:h-[620px] tablet:w-[400px] tablet:gap-4 flex flex-col gap-5 bg-gray-800',
+            isProfileDisplayed && 'hidden'
+          )}
           fullscreenWhenMobile
           onCloseAutoFocus={() => setEditMode('view')}
         >
@@ -102,7 +109,9 @@ export default function CrewMemberList({
               <CrewMemberListItem
                 key={member.userId}
                 editMode={editMode}
+                isProfileDisplayed={isProfileDisplayed}
                 member={member}
+                setIsProfileDisplayed={setIsProfileDisplayed}
               />
             ))}
           </Modal.Description>
@@ -229,7 +238,6 @@ function CrewMenuActions({ crew: crewData }: { crew?: Crew }) {
         </Modal.Content>
       </Modal>
 
-      {/* TODO: Edit Crew Modal - 크루 생성 추가 후 구현 예정 */}
       {/* TODO: Delegate Leader Modal - 디자인 없음, API 있음; 추후 구현 */}
     </>
   );
@@ -238,9 +246,13 @@ function CrewMenuActions({ crew: crewData }: { crew?: Crew }) {
 function CrewMemberListItem({
   member,
   editMode,
+  isProfileDisplayed,
+  setIsProfileDisplayed,
 }: {
   member: CrewMember;
   editMode: 'view' | 'edit';
+  isProfileDisplayed?: boolean;
+  setIsProfileDisplayed?: Dispatch<SetStateAction<boolean>>;
 }) {
   const { crewId } = useCrewRole();
 
@@ -256,15 +268,36 @@ function CrewMemberListItem({
     <div className="mb-5 flex items-center gap-3">
       <UserAvatar className="size-10 shrink-0" src={member.profileImage} />
       {editMode === 'view' && (
-        <div className="flex flex-col gap-1">
-          <div className="flex w-full items-center gap-1.5">
-            <span className="text-body3-semibold">{member.name}</span>
-            <RoleBadge role={member.role} />
-          </div>
-          <span className="text-caption-regular line-clamp-1">
-            {member.introduction || '안녕하세요:) 잘 부탁드립니다!'}
-          </span>
-        </div>
+        <Modal
+          onOpenChange={
+            setIsProfileDisplayed
+              ? () => setIsProfileDisplayed((prev) => !prev)
+              : undefined
+          }
+        >
+          <Modal.Trigger asChild>
+            <div className="flex flex-col gap-1">
+              <div className="flex w-full items-center gap-1.5">
+                <span className="text-body3-semibold">{member.name}</span>
+                <RoleBadge role={member.role} />
+              </div>
+              <span className="text-caption-regular line-clamp-1">
+                {member.introduction || '안녕하세요:) 잘 부탁드립니다!'}
+              </span>
+            </div>
+          </Modal.Trigger>
+          <Modal.Content className="tablet:w-[400px] w-[calc(100%-2rem)] gap-4">
+            <Modal.Title className="relative w-full">
+              {isProfileDisplayed && (
+                <Modal.EmptyCloseButton className="my-0.5 flex">
+                  <ChevronLeft className="size-6" />
+                </Modal.EmptyCloseButton>
+              )}
+              <Modal.CloseButton className="absolute top-0 right-0" />
+            </Modal.Title>
+            <ProfileDetail userId={member.userId} />
+          </Modal.Content>
+        </Modal>
       )}
       {editMode === 'edit' && (
         <div className="flex w-full items-center justify-between">
