@@ -16,10 +16,10 @@ export default function SessionList({
 
   return (
     <>
-      <div className="tablet:mt-6 mt-2 flex w-full flex-1">
+      <div className="tablet:my-6 my-2 flex w-full flex-1">
         {sessions?.length ? (
           <>
-            <ul className="laptop:grid-cols-3 grid w-full grid-cols-2 gap-6">
+            <ul className="laptop:grid-cols-3 tablet:gap-x-6 tablet:gap-y-10 grid w-full grid-cols-2 gap-6">
               {sessions.map((session) => (
                 <SessionCard
                   key={session.id}
