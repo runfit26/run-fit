@@ -19,7 +19,7 @@ export default function CrewPageContent() {
 
   return (
     <>
-      <FilterBar filters={filters} applyFilters={applyFilters} />
+      <FilterBar applyFilters={applyFilters} filters={filters} />
       <CrewList data={data?.crews} loadMoreRef={loadMoreRef} />
     </>
   );
@@ -33,7 +33,7 @@ function FilterBar({
   applyFilters: (filters: CrewListFilters) => void;
 }) {
   return (
-    <div className="mb-6 flex w-full items-center justify-between">
+    <div className="flex w-full items-center justify-between">
       <RegionFilter
         value={filters.city}
         onChange={(city) => applyFilters({ ...filters, city })}

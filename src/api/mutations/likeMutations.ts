@@ -4,14 +4,19 @@ import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
 
 // 세션 찜/취소
-export function useLikeSession(sessionId: number) {
+export function useLikeSession() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (isLiked: boolean) =>
-      isLiked ? deleteLikeSession(sessionId) : postLikeSession(sessionId),
+    mutationFn: ({
+      sessionId,
+      liked,
+    }: {
+      sessionId: number;
+      liked: boolean;
+    }) => (liked ? deleteLikeSession(sessionId) : postLikeSession(sessionId)),
 
-    onMutate: async (isLiked) => {
+    onMutate: async ({ sessionId, liked }) => {
       await queryClient.cancelQueries({
         queryKey: sessionQueries.detail(sessionId).queryKey,
       });
@@ -26,7 +31,7 @@ export function useLikeSession(sessionId: number) {
             if (!oldData) return oldData;
             return {
               ...oldData,
-              liked: !isLiked,
+              liked: !liked,
             };
           }
         );
@@ -35,7 +40,8 @@ export function useLikeSession(sessionId: number) {
       return { previousSessionData };
     },
 
-    onError: (_err, _isLiked, context) => {
+    onError: (_err, variables, context) => {
+      const sessionId = variables.sessionId;
       if (context?.previousSessionData) {
         queryClient.setQueryData(
           sessionQueries.detail(sessionId).queryKey,
@@ -44,7 +50,9 @@ export function useLikeSession(sessionId: number) {
       }
     },
 
-    onSettled: () => {
+    onSettled: (_response, _error, variables) => {
+      const sessionId = variables.sessionId;
+
       queryClient.invalidateQueries({
         queryKey: sessionQueries.detail(sessionId).queryKey,
       });

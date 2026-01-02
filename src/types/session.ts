@@ -39,6 +39,7 @@ export type SessionListFilters = PaginationQueryParams & {
   dateTo?: string;
   timeFrom?: string;
   timeTo?: string;
+  status?: 'OPEN' | 'CLOSED';
   sort: SessionSortKey;
 };
 
@@ -54,20 +55,6 @@ export type SessionFilterState = {
   time?: [number, number];
   level: SessionLevel | undefined;
 };
-
-export type LikeSessions = Pick<
-  Session,
-  | 'crewId'
-  | 'name'
-  | 'image'
-  | 'city'
-  | 'district'
-  | 'location'
-  | 'coords'
-  | 'sessionAt'
-  | 'level'
-  | 'status'
-> & { sessionId: number };
 
 export type ParticipatingSession = Omit<Session, 'description'> & {
   reviewed?: boolean;
