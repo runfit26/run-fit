@@ -87,9 +87,9 @@ export default function CrewMemberList({
                   </button>
                 )}
               </div>
-              <span className="text-body3-regular tablet:pb-0 pb-1 text-gray-200">
+              <Modal.Description className="text-body3-regular tablet:pb-0 pb-1 text-gray-200">
                 {crew.city} • 멤버 {members.length}명
-              </span>
+              </Modal.Description>
             </div>
             <Modal.CloseButton
               className="tablet:flex absolute top-0 right-0 my-0.5 hidden"
@@ -97,7 +97,7 @@ export default function CrewMemberList({
             />
           </Modal.Title>
           <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-gray-700" />
-          <Modal.Description className="flex w-full flex-1 flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
+          <div className="flex w-full flex-1 flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
             {members.map((member) => (
               <CrewMemberListItem
                 key={member.userId}
@@ -105,7 +105,7 @@ export default function CrewMemberList({
                 member={member}
               />
             ))}
-          </Modal.Description>
+          </div>
           {editMode !== 'view' && (
             <Modal.Footer className="w-full">
               <Button className="w-full" onClick={() => setEditMode('view')}>
