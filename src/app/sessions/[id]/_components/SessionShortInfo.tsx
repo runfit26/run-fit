@@ -80,7 +80,7 @@ export default function SessionShortInfo({
       <hr className="text-gray-500" />
       <div className="laptop:flex hidden items-center gap-7">
         <div className="flex items-center gap-4">
-          <LikeButton liked={session.liked} sessionId={session.id} />
+          <LikeButton sessionId={session.id} />
           <CopyUrlButton />
         </div>
         <ParticipateButton className="flex-1" sessionId={session.id} />

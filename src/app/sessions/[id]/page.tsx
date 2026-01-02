@@ -36,7 +36,7 @@ export default function Page() {
       <FixedBottomBar>
         <div className="flex items-center gap-7">
           <div className="flex items-center gap-4">
-            <LikeButton liked={session.liked} sessionId={session.id} />
+            <LikeButton sessionId={session.id} />
             <CopyUrlButton />
           </div>
           <ParticipateButton className="flex-1" sessionId={session.id} />
