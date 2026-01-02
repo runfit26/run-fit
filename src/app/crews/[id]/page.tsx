@@ -140,7 +140,7 @@ export default function Page() {
                     <span className="text-title3-semibold text-gray-50">
                       모집중인 세션
                     </span>
-                    <div className="grid grid-cols-3 gap-3">
+                    <ul className="grid grid-cols-3 gap-3">
                       {crewSessions?.content.slice(0, 3).map((session) => (
                         <SessionCard
                           key={session.id}
@@ -149,7 +149,7 @@ export default function Page() {
                           textSize="sm"
                         />
                       ))}
-                    </div>
+                    </ul>
                   </div>
                   <div className="flex flex-col gap-4">
                     <span className="text-title3-semibold text-gray-50">

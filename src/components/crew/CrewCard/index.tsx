@@ -147,8 +147,8 @@ function CrewCardSessions({ sessions }: { sessions?: Session[] }) {
         return (
           <Link
             key={session.id}
-            href={`/sessions/${session.id}`}
             className="text-body2-regular flex justify-between text-gray-100 transition-colors hover:opacity-80"
+            href={`/sessions/${session.id}`}
           >
             {session.name}
             <span className="text-body3-regular text-nowrap text-gray-200">
