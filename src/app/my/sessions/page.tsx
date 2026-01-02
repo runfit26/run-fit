@@ -1,6 +1,10 @@
 'use client';
 
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { Suspense } from '@suspensive/react';
+import {
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -13,30 +17,41 @@ import Spinner from '@/components/ui/Spinner';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ParticipatingSession, Session } from '@/types';
+import MySessionsSkeleton from './MySessionsSkeleton';
 
 export default function Page() {
+  return (
+    <Suspense fallback={<MySessionsSkeleton />}>
+      <SessionsContent />
+    </Suspense>
+  );
+}
+
+function SessionsContent() {
   const router = useRouter();
   const isMobile = useMediaQuery({ max: 'tablet' });
 
   const [open, setOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
 
-  const { data: userInfo } = useQuery(userQueries.me.info());
+  const { data: userInfo } = useSuspenseQuery(userQueries.me.info());
   const {
     data: scheduledSessions,
     fetchNextPage: fetchNextScheduled,
     hasNextPage: hasNextScheduled,
     isFetchingNextPage: isFetchingNextScheduled,
-    isLoading: isLoadingScheduled,
-  } = useInfiniteQuery(userQueries.me.sessions.participating('SCHEDULED'));
+  } = useSuspenseInfiniteQuery(
+    userQueries.me.sessions.participating('SCHEDULED')
+  );
 
   const {
     data: completedSessions,
     fetchNextPage: fetchNextCompleted,
     hasNextPage: hasNextCompleted,
     isFetchingNextPage: isFetchingNextCompleted,
-    isLoading: isLoadingCompleted,
-  } = useInfiniteQuery(userQueries.me.sessions.participating('COMPLETED'));
+  } = useSuspenseInfiniteQuery(
+    userQueries.me.sessions.participating('COMPLETED')
+  );
 
   const scheduledRef = useRef<HTMLDivElement | null>(null);
   const completedRef = useInfiniteScroll(fetchNextCompleted, hasNextCompleted);
@@ -70,19 +85,9 @@ export default function Page() {
   const scheduledCount = scheduledSessions?.sessions.length ?? 0;
   const completedCount = completedSessions?.sessions.length ?? 0;
 
-  const isLoading = isLoadingScheduled || isLoadingCompleted;
-
   const hasNoScheduled = scheduledCount === 0;
   const hasNoCompleted = completedCount === 0;
   const hasNoSessions = hasNoScheduled && hasNoCompleted;
-
-  if (isLoading) {
-    return (
-      <section className="flex h-[60vh] items-center justify-center">
-        <Spinner className="text-brand-500 size-8" />
-      </section>
-    );
-  }
 
   if (hasNoSessions) {
     return (
@@ -168,10 +173,8 @@ export default function Page() {
         ) : (
           <div className="tablet:gap-3 flex flex-col gap-2">
             {completedSessions?.sessions.map((session) => {
-              const isHost = userInfo
-                ? session.hostUserId === userInfo.id
-                : false;
-              const showReviewButton = !session.reviewed && userInfo && !isHost;
+              const isHost = session.hostUserId === userInfo.id;
+              const showReviewButton = !session.reviewed && !isHost;
 
               return (
                 <div key={session.id} className="flex flex-col gap-3">
@@ -202,11 +205,7 @@ export default function Page() {
             })}
             <div ref={completedRef} className="h-5" />
 
-            {isFetchingNextCompleted && (
-              <div className="flex shrink-0 items-center justify-center">
-                <Spinner className="text-brand-500 size-5" />
-              </div>
-            )}
+            {isFetchingNextCompleted && <Spinner.Scroll />}
           </div>
         )}
       </div>
