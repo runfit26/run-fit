@@ -3,7 +3,10 @@ import Input from '@/components/ui/Input';
 import { SessionCreateFormValues } from '../_others/schema';
 
 export default function NameInputField() {
-  const { register } = useFormContext<SessionCreateFormValues>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<SessionCreateFormValues>();
 
   return (
     <Input
@@ -11,6 +14,7 @@ export default function NameInputField() {
       id="session-name"
       placeholder="세션 이름을 입력하세요"
       {...register('name')}
+      errorMessage={errors.name?.message}
     />
   );
 }

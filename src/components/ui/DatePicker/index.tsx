@@ -27,6 +27,7 @@ interface DatePickerSingleProps {
   value?: Date;
   onChange: (value: Date) => void;
   className?: string;
+  errorMessage?: string;
 }
 
 interface DatePickerRangeProps {
@@ -37,6 +38,7 @@ interface DatePickerRangeProps {
   value?: DateRange;
   onChange: (value: DateRange) => void;
   className?: string;
+  errorMessage?: string;
 }
 
 export type DatePickerProps = DatePickerSingleProps | DatePickerRangeProps;
@@ -49,6 +51,7 @@ export default function DatePicker({
   value,
   onChange,
   className,
+  errorMessage,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
   const autoId = React.useId();
@@ -97,6 +100,7 @@ export default function DatePicker({
             </Popover.Content>
           </Popover.Root>
         }
+        errorMessage={errorMessage}
         id={inputId}
         placeholder={placeholder}
         readOnly

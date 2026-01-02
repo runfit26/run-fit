@@ -39,43 +39,43 @@ export default function DateInputField({ className }: DateInputFieldProps) {
         const { dateOnly, minutes } = parseIsoToDateAndMinutes(field.value);
 
         return (
-          <div
-            className={cn('tablet:gap-3 flex items-center gap-5', className)}
-          >
-            <DatePicker
-              id="session-date"
-              mode="single"
-              label="마감 날짜"
-              placeholder="마감 날짜를 선택해주세요"
-              value={dateOnly}
-              onChange={(nextDate) => {
-                if (!nextDate) return;
-                field.onChange(
-                  combineDateAndMinutesToLocalIso(nextDate, minutes)
-                );
-              }}
-              className="flex-1"
-            />
-
-            <div>
-              <label className="text-caption-semibold tablet:text-body3-semibold text-gray-50">
-                마감 시간
-              </label>
-              <TimePicker
-                value={minutes}
-                onChange={(nextMinutes) => {
+          <div className="flex flex-col">
+            <div
+              className={cn('tablet:gap-3 flex items-start gap-5', className)}
+            >
+              <DatePicker
+                id="session-date"
+                mode="single"
+                label="마감 날짜"
+                placeholder="마감 날짜를 선택해주세요"
+                value={dateOnly}
+                onChange={(nextDate) => {
+                  if (!nextDate) return;
                   field.onChange(
-                    combineDateAndMinutesToLocalIso(dateOnly, nextMinutes)
+                    combineDateAndMinutesToLocalIso(nextDate, minutes)
                   );
                 }}
-                className="tablet:w-[240px] laptop:w-[120px] w-[110px]"
+                className="flex-1"
               />
-              {fieldState.error?.message && (
-                <p className="mt-2 text-sm text-red-400">
-                  {fieldState.error.message}
-                </p>
-              )}
+
+              <div>
+                <label className="text-caption-semibold tablet:text-body3-semibold text-gray-50">
+                  마감 시간
+                </label>
+                <TimePicker
+                  value={minutes}
+                  onChange={(nextMinutes) => {
+                    field.onChange(
+                      combineDateAndMinutesToLocalIso(dateOnly, nextMinutes)
+                    );
+                  }}
+                  className="tablet:w-60 laptop:w-[120px] w-[110px]"
+                />
+              </div>
             </div>
+            {fieldState.error?.message && (
+              <p className="error-message">{fieldState.error.message}</p>
+            )}
           </div>
         );
       }}
