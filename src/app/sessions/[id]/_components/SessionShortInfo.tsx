@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import Link from 'next/link';
 import { useState } from 'react';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import { DdayBadge, LevelBadge, PaceBadge } from '@/components/ui/Badge';
@@ -13,6 +12,7 @@ import CopyUrlButton from './CopyUrlButton';
 import LikeButton from './LikeButton';
 import ParticipateButton from './ParticipateButton';
 import SessionDeleteModal from './SessionDeleteModal';
+import SessionUpdateModal from './SessionUpdateModal';
 
 export default function SessionShortInfo({
   session,
@@ -41,6 +41,7 @@ export default function SessionShortInfo({
   const isManager =
     memberRole?.role === 'LEADER' || memberRole?.role === 'STAFF';
 
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
@@ -54,8 +55,8 @@ export default function SessionShortInfo({
                 <VerticalEllipsisIcon className="size-6" />
               </Dropdown.TriggerNoArrow>
               <Dropdown.Content className="z-100">
-                <Dropdown.Item>
-                  <Link href={`/sessions/${session.id}/edit`}>수정하기</Link>
+                <Dropdown.Item onClick={() => setIsUpdateModalOpen(true)}>
+                  수정하기
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => setIsDeleteModalOpen(true)}>
                   삭제하기
@@ -84,6 +85,12 @@ export default function SessionShortInfo({
         </div>
         <ParticipateButton className="flex-1" sessionId={session.id} />
       </div>
+
+      <SessionUpdateModal
+        isUpdateModalOpen={isUpdateModalOpen}
+        setIsUpdateModalOpen={setIsUpdateModalOpen}
+        session={session}
+      />
 
       <SessionDeleteModal
         isDeleteModalOpen={isDeleteModalOpen}

@@ -71,7 +71,7 @@ export function LevelBadge({
     responsive: 'laptop:size-4 size-3',
   };
 
-  const baseStyle = 'bg-gray-800 flex gap-0.5 ';
+  const baseStyle = 'bg-gray-800 flex gap-0.5 items-center';
 
   const badgeSize = {
     sm: 'rounded-sm px-1 py-0.5',
@@ -157,8 +157,8 @@ export function RoleBadge({ role, className, ...props }: RoleBadgeProps) {
   const baseStyle = 'px-2 py-1 rounded-md';
 
   const roleStyles = {
-    LEADER: 'bg-brand-900 text-brand-200 text-[10px]/[100%] font-bold',
-    STAFF: 'bg-gray-700 text-gray-200 text-[10px]/[100%] font-semibold',
+    LEADER: 'bg-brand-900 text-brand-200 text-[10px]/normal font-bold',
+    STAFF: 'bg-gray-700 text-gray-200 text-[10px]/normal font-semibold',
     MEMBER: 'hidden',
   };
 

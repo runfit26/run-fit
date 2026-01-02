@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import {
   createCrew,
   CrewRequestBody,
@@ -14,14 +15,23 @@ import {
 } from '@/lib/api/fetch/crews';
 import { crewQueries } from '@/lib/api/queries/crewQueries';
 
+export interface UseCrewMutationOptions {
+  onSuccess?: () => void;
+  onError?: (message: string) => void;
+}
+
 // 크루 생성
-export function useCreateCrew() {
+export function useCreateCrew(options?: UseCrewMutationOptions) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createCrew,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: crewQueries.all() }); // 크루 목록 캐시 무효화 (새 크루 목록에 반영)
+      options?.onSuccess?.();
+    },
+    onError: (error: Error) => {
+      options?.onError?.(error.message ?? '크루 생성에 실패했습니다.');
     },
   });
 }
@@ -53,6 +63,7 @@ export function useDeleteCrew(crewId: number) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: crewQueries.all() }); // 크루 목록 캐시 무효화
       router.push('/crews');
+      toast.success('크루가 삭제되었습니다!');
     },
     onError: (error) => {
       console.error('크루 삭제 실패:', error);
@@ -113,17 +124,32 @@ export function useLeaveCrew(crewId: number) {
 }
 
 // 크루 상세 정보 수정
-export function useUpdateCrewDetail(crewId: number) {
+export function useUpdateCrewDetail(
+  crewId?: number,
+  options?: UseCrewMutationOptions
+) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: CrewRequestBody) => updateCrewDetail(crewId, body),
+    mutationFn: (body: CrewRequestBody & { id?: number }) => {
+      const id = body.id ?? crewId;
+      if (!id) {
+        throw new Error('크루 ID가 필요합니다.');
+      }
+      return updateCrewDetail(id, body);
+    },
 
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: crewQueries.detail(crewId).queryKey, // 크루 상세 정보 캐시 무효화
-      });
-      queryClient.invalidateQueries({ queryKey: crewQueries.lists() }); // 전체 크루 목록 캐시 무효화
+      if (crewId) {
+        queryClient.invalidateQueries({
+          queryKey: crewQueries.detail(crewId).queryKey,
+        });
+      }
+      queryClient.invalidateQueries({ queryKey: crewQueries.lists() });
+      options?.onSuccess?.();
+    },
+    onError: (error: Error) => {
+      options?.onError?.(error.message ?? '크루 수정에 실패했습니다.');
     },
   });
 }
