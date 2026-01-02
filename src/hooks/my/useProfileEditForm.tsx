@@ -36,11 +36,12 @@ export function useProfileEditForm(user?: Profile, onSuccess?: () => void) {
 
   const uploadImage = useUploadImage();
   const updateProfile = useUpdateMyProfile();
+  const { reset } = form;
 
   useEffect(() => {
     if (!user) return;
 
-    form.reset({
+    reset({
       name: user.name ?? '',
       introduction: user.introduction ?? null,
       pace: user.pace ?? null,
@@ -48,7 +49,7 @@ export function useProfileEditForm(user?: Profile, onSuccess?: () => void) {
       styles: user.styles ?? [],
       image: undefined,
     });
-  }, [user, form]);
+  }, [user]);
 
   const submit = form.handleSubmit(async (values) => {
     const hasContent =
