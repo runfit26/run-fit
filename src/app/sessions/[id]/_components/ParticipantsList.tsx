@@ -33,7 +33,9 @@ export default function ParticipantsList({ sessionId }: { sessionId: number }) {
             <li key={participant.userId} className="flex items-center gap-3">
               <UserAvatar
                 src={participant.profileImage}
+                alt={`${participant.name} 프로필 이미지`}
                 className="size-12 shrink-0"
+                sizes="48px"
               />
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-1.5">
