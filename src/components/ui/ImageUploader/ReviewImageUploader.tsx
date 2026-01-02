@@ -18,6 +18,13 @@ export default function ReviewImageUploader({
 
   const has = items.length > 0;
 
+  const handleRemove = () => {
+    if (items[0]) {
+      remove(items[0].id);
+      onChange?.(null);
+    }
+  };
+
   return (
     <div>
       <input
@@ -64,7 +71,7 @@ export default function ReviewImageUploader({
               'absolute -top-2 -right-2 flex size-6 items-center justify-center rounded-full bg-gray-50 text-gray-700'
             }
             type="button"
-            onClick={() => remove(items[0].id)}
+            onClick={handleRemove}
           >
             <XIcon className="size-4" />
           </button>
