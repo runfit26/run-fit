@@ -49,7 +49,7 @@ export function useProfileEditForm(user?: Profile, onSuccess?: () => void) {
       styles: user.styles ?? [],
       image: undefined,
     });
-  }, [user]);
+  }, [user, reset]);
 
   const submit = form.handleSubmit(async (values) => {
     const hasContent =
