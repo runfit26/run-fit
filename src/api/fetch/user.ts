@@ -1,3 +1,5 @@
+import { UseMutationOptions } from '@tanstack/react-query';
+import { ApiError } from '@/lib/error';
 import {
   Crew,
   PageData,
@@ -18,9 +20,13 @@ export type UpdateMyProfileRequestBody = Partial<
   Pick<Profile, 'name' | 'image' | 'introduction' | 'city' | 'pace' | 'styles'>
 >;
 
-export type UpdateMyProfileResponse = Profile;
+export type UpdateMyProfileMutationOption = UseMutationOptions<
+  Profile,
+  ApiError,
+  UpdateMyProfileRequestBody
+>;
 export async function updateMyProfile(body: UpdateMyProfileRequestBody) {
-  return request<UpdateMyProfileResponse>('/api/user', {
+  return request<Profile>('/api/user', {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
