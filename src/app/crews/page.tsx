@@ -10,7 +10,7 @@ import CrewModal from '@/components/crew/CrewModal';
 import CrewPageContent from '@/components/crew/CrewPageContent';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import Spinner from '@/components/ui/Spinner';
+import CrewPageSkeleton from './CrewPageSkeleton';
 
 export default function Page() {
   return (
@@ -22,7 +22,7 @@ export default function Page() {
           </div>
         }
       >
-        <Suspense fallback={<Spinner.Page />}>
+        <Suspense fallback={<CrewPageSkeleton />}>
           <CrewPageContent />
         </Suspense>
       </ErrorBoundary>

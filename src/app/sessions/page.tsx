@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import SessionPageContent from '@/components/session/SessionPageContent';
-import Spinner from '@/components/ui/Spinner';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import SessionPageSkeleton from './SessionPageSkeleton';
 
 export default function Page() {
   return (
@@ -17,7 +17,7 @@ export default function Page() {
           </div>
         }
       >
-        <Suspense fallback={<Spinner.Page />}>
+        <Suspense fallback={<SessionPageSkeleton />}>
           <SessionPageContent />
         </Suspense>
       </ErrorBoundary>
