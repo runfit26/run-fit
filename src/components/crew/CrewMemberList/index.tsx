@@ -5,8 +5,10 @@ import {
   useLeaveCrew,
   useUpdateMemberRole,
 } from '@/api/mutations/crewMutations';
+import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import Settings from '@/assets/icons/settings.svg?react';
 import VerticalEllipsis from '@/assets/icons/vertical-ellipsis.svg?react';
+import CrewModal from '@/components/crew/CrewModal';
 import { RoleBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
@@ -34,7 +36,7 @@ export default function CrewMemberList({
           <span className="text-title3-semibold line-clamp-1 text-gray-50">
             {crew.name}
           </span>
-          {myRole && <CrewMenuActions />}
+          {myRole && <CrewMenuActions crew={crew} />}
         </div>
         <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
           {crew.city} • 멤버 {members.length}명
@@ -59,30 +61,41 @@ export default function CrewMemberList({
           </Button>
         </Modal.Trigger>
         <Modal.Content
-          className="tablet:h-[620px] flex h-full w-[400px] flex-col bg-gray-800"
+          className="tablet:h-[620px] tablet:w-[400px] tablet:gap-4 flex flex-col gap-5 bg-gray-800"
+          fullscreenWhenMobile
           onCloseAutoFocus={() => setEditMode('view')}
         >
-          <Modal.Title className="self-start">
-            <div className="flex flex-col">
+          <Modal.Title className="relative flex w-full items-start gap-2 self-start">
+            <Modal.EmptyCloseButton
+              className="tablet:hidden my-0.5 flex"
+              onClick={() => setEditMode('view')}
+            >
+              <ChevronLeft className="size-6" />
+            </Modal.EmptyCloseButton>
+            <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <span className="text-title3-semibold line-clamp-1 text-gray-50">
+                <span className="text-body1-semibold line-clamp-1 text-white">
                   {crew.name}
                 </span>
                 {myRole === 'LEADER' && (
-                  <Settings
-                    className="size-5 fill-gray-300"
+                  <button
                     onClick={() =>
                       setEditMode((prev) => (prev === 'view' ? 'edit' : 'view'))
                     }
-                  />
+                  >
+                    <Settings className="size-5 fill-gray-200" />
+                  </button>
                 )}
               </div>
-              <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
+              <span className="text-body3-regular tablet:pb-0 pb-1 text-gray-200">
                 {crew.city} • 멤버 {members.length}명
               </span>
             </div>
+            <Modal.CloseButton
+              className="tablet:flex absolute top-0 right-0 my-0.5 hidden"
+              onClick={() => setEditMode('view')}
+            />
           </Modal.Title>
-          <Modal.CloseButton onClick={() => setEditMode('view')} />
           <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-gray-700" />
           <Modal.Description className="flex w-full flex-1 flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
             {members.map((member) => (
@@ -106,7 +119,7 @@ export default function CrewMemberList({
   );
 }
 
-function CrewMenuActions() {
+function CrewMenuActions({ crew: crewData }: { crew?: Crew }) {
   const { crewId, myRole } = useCrewRole();
   const [currentModal, setCurrentModal] = useState<
     'leave' | 'delete' | 'edit' | 'delegate' | null
@@ -153,6 +166,15 @@ function CrewMenuActions() {
           )}
         </Dropdown.Content>
       </Dropdown>
+
+      {/** Edit Crew Modal */}
+      <CrewModal
+        crewData={crewData}
+        mode="edit"
+        open={currentModal === 'edit'}
+        onOpenChange={(open) => !open && setCurrentModal(null)}
+        onSuccess={() => setCurrentModal(null)}
+      />
 
       {/* Leave Crew Modal */}
       <Modal
@@ -248,12 +270,14 @@ function CrewMemberListItem({
       )}
       {editMode === 'edit' && (
         <div className="flex w-full items-center justify-between">
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <span className="text-body3-semibold">{member.name}</span>
             {member.role === 'LEADER' && <RoleBadge role="LEADER" />}
             {member.role !== 'LEADER' && (
-              <Dropdown size="lg">
-                <Dropdown.Trigger>{ROLE_LABEL[member.role]}</Dropdown.Trigger>
+              <Dropdown size="sm">
+                <Dropdown.Trigger className="bg-gray-700">
+                  {ROLE_LABEL[member.role]}
+                </Dropdown.Trigger>
                 <Dropdown.Content className="z-60">
                   <Dropdown.Item onSelect={() => handleSelect('STAFF')}>
                     {ROLE_LABEL['STAFF']}
@@ -268,9 +292,9 @@ function CrewMemberListItem({
           {member.role !== 'LEADER' && (
             <Modal>
               <Modal.Trigger aria-label="멤버 추방" asChild>
-                <span className="text-body3-medium text-error-100 shrink-0 px-3 py-2">
+                <button className="text-body3-medium text-error-100 shrink-0 px-3 py-2">
                   삭제하기
-                </span>
+                </button>
               </Modal.Trigger>
               <Modal.Content className="flex h-[200px] w-[360px] flex-col gap-7">
                 <Modal.Title />

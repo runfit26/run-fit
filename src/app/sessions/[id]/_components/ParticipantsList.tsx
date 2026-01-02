@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { sessionQueries } from '@/api/queries/sessionQueries';
+import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import { RoleBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
@@ -15,8 +16,8 @@ export default function ParticipantsList({ sessionId }: { sessionId: number }) {
 
   return (
     <div className="tablet:gap-2 flex flex-col gap-1">
-      <h2 className="text-body2-semibold tablet:text-title3-semibold text-gray-50">
-        참여 멤버&nbsp;
+      <h2 className="text-body2-semibold tablet:text-title3-semibold tablet:gap-2 flex gap-1">
+        <span className="text-gray-50">참여 멤버</span>
         <span className="text-brand-300">{participants.length}</span>
       </h2>
 
@@ -61,13 +62,18 @@ export default function ParticipantsList({ sessionId }: { sessionId: number }) {
 
       <Modal open={isModalOpen} onOpenChange={setIsModalOpen}>
         <Modal.Content
-          className="tablet:h-[620px] bg-gray-800"
+          className="tablet:h-[620px] tablet:w-[400px] bg-gray-800"
           fullscreenWhenMobile
         >
-          <Modal.CloseButton />
-          <Modal.Title>참여 멤버</Modal.Title>
+          <Modal.Title className="relative flex w-full items-start gap-2 self-start">
+            <Modal.EmptyCloseButton className="tablet:hidden my-0.5 flex">
+              <ChevronLeft className="size-6" />
+            </Modal.EmptyCloseButton>
+            <span className="text-body1-semibold text-white">참여 멤버</span>
+            <Modal.CloseButton className="tablet:flex absolute top-0 right-0 my-0.5 hidden" />
+          </Modal.Title>
           <hr className="w-full text-gray-700" />
-          <ul className="flex h-full flex-col gap-4">
+          <ul className="flex h-full w-full flex-col gap-4">
             {participants.map((participant) => (
               <li key={participant.userId} className="flex items-center gap-3">
                 <UserAvatar

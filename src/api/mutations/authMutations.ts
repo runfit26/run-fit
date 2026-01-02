@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postSignin, postSignout, postSignup } from '@/api/fetch/auth';
 import { userQueries } from '@/api/queries/userQueries';
+import { sessionQueries } from '../queries/sessionQueries';
 
 export interface UseAuthFormOptions {
   onSuccess?: () => void;
@@ -27,9 +28,10 @@ export function useSignin(options?: UseAuthFormOptions) {
   return useMutation({
     mutationFn: postSignin,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: userQueries.me.all(), // 내 정보 조회 캐시 무효화
-      });
+      // 1. 내 정보 관련 캐시 삭제
+      queryClient.removeQueries({ queryKey: userQueries.me.all() });
+      // 2. 세션 관련 캐시 전체 삭제
+      queryClient.removeQueries({ queryKey: sessionQueries.all() });
       options?.onSuccess?.();
     },
     onError: (error) => {
@@ -45,7 +47,7 @@ export function useSignout(options?: UseAuthFormOptions) {
   return useMutation({
     mutationFn: postSignout,
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: userQueries.me.all() });
+      queryClient.clear();
       options?.onSuccess?.();
     },
   });

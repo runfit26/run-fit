@@ -82,6 +82,26 @@ function ModalContent({
   );
 }
 
+function ModalEmptyCloseButton({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Close>) {
+  return (
+    <DialogPrimitive.Close
+      className={cn(
+        "outline-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      data-slot="dialog-close-button"
+      {...props}
+    >
+      {children}
+      <span className="sr-only">Close</span>
+    </DialogPrimitive.Close>
+  );
+}
+
 function ModalCloseButton({
   className,
   ...props
@@ -150,6 +170,7 @@ function ModalDescription({
 const Modal = Object.assign(ModalRoot, {
   Close: ModalClose,
   CloseButton: ModalCloseButton,
+  EmptyCloseButton: ModalEmptyCloseButton,
   Content: ModalContent,
   Description: ModalDescription,
   Footer: ModalFooter,

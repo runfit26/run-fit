@@ -234,6 +234,7 @@ export default function Page() {
                             <SessionCard
                               session={session}
                               displayParticipants={false}
+                              textSize="sm"
                             />
                           </div>
                         ))}
