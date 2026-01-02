@@ -148,7 +148,7 @@ export default function Page() {
               >
                 <SessionCard
                   session={normalizeSession(session)}
-                  isMySession={true}
+                  textSize="sm"
                 />
               </div>
             ))}
