@@ -1,4 +1,5 @@
 import SafeImage from '@/components/ui/SafeImage';
+import { generateNextImageSizes } from '@/lib/Image';
 
 export default function SessionImage({
   image,
@@ -14,7 +15,13 @@ export default function SessionImage({
         fallbackSrc="/assets/session-default.png"
         alt={name}
         fill
+        preload
         className="object-cover"
+        sizes={generateNextImageSizes({
+          mobile: '100vw',
+          tablet: '100vw',
+          laptop: '680px',
+        })}
       />
     </div>
   );
