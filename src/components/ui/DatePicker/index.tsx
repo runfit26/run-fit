@@ -63,19 +63,31 @@ export default function DatePicker({
   return (
     <div className={cn('flex flex-col gap-1', className)}>
       <Label htmlFor={inputId}>{label}</Label>
-      <Input
-        RightElement={
-          <Popover.Root open={open} onOpenChange={setOpen}>
-            <Popover.Trigger asChild>
-              <button
-                className="flex size-5 items-center justify-center"
-                type="button"
-                onMouseDown={(e) => e.preventDefault()}
-              >
-                <CalendarIcon />
-              </button>
-            </Popover.Trigger>
-            <Popover.Content>
+
+      <Popover.Root open={open} onOpenChange={setOpen}>
+        <Popover.Trigger asChild>
+          <div>
+            <Input
+              RightElement={
+                <button
+                  className="flex size-5 items-center justify-center"
+                  type="button"
+                >
+                  <CalendarIcon />
+                </button>
+              }
+              errorMessage={errorMessage}
+              id={inputId}
+              placeholder={placeholder}
+              readOnly
+              value={displayValue}
+            />
+          </div>
+        </Popover.Trigger>
+
+        <Popover.Portal>
+          <Popover.Content className="z-50">
+            <div className="flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border border-gray-600 bg-gray-700 pt-5 pb-6">
               {mode === 'single' ? (
                 <Calendar.Single
                   selected={value}
@@ -97,23 +109,10 @@ export default function DatePicker({
                   }}
                 />
               )}
-            </Popover.Content>
-          </Popover.Root>
-        }
-        errorMessage={errorMessage}
-        id={inputId}
-        placeholder={placeholder}
-        readOnly
-        value={displayValue}
-        onFocus={() => setOpen(true)}
-        onKeyDown={(e) => {
-          if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            setOpen(true);
-          }
-        }}
-        onMouseDown={() => setOpen(true)}
-      />
+            </div>
+          </Popover.Content>
+        </Popover.Portal>
+      </Popover.Root>
     </div>
   );
 }
