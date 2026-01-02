@@ -1,5 +1,5 @@
 import BottomBar from './_components/BottomBar';
-import SessionDetailView from './_components/SessionDetailView';
+import SessionDetailContainer from './_components/SessionDetailContainer';
 
 export default async function Page({
   params,
@@ -11,7 +11,7 @@ export default async function Page({
   return (
     <>
       <main className="h-main laptop:bg-gray-900 bg-gray-800">
-        <SessionDetailView sessionId={sessionId} />
+        <SessionDetailContainer sessionId={sessionId} />
       </main>
       <BottomBar sessionId={sessionId} />
     </>

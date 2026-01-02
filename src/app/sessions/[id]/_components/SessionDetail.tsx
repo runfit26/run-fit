@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { cn } from '@/lib/utils';
@@ -10,22 +10,20 @@ import SessionDetailInfo from './SessionDetailInfo';
 import SessionImage from './SessionImage';
 import SessionShortInfo from './SessionShortInfo';
 
-export default function SessionDetailView({
+export default function SessionDetail({
   sessionId,
 }: {
   sessionId: Session['id'];
 }) {
-  const sessionQuery = useQuery(sessionQueries.detail(Number(sessionId)));
+  const sessionQuery = useSuspenseQuery(
+    sessionQueries.detail(Number(sessionId))
+  );
   const session = sessionQuery.data;
   const crewId = session?.crewId;
   const crewQuery = useQuery({
     ...crewQueries.detail(Number(crewId)),
     enabled: !!crewId,
   });
-
-  if (sessionQuery.isLoading) return null;
-  if (sessionQuery.isError) return null;
-  if (!session) return null;
 
   if (crewQuery.isLoading) return null;
   if (crewQuery.isError) return null;
