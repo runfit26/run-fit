@@ -33,12 +33,13 @@ export default function Textarea({
   return (
     <div className="w-full">
       {label && (
-        <Label htmlFor={id} className="mb-1 block">
+        <Label className="mb-1 block" htmlFor={id}>
           {label}
         </Label>
       )}
       <textarea
-        data-slot="textarea"
+        ref={ref}
+        aria-describedby={describedBy}
         className={cn(
           'focus-visible:border-brand-400 aria-invalid:border-error-100 h-30 w-full resize-none rounded-lg border border-transparent bg-gray-800 px-3 py-2 text-sm text-white transition-all outline-none placeholder:text-gray-300 disabled:cursor-not-allowed',
           'tablet:rounded-xl tablet:px-4 tablet:py-3 tablet:text-body2-medium',
@@ -49,17 +50,16 @@ export default function Textarea({
           disabled && 'text-gray-400 opacity-50',
           className
         )}
-        aria-describedby={describedBy}
-        id={id}
+        data-slot="textarea"
         disabled={disabled}
-        ref={ref}
+        id={id}
         {...props}
       />
 
       {errorMessage && (
         <p
-          id={errorId}
           className="text-error-100 tablet:text-body3-semibold text-caption-semibold mt-2"
+          id={errorId}
         >
           {errorMessage}
         </p>
