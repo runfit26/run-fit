@@ -113,3 +113,14 @@
     font-weight: 600;
   }
 }
+
+/* 숫자 입력 필드 화살표 제거 */
+@utility hide-number-arrows {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  -moz-appearance: textfield;
+}
