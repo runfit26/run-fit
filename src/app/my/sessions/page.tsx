@@ -19,8 +19,6 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ParticipatingSession, Session } from '@/types';
 import MySessionsSkeleton from './MySessionsSkeleton';
 
-export const dynamic = 'force-dynamic';
-
 export default function Page() {
   return (
     <section className="tablet:gap-16 flex flex-col gap-10">
