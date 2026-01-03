@@ -4,6 +4,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { crewQueries } from '@/api/queries/crewQueries';
 import SafeImage from '@/components/ui/SafeImage';
+import { generateNextImageSizes } from '@/lib/Image';
 import { Crew } from '@/types';
 
 interface CrewInfoProps {
@@ -17,14 +18,17 @@ export default function CrewInfo({ crewId }: CrewInfoProps) {
 
   return (
     <Link href={`/crews/${crewId}`} className="flex items-center gap-3">
-      <div className="tablet:aspect-84/56 relative aspect-66/44 w-20">
+      <div className="tablet:aspect-84/56 tablet:w-[84px] relative aspect-66/44 w-[66px]">
         <SafeImage
           src={crew.image}
-          alt={crew.name}
+          alt={`${crew.name} 크루 이미지`}
           fallbackSrc="/assets/crew-default.png"
-          height={44}
-          width={66}
-          className="object-cover"
+          className="rounded-lg object-cover"
+          fill
+          sizes={generateNextImageSizes({
+            mobile: '66px',
+            tablet: '84px',
+          })}
         />
       </div>
       <div>
