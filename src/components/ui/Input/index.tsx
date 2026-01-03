@@ -60,7 +60,9 @@ export default function Input({
           className={cn(
             'flex-1 bg-transparent text-white outline-none placeholder:text-gray-300',
             'text-body3-medium placeholder:text-body3-medium',
-            'tablet:text-body2-medium tablet:placeholder:text-body2-medium'
+            'tablet:text-body2-medium tablet:placeholder:text-body2-medium',
+            'hide-number-arrows',
+            props.readOnly && 'cursor-pointer'
           )}
           disabled={disabled}
           id={id}
