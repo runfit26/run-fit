@@ -8,6 +8,8 @@ import Spinner from '@/components/ui/Spinner';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import ReviewsSkeleton from './ReviewsSkeleton';
 
+export const dynamic = 'force-dynamic';
+
 export default function MyReviewsPage() {
   return (
     <Suspense fallback={<ReviewsSkeleton />}>

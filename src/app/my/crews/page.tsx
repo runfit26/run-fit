@@ -12,6 +12,8 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CrewsSkeleton from './CrewsSkeleton';
 
+export const dynamic = 'force-dynamic';
+
 export default function MyCrewsPage() {
   return (
     <Suspense fallback={<CrewsSkeleton />}>
