@@ -69,6 +69,7 @@ function Header() {
           fill
           priority
           sizes={generateNextImageSizes({
+            mobile: '302px',
             tablet: '302px',
             laptop: '417px',
           })}

@@ -14,13 +14,13 @@ export interface ImageSizeConfig {
  */
 export function generateNextImageSizes(config: ImageSizeConfig): string {
   const breakpointEntries = Object.entries(BREAKPOINTS).sort(
-    ([, a], [, b]) => b - a
+    ([, pxA], [, pxB]) => pxB - pxA
   ); // 큰 breakpoint부터 정렬
 
   const sizes = breakpointEntries
     .slice(0, -1) // 가장 작은 breakpoint는 기본값으로 사용
     .map(([bp, px]) => {
-      const size = config[bp];
+      const size = config[bp as keyof ImageSizeConfig];
       if (size === undefined) return null;
       return `(min-width: ${px}px) ${size}`;
     })
