@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { userQueries } from '@/api/queries/userQueries';
 import Button from '@/components/ui/Button';
 import { formatPaceText, splitSecondsToMinutesAndSeconds } from '@/lib/pace';
-import type { Profile as ProfileType } from '@/types';
+import type { Profile } from '@/types';
 import ProfileEdit from '../ProfileEdit';
 
-export default function Profile() {
+export default function ProfileDetail() {
   const { data } = useQuery(userQueries.me.info());
   const [open, setOpen] = useState(false);
 
-  function isEmptyProfile(profile: ProfileType) {
+  function isEmptyProfile(profile: Profile) {
     return (
       !profile.introduction &&
       !profile.city &&

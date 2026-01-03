@@ -1,7 +1,10 @@
+import { ErrorBoundary, Suspense } from '@suspensive/react';
 import KakaoMap from '@/components/session/KakaoMap';
+import Spinner from '@/components/ui/Spinner';
 import { formatKoYMD, formatKoYYMDMeridiemTime } from '@/lib/time';
 import { Session } from '@/types';
 import ParticipantsList from './ParticipantsList';
+import ParticipantsListErrorFallback from './ParticipantsListErrorFallback';
 
 export default function SessionDetailInfo({ session }: { session: Session }) {
   const { description, createdAt, sessionAt, registerBy, location, coords } =
@@ -53,7 +56,15 @@ export default function SessionDetailInfo({ session }: { session: Session }) {
         </div>
       </div>
 
-      <ParticipantsList sessionId={session.id} />
+      <ErrorBoundary
+        fallback={({ error }) => (
+          <ParticipantsListErrorFallback error={error} />
+        )}
+      >
+        <Suspense fallback={<Spinner />}>
+          <ParticipantsList sessionId={session.id} />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 }

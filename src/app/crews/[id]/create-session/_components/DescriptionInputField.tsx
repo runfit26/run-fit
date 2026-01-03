@@ -2,18 +2,19 @@ import { useFormContext } from 'react-hook-form';
 import Textarea from '@/components/ui/Textarea';
 import { SessionCreateFormValues } from '../_others/schema';
 
-interface DetailInputFieldProps {
+interface DescriptionInputFieldProps {
   className?: string;
-  errorMessage?: string;
   disabled?: boolean;
 }
 
-export default function DetailInputField({
+export default function DescriptionInputField({
   className,
-  errorMessage,
   disabled,
-}: DetailInputFieldProps) {
-  const { register } = useFormContext<SessionCreateFormValues>();
+}: DescriptionInputFieldProps) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<SessionCreateFormValues>();
 
   return (
     <Textarea
@@ -21,7 +22,7 @@ export default function DetailInputField({
       {...register('description')}
       label="세션 설명"
       disabled={disabled}
-      errorMessage={errorMessage}
+      errorMessage={errors.description?.message}
       className={className}
     />
   );

@@ -57,10 +57,7 @@ export default function Textarea({
       />
 
       {errorMessage && (
-        <p
-          className="text-error-100 tablet:text-body3-semibold text-caption-semibold mt-2"
-          id={errorId}
-        >
+        <p className="error-message" id={errorId}>
           {errorMessage}
         </p>
       )}

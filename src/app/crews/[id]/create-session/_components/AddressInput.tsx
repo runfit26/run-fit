@@ -15,52 +15,64 @@ interface AddressInputProps {
 }
 
 export default function AddressInput({ className }: AddressInputProps) {
-  const { watch, setValue } = useFormContext<SessionCreateFormValues>();
+  const {
+    watch,
+    setValue,
+    formState: { errors },
+  } = useFormContext<SessionCreateFormValues>();
   const { openAddressSearch } = useDaumPostcode();
   const { convertAddressToCoords } = useKakaoMap();
 
   return (
-    <div className={cn('flex flex-col gap-3', className)}>
-      <FakeTextInputField location={watch('location')} />
-      <SearchAddressButton
-        location={watch('location')}
-        onClick={() => {
-          openAddressSearch((data) => {
-            setValue('location', data.address, {
-              shouldDirty: true,
-              shouldValidate: true,
+    <div className="flex flex-col">
+      <div className={cn('flex flex-col gap-3', className)}>
+        <FakeTextInputField location={watch('location')} />
+        <SearchAddressButton
+          location={watch('location')}
+          onClick={() => {
+            openAddressSearch((data) => {
+              const location = data.address;
+              const cityParsed = citySchema.safeParse(data.sido);
+              const districtParsed = districtSchema.safeParse(data.sigungu);
+
+              setValue('location', location, {
+                shouldDirty: true,
+                shouldValidate: true,
+              });
+
+              if (cityParsed.success) {
+                setValue('city', cityParsed.data, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              } else {
+                setValue('city', '', {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              }
+
+              if (districtParsed.success) {
+                setValue('district', districtParsed.data, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              } else {
+                setValue('district', '', {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+              }
+
+              convertAddressToCoords(data.address, (coords) => {
+                if (!coords) return;
+                setValue('coords', coords, { shouldDirty: true });
+              });
             });
-
-            const cityParsed = citySchema.safeParse(data.sido);
-            if (cityParsed.success) {
-              setValue('city', cityParsed.data, {
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-            } else {
-              setValue('city', '', { shouldDirty: true, shouldValidate: true });
-            }
-
-            const districtParsed = districtSchema.safeParse(data.sigungu);
-            if (districtParsed.success) {
-              setValue('district', districtParsed.data, {
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-            } else {
-              setValue('district', '', {
-                shouldDirty: true,
-                shouldValidate: true,
-              });
-            }
-
-            convertAddressToCoords(data.address, (coords) => {
-              if (!coords) return;
-              setValue('coords', coords, { shouldDirty: true });
-            });
-          });
-        }}
-      />
+          }}
+        />
+      </div>
+      <p className="error-message">{errors.location?.message}</p>
     </div>
   );
 }

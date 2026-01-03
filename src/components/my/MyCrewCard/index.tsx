@@ -19,6 +19,8 @@ export default function MyCrewCard({
 }) {
   const { data: crewMembers } = useQuery(crewQueries.members(crew.id).list());
 
+  if (!crewMembers) return null;
+
   return (
     <Link className="tablet:flex-row flex flex-col" href={`/crews/${crew.id}`}>
       <div className="tablet:w-60 tablet:h-37 relative aspect-327/132 w-full shrink-0 overflow-hidden rounded-xl">
@@ -46,8 +48,11 @@ export default function MyCrewCard({
             {crew.city}
           </span>
           <span className="text-caption-regular tablet:text-body3-regular pointer-events-none text-gray-300">{`• 멤버 ${crew.memberCount}명`}</span>
-          <ProfileList members={crewMembers?.members.slice(0, 3)} />
-          <div className="tablet:block mr-1 hidden h-4 w-px bg-gray-400" />
+          <ProfileList
+            memberCount={crew.memberCount}
+            members={crewMembers?.members.slice(0, 3)}
+          />
+          <div className="tablet:block mr-1 ml-1 hidden h-4 w-px bg-gray-400" />
           <div className="text-body3-regular tablet:flex hidden items-center gap-1 text-gray-200">
             <MemberIcon className="size-4 text-gray-200" />
             <p className="text-gray-200">{ROLE_NAME[crew.myRole]}</p>

@@ -9,9 +9,9 @@ import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import HeartOutline from '@/assets/icons/heart-outline.svg?react';
 import Location from '@/assets/icons/location.svg?react';
 import { DdayBadge, LevelBadge, PaceBadge } from '@/components/ui/Badge';
+import ProfileList from '@/components/user/ProfileList';
 import { formatDDay, formatTimeToKorean } from '@/lib/time';
 import type { Session } from '@/types';
-import ProfileList from '../../user/ProfileList';
 
 interface SessionCardProps {
   session: Session;
@@ -75,7 +75,7 @@ export default function SessionCard({
           {liked ? (
             <HeartFill className="text-brand-500 block size-7" />
           ) : (
-            <HeartOutline className="block size-7 text-[#9CA3AF]" />
+            <HeartOutline className="block size-7 fill-[#0F101480] stroke-[#9CA3AF]" />
           )}
         </button>
       </div>
@@ -112,11 +112,14 @@ export default function SessionCard({
             <LevelBadge level={level} />
           </div>
         </div>
-        {displayParticipants && (
+        {displayParticipants && crewData && (
           <div className="laptop:gap-2 flex items-center gap-1">
-            <ProfileList members={participants || []} />
+            <ProfileList
+              memberCount={participants.length}
+              members={participants}
+            />
             <div className="text-caption-regular laptop:text-body3-regular pointer-events-none text-gray-300">
-              {crewData?.name
+              {crewData.name
                 ? `${currentParticipantCount}/${maxParticipantCount}명 • ${crewData.name}`
                 : `${currentParticipantCount}/${maxParticipantCount}명`}
             </div>
