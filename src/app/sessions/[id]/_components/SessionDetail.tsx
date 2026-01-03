@@ -1,24 +1,32 @@
+'use client';
+
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { sessionQueries } from '@/api/queries/sessionQueries';
 import { cn } from '@/lib/utils';
-import { Crew, Session } from '@/types';
+import { Session } from '@/types';
 import CrewShortInfo from './CrewShortInfo';
 import SessionDetailInfo from './SessionDetailInfo';
 import SessionImage from './SessionImage';
 import SessionShortInfo from './SessionShortInfo';
 
-export default function SessionDetailView({
-  session,
-  crew,
-}: {
-  session: Session;
-  crew: Crew;
-}) {
+interface SessionDetailProps {
+  sessionId: Session['id'];
+}
+
+export default function SessionDetail({ sessionId }: SessionDetailProps) {
+  const sessionQuery = useSuspenseQuery(
+    sessionQueries.detail(Number(sessionId))
+  );
+  const session = sessionQuery.data;
+  const crewId = session?.crewId;
+
   return (
     <>
       <div className={cn('laptop:hidden flex', 'flex-col bg-gray-800 py-10')}>
         <SessionImage image={session.image} name={session.name} />
-        <SessionShortInfo session={session} crewId={crew.id} />
+        <SessionShortInfo session={session} crewId={crewId} />
         <SessionDetailInfo session={session} />
-        <CrewShortInfo crew={crew} />
+        <CrewShortInfo crewId={crewId} />
       </div>
 
       <div
@@ -32,8 +40,8 @@ export default function SessionDetailView({
           <SessionDetailInfo session={session} />
         </div>
         <div className="laptop:w-[360px] flex flex-col gap-10">
-          <SessionShortInfo session={session} crewId={crew.id} />
-          <CrewShortInfo crew={crew} />
+          <SessionShortInfo session={session} crewId={crewId} />
+          <CrewShortInfo crewId={crewId} />
         </div>
       </div>
     </>

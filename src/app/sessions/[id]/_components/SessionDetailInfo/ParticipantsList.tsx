@@ -1,4 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+'use client';
+
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
@@ -6,13 +8,18 @@ import { RoleBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import UserAvatar from '@/components/ui/UserAvatar';
+import { Session } from '@/types';
 
-export default function ParticipantsList({ sessionId }: { sessionId: number }) {
-  const participantsQuery = useQuery(sessionQueries.participants(sessionId));
+interface ParticipantsListProps {
+  sessionId: Session['id'];
+}
+
+export default function ParticipantsList({ sessionId }: ParticipantsListProps) {
+  const participantsQuery = useSuspenseQuery(
+    sessionQueries.participants(sessionId)
+  );
   const participants = participantsQuery.data?.participants || [];
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  if (participantsQuery.isLoading) return <h1>Loading...</h1>;
 
   return (
     <div className="tablet:gap-2 flex flex-col gap-1">
@@ -21,35 +28,27 @@ export default function ParticipantsList({ sessionId }: { sessionId: number }) {
         <span className="text-brand-300">{participants.length}</span>
       </h2>
 
-      {participantsQuery.isError ? (
-        <div className="h-10">
-          {participantsQuery.error?.message === 'UNAUTHORIZED'
-            ? '참가자 목록을 보려면 로그인이 필요합니다.'
-            : '참가자 목록을 불러올 수 없습니다.'}
-        </div>
-      ) : (
-        <ul className="tablet:gap-5 mb-3 flex flex-col gap-2">
-          {participants.slice(0, 4).map((participant) => (
-            <li key={participant.userId} className="flex items-center gap-3">
-              <UserAvatar
-                src={participant.profileImage}
-                className="size-12 shrink-0"
-              />
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-body3-semibold tablet:text-body2-semibold">
-                    {participant.name}
-                  </span>
-                  <RoleBadge role={participant.role} />
-                </div>
-                <p className="text-caption-regular tablet:text-body3-regular line-clamp-1 text-gray-200">
-                  {participant.introduction}
-                </p>
+      <ul className="tablet:gap-5 mb-3 flex flex-col gap-2">
+        {participants.slice(0, 4).map((participant) => (
+          <li key={participant.userId} className="flex items-center gap-3">
+            <UserAvatar
+              src={participant.profileImage}
+              className="size-12 shrink-0"
+            />
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1.5">
+                <span className="text-body3-semibold tablet:text-body2-semibold">
+                  {participant.name}
+                </span>
+                <RoleBadge role={participant.role} />
               </div>
-            </li>
-          ))}
-        </ul>
-      )}
+              <p className="text-caption-regular tablet:text-body3-regular line-clamp-1 text-gray-200">
+                {participant.introduction}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
 
       <Button
         variant="neutral"

@@ -1,17 +1,20 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useLikeSession } from '@/api/mutations/likeMutations';
+import { sessionQueries } from '@/api/queries/sessionQueries';
 import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import HeartOutline from '@/assets/icons/heart-outline.svg?react';
 import { signInModal } from '@/store/signinModal';
 
 interface LikeButtonProps {
-  liked: boolean;
   sessionId: number;
 }
 
-export default function LikeButton({ liked, sessionId }: LikeButtonProps) {
+export default function LikeButton({ sessionId }: LikeButtonProps) {
+  const { data: session } = useQuery(sessionQueries.detail(sessionId));
+  const liked = session?.liked || false;
   const { handleClick } = useLikeButton();
 
   return (
