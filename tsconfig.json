@@ -20,16 +20,7 @@
       }
     ],
     "paths": {
-      "@/*": ["*"],
-      "@app/*": ["app/*"],
-      "@assets/*": ["assets/*"],
-      "@components/*": ["components/*"],
-      "@hooks/*": ["hooks/*"],
-      "@lib/*": ["lib/*"],
-      "@mocks/*": ["mocks/*"],
-      "@provider/*": ["provider/*"],
-      "@stores/*": ["stores/*"],
-      "@types/*": ["types/*"]
+      "@/*": ["*"]
     }
   },
   "include": [

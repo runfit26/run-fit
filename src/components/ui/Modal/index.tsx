@@ -1,8 +1,8 @@
 'use client';
 
-import XIcon from '@assets/icons/x.svg?react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import * as React from 'react';
+import XIcon from '@/assets/icons/x.svg?react';
 import { cn } from '@/lib/utils';
 
 function ModalRoot({
