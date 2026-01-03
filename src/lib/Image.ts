@@ -1,7 +1,10 @@
 import { BREAKPOINTS } from '@/constants/breakpoints';
 
 export interface ImageSizeConfig {
-  [key: string]: string;
+  mobile: string;
+  tablet?: string;
+  laptop?: string;
+  desktop?: string;
 }
 
 /**
