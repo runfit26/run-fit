@@ -60,7 +60,11 @@ export default function PageAction({ className }: PageActionProps) {
           <Share className="size-6 text-[#9CA3AF]" />
         </button>
 
-        {!myRole ? (
+        {myRole === undefined ? (
+          <Button className="text-body2-semibold flex-1 px-6 py-3" disabled>
+            로딩 중...
+          </Button>
+        ) : !myRole ? (
           <Button
             className="text-body2-semibold flex-1 px-6 py-3"
             onClick={handleJoinCrew}
