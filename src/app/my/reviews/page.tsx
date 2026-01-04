@@ -19,8 +19,6 @@ export default function MyReviewsPage() {
 }
 
 function MyReviewsContent() {
-  const router = useRouter();
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSuspenseInfiniteQuery(userQueries.me.reviews());
 
@@ -36,13 +34,6 @@ function MyReviewsContent() {
           아직 작성한 리뷰가 없어요 <br />
           함께한 러닝 세션에 대한 솔직한 후기를 남겨보세요!
         </EmptyLayout.Message>
-        <EmptyLayout.Button
-          onClick={() => {
-            router.push('/sessions');
-          }}
-        >
-          세션 보러 가기
-        </EmptyLayout.Button>
       </EmptyLayout>
     );
   }

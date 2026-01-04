@@ -61,13 +61,6 @@ function MyCreatedSessionsContent() {
           <br />
           운영진으로 활동할 때 만들 수 있어요!
         </EmptyLayout.Message>
-        <EmptyLayout.Button
-          onClick={() => {
-            router.push('/crews');
-          }}
-        >
-          크루 구경하러 가기
-        </EmptyLayout.Button>
       </EmptyLayout>
     );
   }
