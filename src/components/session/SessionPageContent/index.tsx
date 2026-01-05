@@ -13,7 +13,9 @@ export default function SessionPageInner() {
     useSessionFilters();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteQuery(sessionQueries.infiniteList({ ...queryFilters }));
+    useSuspenseInfiniteQuery(
+      sessionQueries.infiniteList({ ...queryFilters, status: 'OPEN' })
+    );
 
   const loadMoreRef = useInfiniteScroll(fetchNextPage, hasNextPage);
 
