@@ -1,5 +1,6 @@
 'use client';
 
+import { ErrorBoundary, Suspense } from '@suspensive/react';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { crewQueries } from '@/api/queries/crewQueries';
@@ -30,16 +31,6 @@ export default function SessionShortInfo({
     currentParticipantCount,
     maxParticipantCount,
   } = session;
-  const { data: profile } = useSuspenseQuery(userQueries.me.info());
-  const profileId = profile?.id;
-
-  const { data: memberRole } = useQuery({
-    ...crewQueries.members(crewId).detail(profileId!),
-    enabled: !!profileId,
-  });
-
-  const isManager =
-    memberRole?.role === 'LEADER' || memberRole?.role === 'STAFF';
 
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -49,21 +40,15 @@ export default function SessionShortInfo({
       <div>
         <div className="mb-1 flex w-full items-center justify-between gap-2">
           <DdayBadge dday={formatDDay(registerBy)} />
-          {isManager && (
-            <Dropdown>
-              <Dropdown.TriggerNoArrow>
-                <VerticalEllipsisIcon className="size-6" />
-              </Dropdown.TriggerNoArrow>
-              <Dropdown.Content className="z-100">
-                <Dropdown.Item onClick={() => setIsUpdateModalOpen(true)}>
-                  수정하기
-                </Dropdown.Item>
-                <Dropdown.Item onClick={() => setIsDeleteModalOpen(true)}>
-                  삭제하기
-                </Dropdown.Item>
-              </Dropdown.Content>
-            </Dropdown>
-          )}
+          <ErrorBoundary fallback={<div />}>
+            <Suspense>
+              <SessionRoleDropdown
+                crewId={crewId}
+                setIsUpdateModalOpen={setIsUpdateModalOpen}
+                setIsDeleteModalOpen={setIsDeleteModalOpen}
+              />
+            </Suspense>
+          </ErrorBoundary>
         </div>
         <div className="mb-2">
           <h1 className="text-title3-semibold text-gray-50">{name}</h1>
@@ -92,5 +77,46 @@ export default function SessionShortInfo({
         sessionId={session.id}
       />
     </div>
+  );
+}
+
+function SessionRoleDropdown({
+  crewId,
+  setIsUpdateModalOpen,
+  setIsDeleteModalOpen,
+}: {
+  crewId: number;
+  setIsUpdateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsDeleteModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const { data: profile } = useSuspenseQuery(userQueries.me.info());
+  const profileId = profile?.id;
+
+  const { data: memberRole } = useQuery({
+    ...crewQueries.members(crewId).detail(profileId!),
+    enabled: !!profileId,
+  });
+
+  const isManager =
+    memberRole?.role === 'LEADER' || memberRole?.role === 'STAFF';
+
+  return (
+    <>
+      {isManager && (
+        <Dropdown>
+          <Dropdown.TriggerNoArrow>
+            <VerticalEllipsisIcon className="size-6" />
+          </Dropdown.TriggerNoArrow>
+          <Dropdown.Content className="z-100">
+            <Dropdown.Item onClick={() => setIsUpdateModalOpen(true)}>
+              수정하기
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setIsDeleteModalOpen(true)}>
+              삭제하기
+            </Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown>
+      )}
+    </>
   );
 }

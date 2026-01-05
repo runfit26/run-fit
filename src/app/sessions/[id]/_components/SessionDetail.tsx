@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from '@suspensive/react';
+import { ErrorBoundary, Suspense } from '@suspensive/react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ import CrewShortInfoSkeleton from './CrewShortInfo/CrewShortInfoSkeleton';
 import SessionDetailInfo from './SessionDetailInfo';
 import SessionImage from './SessionImage';
 import SessionShortInfo from './SessionShortInfo';
+import SessionShortInfoSkeleton from './SessionShortInfo/SessionShortInfoSkeleton';
 
 interface SessionDetailProps {
   sessionId: Session['id'];
@@ -27,7 +28,11 @@ export default function SessionDetail({ sessionId }: SessionDetailProps) {
       {/* Mobile & Tablet Layout */}
       <div className={cn('laptop:hidden flex', 'flex-col bg-gray-800 py-10')}>
         <SessionImage image={session.image} name={session.name} />
-        <SessionShortInfo session={session} crewId={crewId} />
+        <ErrorBoundary fallback={<SessionShortInfoSkeleton />}>
+          <Suspense fallback={<SessionShortInfoSkeleton />}>
+            <SessionShortInfo session={session} crewId={crewId} />
+          </Suspense>
+        </ErrorBoundary>
         <SessionDetailInfo session={session} />
         <Suspense fallback={<CrewShortInfoSkeleton />}>
           <CrewShortInfo crewId={crewId} />
@@ -46,7 +51,11 @@ export default function SessionDetail({ sessionId }: SessionDetailProps) {
           <SessionDetailInfo session={session} />
         </div>
         <div className="laptop:w-[360px] flex flex-col gap-10">
-          <SessionShortInfo session={session} crewId={crewId} />
+          <ErrorBoundary fallback={<SessionShortInfoSkeleton />}>
+            <Suspense fallback={<SessionShortInfoSkeleton />}>
+              <SessionShortInfo session={session} crewId={crewId} />
+            </Suspense>
+          </ErrorBoundary>
           <Suspense fallback={<CrewShortInfoSkeleton />}>
             <CrewShortInfo crewId={crewId} />
           </Suspense>
