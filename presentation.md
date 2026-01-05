@@ -338,6 +338,88 @@ export default function SessionDetail({ sessionId }: Props) {
 
 ---
 
+## Suspense 심화: 초기 로딩과 추가 로딩 분리
+
+### 🤔 초기 문제점
+
+**컴포넌트에서 모든 로딩 상태를 직접 관리**
+
+```tsx
+export default function SessionList() {
+  const { data, isLoading, isFetchingNextPage } = useInfiniteQuery(
+    sessionQueries.infinite()
+  );
+
+  if (isLoading) return <Spinner />; // 초기 로딩
+
+  return (
+    <div>
+      {data?.pages.map((page) =>
+        page.data.map((session) => (
+          <SessionCard key={session.id} session={session} />
+        ))
+      )}
+      {isFetchingNextPage && <ScrollSpinner />} // 추가 로딩
+    </div>
+  );
+}
+```
+
+- 📌 **초기 로딩과 추가 로딩 구분 필요**: 무한스크롤에서는 두 가지 로딩이 섞여 있음
+- 📌 **쿼리 구조 노출**: 컴포넌트가 page 단위 응답 구조를 직접 처리
+
+---
+
+### ✨ 개선 방식: 로딩 상태 분리 + 데이터 변환
+
+```tsx
+// Container: 초기 로딩만 Suspense로 처리
+export default function SessionListContainer() {
+  return (
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <Suspense fallback={<Spinner />} clientOnly>
+        <SessionList />
+      </Suspense>
+    </ErrorBoundary>
+  );
+}
+
+// 컴포넌트: 추가 로딩만 처리
+export default function SessionList() {
+  const { data, isFetchingNextPage, fetchNextPage } = useInfiniteQuery(
+    sessionQueries.infinite(),
+    {
+      // select로 페이지별 응답을 리스트로 변환
+      select: (data) => data.pages.flatMap((page) => page.data),
+    }
+  );
+
+  // 쿼리 구조를 알 필요 없음 - 바로 리스트로 사용
+  return (
+    <div>
+      {data.map((session) => (
+        <SessionCard key={session.id} session={session} />
+      ))}
+      {isFetchingNextPage && <ScrollSpinner />}
+    </div>
+  );
+}
+```
+
+---
+
+### 개선의 이점
+
+| 항목               | 기존 방식           | 개선 방식                      |
+| ------------------ | ------------------- | ------------------------------ |
+| **초기 로딩 처리** | 컴포넌트에서        | Suspense boundary에서          |
+| **추가 로딩 처리** | 같은 상태로 관리    | 별도의 isFetchingNextPage 사용 |
+| **쿼리 구조 노출** | page 단위 직접 처리 | select로 변환                  |
+| **코드 복잡도**    | 높음                | 낮음                           |
+| **컴포넌트 책임**  | 다중                | 데이터 렌더링만                |
+
+---
+
 <!-- _class: lead -->
 
 ## Next.js Proxy를 이용한 페이지 접근 제어
