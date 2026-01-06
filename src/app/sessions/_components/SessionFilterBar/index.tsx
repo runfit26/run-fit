@@ -6,22 +6,22 @@ import { SESSION_SORT_OPTIONS } from '@/constants/session';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { SessionFilterState } from '@/types';
 import DateFilter from './DateFilter';
-import FilterModal from './FilterModal';
 import LevelFilter from './LevelFilter';
 import RegionFilter from './RegionFilter';
+import SessionFilterModal from './SessionFilterModal';
 import TimeFilter from './TimeFilter';
 
-interface FilterBarProps {
+interface SessionFilterBarProps {
   filters: SessionFilterState;
   applyFilters: (filters: SessionFilterState) => void;
   activeFilterCount: number;
 }
 
-export default function FilterBar({
+export default function SessionFilterBar({
   filters,
   applyFilters,
   activeFilterCount,
-}: FilterBarProps) {
+}: SessionFilterBarProps) {
   const isTabletUp = useMediaQuery({ min: 'laptop' });
   const isMobile = useMediaQuery({ max: 'tablet' });
 
@@ -51,9 +51,9 @@ export default function FilterBar({
           </div>
           {isTabletUp && (
             <div className="relative overflow-visible">
-              <FilterModal>
+              <SessionFilterModal>
                 <FilterButton count={activeFilterCount} />
-              </FilterModal>
+              </SessionFilterModal>
             </div>
           )}
           <div
@@ -64,9 +64,9 @@ export default function FilterBar({
         </div>
         <div className="tablet:pt-5 flex items-center">
           {!isTabletUp && (
-            <FilterModal>
+            <SessionFilterModal>
               <FilterButton count={activeFilterCount} />
-            </FilterModal>
+            </SessionFilterModal>
           )}
           {!isMobile && (
             <OptionDropdown

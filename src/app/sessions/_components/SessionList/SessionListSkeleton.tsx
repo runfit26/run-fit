@@ -1,4 +1,4 @@
-import SessionCardSkeleton from '../SessionCard/SessionCardSkeleton';
+import SessionCardSkeleton from '@/components/session/SessionCard/SessionCardSkeleton';
 
 export default function SessionListSkeleton() {
   return (

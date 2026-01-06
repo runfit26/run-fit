@@ -1,9 +1,9 @@
 'use client';
 
 import { useLikeButton } from '@/app/sessions/[id]/_components/SessionActionGroup/LikeButton';
+import SessionCard from '@/components/session/SessionCard';
 import Spinner from '@/components/ui/Spinner';
 import { Session } from '@/types';
-import SessionCard from '../SessionCard';
 import SessionListEmptyState from './SessionListEmptyState';
 
 export default function SessionList({
