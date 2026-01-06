@@ -10,12 +10,15 @@ import { SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
 type Sido = (typeof SIDO_LIST)[number];
 type RegionValue = Record<string, string[]>;
 
-interface RegionFilterProps {
+interface SessionRegionFilterProps {
   value?: RegionValue;
   onChange: (value?: RegionValue) => void;
 }
 
-export default function RegionFilter({ value, onChange }: RegionFilterProps) {
+export default function SessionRegionFilter({
+  value,
+  onChange,
+}: SessionRegionFilterProps) {
   const [open, setOpen] = useState(false);
   const [activeSido, setActiveSido] = useState<Sido>('서울');
   const [tempValue, setTempValue] = useState<RegionValue>(value || {});

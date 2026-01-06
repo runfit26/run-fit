@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import DateFilter from '.';
+import SessionDateFilter from '.';
 
-const meta: Meta<typeof DateFilter> = {
-  title: 'Filters/DateFilter',
-  component: DateFilter,
+const meta: Meta<typeof SessionDateFilter> = {
+  title: 'Filters/SessionDateFilter',
+  component: SessionDateFilter,
   tags: ['autodocs'],
   decorators: [
     (Story) => (
@@ -20,7 +20,7 @@ const meta: Meta<typeof DateFilter> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof DateFilter>;
+type Story = StoryObj<typeof SessionDateFilter>;
 
 export const Default: Story = {
   render: () => {
@@ -28,7 +28,7 @@ export const Default: Story = {
 
     return (
       <div className="flex flex-col gap-4 text-white">
-        <DateFilter value={value} onChange={setValue} />
+        <SessionDateFilter value={value} onChange={setValue} />
       </div>
     );
   },
@@ -43,7 +43,7 @@ export const DaySelected: Story = {
       to: today,
     });
 
-    return <DateFilter value={value} onChange={setValue} />;
+    return <SessionDateFilter value={value} onChange={setValue} />;
   },
 };
 
@@ -58,6 +58,6 @@ export const RangeSelected: Story = {
       to: nextWeek,
     });
 
-    return <DateFilter value={value} onChange={setValue} />;
+    return <SessionDateFilter value={value} onChange={setValue} />;
   },
 };

@@ -5,15 +5,15 @@ import { SESSION_LEVEL_OPTIONS } from '@/constants/session';
 import { getOptionLabel } from '@/lib/utils';
 import { SessionLevel } from '@/types';
 
-interface LevelFilterProps {
+interface SessionLevelFilterProps {
   value?: SessionLevel;
   onChange: (value?: SessionLevel) => void;
 }
 
-export default function LevelFilter({
+export default function SessionLevelFilter({
   value: optionValue,
   onChange,
-}: LevelFilterProps) {
+}: SessionLevelFilterProps) {
   return (
     <Dropdown hasSelected={Boolean(optionValue)} size="lg">
       <Dropdown.Trigger>

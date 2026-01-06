@@ -1,9 +1,9 @@
 'use client';
 
-import DateFilter from '@/components/session/DateFilter';
-import LevelFilter from '@/components/session/LevelFilter';
-import RegionFilter from '@/components/session/RegionFilter';
-import TimeFilter from '@/components/session/TimeFilter';
+import SessionDateFilter from '@/components/session/SessionDateFilter';
+import SessionLevelFilter from '@/components/session/SessionLevelFilter';
+import SessionRegionFilter from '@/components/session/SessionRegionFilter';
+import SessionTimeFilter from '@/components/session/SessionTimeFilter';
 import FilterButton from '@/components/ui/FilterButton';
 import OptionDropdown from '@/components/ui/OptionDropdown';
 import { SESSION_SORT_OPTIONS } from '@/constants/session';
@@ -31,19 +31,19 @@ export default function SessionFilters({
         <div className="scrollbar-hide tablet:pt-5 relative flex flex-1 items-center gap-2 overflow-x-auto">
           <div className="scrollbar-hide relative flex items-center overflow-x-auto">
             <div className="flex w-max items-center gap-2">
-              <RegionFilter
+              <SessionRegionFilter
                 value={filters.region}
                 onChange={(region) => applyFilters({ ...filters, region })}
               />
-              <DateFilter
+              <SessionDateFilter
                 value={filters.date}
                 onChange={(date) => applyFilters({ ...filters, date })}
               />
-              <TimeFilter
+              <SessionTimeFilter
                 value={filters.time}
                 onChange={(time) => applyFilters({ ...filters, time })}
               />
-              <LevelFilter
+              <SessionLevelFilter
                 value={filters.level}
                 onChange={(level) => applyFilters({ ...filters, level })}
               />

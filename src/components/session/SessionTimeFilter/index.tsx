@@ -6,12 +6,15 @@ import Popover from '@/components/ui/FilterPopover';
 import TimeSlider from '@/components/ui/TimeSlider';
 import { formatMinutesToKoreanTime } from '@/lib/time';
 
-interface TimeFilterProps {
+interface SessionTimeFilterProps {
   value?: [number, number];
   onChange: (value?: [number, number]) => void;
 }
 
-export default function TimeFilter({ value, onChange }: TimeFilterProps) {
+export default function SessionTimeFilter({
+  value,
+  onChange,
+}: SessionTimeFilterProps) {
   const [open, setOpen] = useState(false);
   const [tempValue, setTempValue] = useState<[number, number]>(
     value || [0, 720]

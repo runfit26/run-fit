@@ -6,12 +6,15 @@ import Button from '@/components/ui/Button';
 import Calendar from '@/components/ui/Calendar';
 import Popover from '@/components/ui/FilterPopover';
 
-interface DateFilterProps {
+interface SessionDateFilterProps {
   value?: DateRange;
   onChange: (value?: DateRange) => void;
 }
 
-export default function DateFilter({ value, onChange }: DateFilterProps) {
+export default function SessionDateFilter({
+  value,
+  onChange,
+}: SessionDateFilterProps) {
   const [open, setOpen] = useState(false);
 
   const [tempValue, setTempValue] = useState<DateRange | undefined>(value);

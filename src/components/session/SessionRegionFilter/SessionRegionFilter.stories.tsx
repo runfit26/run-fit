@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
-import RegionFilter from './index';
+import SessionRegionFilter from './index';
 
 type RegionValue = Record<string, string[]>;
 
-const meta: Meta<typeof RegionFilter> = {
-  title: 'Filters/RegionFilter',
-  component: RegionFilter,
+const meta: Meta<typeof SessionRegionFilter> = {
+  title: 'Filters/SessionRegionFilter',
+  component: SessionRegionFilter,
   tags: ['autodocs'],
   decorators: [
     (Story) => (
@@ -22,7 +22,7 @@ const meta: Meta<typeof RegionFilter> = {
 
 export default meta;
 
-type Story = StoryObj<typeof RegionFilter>;
+type Story = StoryObj<typeof SessionRegionFilter>;
 
 export const Default: Story = {
   render: () => {
@@ -31,7 +31,7 @@ export const Default: Story = {
     return (
       <div className="flex flex-col gap-8 text-white">
         <div className="flex justify-center">
-          <RegionFilter value={value} onChange={setValue} />
+          <SessionRegionFilter value={value} onChange={setValue} />
         </div>
       </div>
     );
@@ -48,7 +48,7 @@ export const PreSelected: Story = {
     return (
       <div className="flex flex-col gap-8 text-white">
         <div className="flex justify-center">
-          <RegionFilter value={value} onChange={setValue} />
+          <SessionRegionFilter value={value} onChange={setValue} />
         </div>
       </div>
     );

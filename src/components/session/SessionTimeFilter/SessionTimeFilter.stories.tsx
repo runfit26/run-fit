@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
-import TimeFilter from './index';
+import SessionTimeFilter from './index';
 
-const meta: Meta<typeof TimeFilter> = {
-  title: 'Filters/TimeFilter',
-  component: TimeFilter,
+const meta: Meta<typeof SessionTimeFilter> = {
+  title: 'Filters/SessionTimeFilter',
+  component: SessionTimeFilter,
   tags: ['autodocs'],
   decorators: [
     (Story) => (
@@ -19,7 +19,7 @@ const meta: Meta<typeof TimeFilter> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof TimeFilter>;
+type Story = StoryObj<typeof SessionTimeFilter>;
 
 export const Default: Story = {
   render: () => {
@@ -27,7 +27,7 @@ export const Default: Story = {
 
     return (
       <div className="flex flex-col gap-4 text-white">
-        <TimeFilter value={value} onChange={setValue} />
+        <SessionTimeFilter value={value} onChange={setValue} />
       </div>
     );
   },
@@ -39,7 +39,7 @@ export const TimeSelected: Story = {
       600, 600,
     ]);
 
-    return <TimeFilter value={value} onChange={setValue} />;
+    return <SessionTimeFilter value={value} onChange={setValue} />;
   },
 };
 
@@ -49,6 +49,6 @@ export const RangeSelected: Story = {
       600, 840,
     ]);
 
-    return <TimeFilter value={value} onChange={setValue} />;
+    return <SessionTimeFilter value={value} onChange={setValue} />;
   },
 };
