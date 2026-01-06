@@ -9,12 +9,15 @@ import ResponsiveBottomSheet from '@/components/ui/ResponsiveBottomSheet';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { SIDO_LIST } from '@/types/region';
 
-interface RegionFilterProps {
+interface CrewRegionFilterProps {
   value?: string[];
   onChange: (value?: string[]) => void;
 }
 
-export default function RegionFilter({ value, onChange }: RegionFilterProps) {
+export default function CrewRegionFilter({
+  value,
+  onChange,
+}: CrewRegionFilterProps) {
   const isMobile = useMediaQuery({ max: 'tablet' });
 
   const [open, setOpen] = useState(false);
