@@ -1,6 +1,6 @@
 import Skeleton from '@/components/ui/Skeleton';
 
-export default function SessionFilterBarSkeleton() {
+export default function SessionFiltersSkeleton() {
   return (
     <div className="flex w-full items-center">
       <div className="tablet:pt-5 relative flex flex-1 items-center gap-2">

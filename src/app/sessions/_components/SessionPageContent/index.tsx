@@ -5,7 +5,7 @@ import { sessionQueries } from '@/api/queries/sessionQueries';
 import { useSessionFilters } from '@/hooks/session/useSessionFilters';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { SessionFilterProvider } from '@/provider/SessionFilterProvider';
-import SessionFilterBar from '../SessionFilterBar';
+import SessionFilters from '../SessionFilters';
 import SessionList from '../SessionList';
 
 export default function SessionPageContent() {
@@ -21,7 +21,7 @@ export default function SessionPageContent() {
 
   return (
     <SessionFilterProvider applyFilters={applyFilters} initialFilters={filters}>
-      <SessionFilterBar
+      <SessionFilters
         activeFilterCount={activeFilterCount}
         applyFilters={applyFilters}
         filters={filters}

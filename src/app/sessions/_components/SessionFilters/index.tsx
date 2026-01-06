@@ -11,17 +11,17 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { SessionFilterState } from '@/types';
 import SessionFilterModal from './SessionFilterModal';
 
-interface SessionFilterBarProps {
+interface SessionFiltersProps {
   filters: SessionFilterState;
   applyFilters: (filters: SessionFilterState) => void;
   activeFilterCount: number;
 }
 
-export default function SessionFilterBar({
+export default function SessionFilters({
   filters,
   applyFilters,
   activeFilterCount,
-}: SessionFilterBarProps) {
+}: SessionFiltersProps) {
   const isTabletUp = useMediaQuery({ min: 'laptop' });
   const isMobile = useMediaQuery({ max: 'tablet' });
 
