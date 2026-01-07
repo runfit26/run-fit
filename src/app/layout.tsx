@@ -25,10 +25,12 @@ export default function RootLayout({
         <MockProvider>
           <SuspensiveDefaultPropsProvider>
             <QueryProvider>
-              <ToastProvider />
-              <SigninModalProvider />
-              <Header />
-              <ModalProvider>{children}</ModalProvider>
+              <ModalProvider>
+                <ToastProvider />
+                <SigninModalProvider />
+                <Header />
+                {children}
+              </ModalProvider>
             </QueryProvider>
           </SuspensiveDefaultPropsProvider>
         </MockProvider>
