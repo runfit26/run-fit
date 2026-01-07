@@ -14,7 +14,6 @@ interface ModalActions {
 }
 
 const ModalActionsContext = React.createContext<ModalActions | null>(null);
-const ModalStateContext = React.createContext<Modal[] | null>(null);
 
 type Action = { type: 'OPEN'; modal: Modal } | { type: 'CLOSE' };
 
@@ -48,10 +47,8 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ModalActionsContext.Provider value={{ open, close }}>
-      <ModalStateContext.Provider value={modals}>
-        {children}
-        <ModalContainer />
-      </ModalStateContext.Provider>
+      {children}
+      <ModalContainer modals={modals} />
     </ModalActionsContext.Provider>
   );
 }
@@ -62,17 +59,9 @@ export function useModal() {
   return ctx;
 }
 
-function useModalState() {
-  const ctx = React.useContext(ModalStateContext);
-  if (!ctx)
-    throw new Error('useModalState must be used within a ModalProvider');
-  return ctx;
-}
-
 const MODAL_CONTAINER_ID = 'modal-container';
 
-function ModalContainer() {
-  const modals = useModalState();
+function ModalContainer({ modals }: { modals: Modal[] }) {
   const { close } = useModal(); // overlay 클릭으로 닫을 거면
 
   useEffect(() => {
