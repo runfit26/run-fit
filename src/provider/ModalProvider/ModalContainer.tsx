@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
-import { useModal } from './ModalProvider';
-import type { Modal } from './ModalProvider';
+import { useModal } from '.';
+import type { Modal } from '.';
 
 const MODAL_CONTAINER_ID = 'modal-container';
 
@@ -12,7 +12,7 @@ const getModalZIndex = (index: number) => {
   return 50 + index * 10;
 };
 
-export function ModalContainer({ modals }: { modals: Modal[] }) {
+export default function ModalContainer({ modals }: { modals: Modal[] }) {
   const { close } = useModal();
 
   useEffect(() => {

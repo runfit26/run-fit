@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { stackReducer, type StackAction } from '@/lib/stackReducer';
-import { ModalContainer } from './ModalContainer';
+import stackReducer from '@/lib/stackReducer';
+import ModalContainer from './ModalContainer';
 
 export type Modal = {
   id: string;
@@ -21,7 +21,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
 
   const open = React.useCallback(
     (id: string, render: () => React.ReactNode) => {
-      dispatch({ type: 'PUSH', item: { id, render } } as StackAction<Modal>);
+      dispatch({ type: 'PUSH', item: { id, render } });
     },
     []
   );

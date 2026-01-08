@@ -9,7 +9,10 @@ export type StackAction<T> =
   | { type: 'POP' }
   | { type: 'CLEAR' };
 
-export function stackReducer<T>(state: T[], action: StackAction<T>): T[] {
+export default function stackReducer<T>(
+  state: T[],
+  action: StackAction<T>
+): T[] {
   switch (action.type) {
     case 'PUSH':
       return [...state, action.item];
