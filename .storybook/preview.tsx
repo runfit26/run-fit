@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/nextjs-vite';
-import '@app/globals.css';
+import '@/app/globals.css';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from 'storybook/viewport';
 
