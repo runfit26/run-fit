@@ -71,7 +71,8 @@ function ParticipantsModal({ participants }: { participants: CrewMember[] }) {
       fullscreenWhenMobile
     >
       <ModalContent.CloseButton className="tablet:flex top-6 right-6 hidden" />
-      <ModalContent.Header className="relative flex w-full items-start gap-2 self-start">
+      <ModalContent.Header className="relative flex w-full flex-row items-center gap-2 self-start text-white">
+        <ModalContent.BackButton className="tablet:hidden" />
         <ModalContent.Title className="text-body1-semibold">
           참여 멤버
         </ModalContent.Title>

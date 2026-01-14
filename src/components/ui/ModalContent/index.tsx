@@ -1,5 +1,6 @@
 'use client';
 
+import ChevronLeft from '@/assets/icons/chevron-left.svg';
 import XIcon from '@/assets/icons/x.svg';
 import { cn } from '@/lib/utils';
 import { useModalContext, useModalController } from '@/provider/ModalProvider';
@@ -114,8 +115,30 @@ export function ModalCloseButton({
   );
 }
 
+export function ModalBackButton({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<'button'>) {
+  const { close } = useModalController();
+
+  return (
+    <button
+      aria-label="뒤로 가기"
+      className={cn('outline-none', className)}
+      data-slot="modal-close-button"
+      type="button"
+      onClick={close}
+      {...props}
+    >
+      {children || <ChevronLeft className="size-6" />}
+    </button>
+  );
+}
+
 const ModalContent = Object.assign(ModalContentRoot, {
   CloseButton: ModalCloseButton,
+  BackButton: ModalBackButton,
   Content: ModalContentRoot,
   Description: ModalDescription,
   Footer: ModalFooter,
