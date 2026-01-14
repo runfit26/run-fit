@@ -2,9 +2,9 @@
 
 import XIcon from '@/assets/icons/x.svg';
 import { cn } from '@/lib/utils';
-import { useModalContext } from '@/provider/ModalProvider';
+import { useModalContext, useModalController } from '@/provider/ModalProvider';
 
-export function ModalContent({
+export function ModalContentRoot({
   className,
   children,
   fullscreenWhenMobile,
@@ -98,7 +98,7 @@ export function ModalCloseButton({
   children,
   ...props
 }: React.ComponentProps<'button'>) {
-  const { close } = useModalContext();
+  const { close } = useModalController();
 
   return (
     <button
@@ -113,3 +113,14 @@ export function ModalCloseButton({
     </button>
   );
 }
+
+const ModalContent = Object.assign(ModalContentRoot, {
+  CloseButton: ModalCloseButton,
+  Content: ModalContentRoot,
+  Description: ModalDescription,
+  Footer: ModalFooter,
+  Header: ModalHeader,
+  Title: ModalTitle,
+});
+
+export default ModalContent;
