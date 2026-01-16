@@ -1,6 +1,7 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding assistants (Claude Code, GitHub Copilot, etc.) when working with code in this repository.  
+Note: Tool-specific symlinks (e.g., CLAUDE.md) point to this centralized documentation.
 
 ## Project Overview
 
@@ -30,30 +31,35 @@ pnpm storybook        # Storybook (port 6006)
 ## Architecture
 
 ### Data Flow
+
 - **API Layer**: `src/api/fetch/` → direct API calls
 - **Query Layer**: `src/api/queries/` → React Query options, `src/api/mutations/` → mutations
 - **Server State**: React Query with placeholder data (prevents UI flicker on filter changes)
 - **Client State**: stores in `src/store/`
 
 ### Auth & Middleware
+
 - JWT-based auth (refreshToken in cookies)
 - Route protection via `src/proxy.ts`:
   - Protected: `/my/*`, `/crews/[id]/create-session`, `/sessions/likes`
   - Auth-only (redirect if logged in): `/signin`, `/signup`
 
 ### Component Organization
+
 - `src/components/ui/` - Atomic UI (domain-agnostic)
 - `src/components/composite/` - Composed UI components
 - `src/components/{domain}/` - Domain components (crew, session, my, user)
 - `src/components/layout/` - Layout components
 
 ### Other Directories
+
 - `src/assets/icons/` - SVG icons (imported as modules)
 - `src/contexts/` - React Context providers
 - `public/images/` - Static images (direct URL access)
 - `public/fonts/` - Font files
 
 ### External APIs
+
 - Kakao Maps API - location display
 - Daum Postcode API - Korean address search
 - AWS S3 - image storage
@@ -61,10 +67,12 @@ pnpm storybook        # Storybook (port 6006)
 ## Code Conventions
 
 ### TypeScript
+
 - Use `interface` (not `type`)
 - Props: `interface ComponentNameProps {}`
 
 ### Components
+
 ```tsx
 // Function declaration (not arrow functions)
 export default function Button({ children }: ButtonProps) {
@@ -78,11 +86,13 @@ Modal.Header = ModalHeader
 ```
 
 ### Imports
+
 - Path alias (`@/`) for files outside current directory
 - Relative paths for same/child directories
 - Order: third-party → builtins → aliases → relative
 
 ### Naming
+
 | Target | Rule | Example |
 |--------|------|---------|
 | Folders | kebab-case | `item-list` |
@@ -94,15 +104,18 @@ Modal.Header = ModalHeader
 | Static files | kebab-case | `icon-heart.png` |
 
 ### Files
+
 - `Button.tsx` (not `Button/index.tsx`)
 
 ### Style
+
 ```tsx
 // Single-line if - no braces
 if (condition) doSomething();
 ```
 
 ### Custom Hooks
+
 - JSDoc comments required
 
 ## Git Conventions
@@ -111,7 +124,7 @@ See `.agents/skills/` for `commit-convention` and `git-workflow` skills.
 
 ## Environment Variables
 
-```
+```bash
 API_URL=                              # Backend API
 NEXT_PUBLIC_APP_URL=                  # App URL
 NEXT_PUBLIC_KAKAO_JS_KEY=             # Kakao Map API
