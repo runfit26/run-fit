@@ -79,18 +79,18 @@ export default function CompletedSessionCard({
                     {`${sessionDate} • ${sessionTime}`}
                   </div>
                 </div>
-                {action && (
+                {action ? (
                   <div className="tablet:flex hidden items-center gap-0.5">
                     <PaceBadge paceSeconds={session.pace} size={size} />
                     <LevelBadge level={session.level} size={size} />
                   </div>
-                )}
+                ) : null}
               </div>
-              {action && (
+              {action ? (
                 <div className="tablet:hidden pointer-events-auto flex">
                   {action}
                 </div>
-              )}
+              ) : null}
               {showRanks && (
                 <div className="flex items-center gap-0.5">
                   <Star className="size-3 fill-gray-100" />
@@ -102,7 +102,9 @@ export default function CompletedSessionCard({
             </div>
           </div>
         </Link>
-        {action && <div className="tablet:flex hidden shrink-0">{action}</div>}
+        {action ? (
+          <div className="tablet:flex hidden shrink-0">{action}</div>
+        ) : null}
       </div>
     </div>
   );

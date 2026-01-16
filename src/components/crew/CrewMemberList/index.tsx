@@ -42,7 +42,7 @@ export default function CrewMemberList({
           <span className="text-title3-semibold line-clamp-1 text-gray-50">
             {crew.name}
           </span>
-          {myRole && <CrewMenuActions crew={crew} />}
+          {myRole ? <CrewMenuActions crew={crew} /> : null}
         </div>
         <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
           {crew.city} • 멤버 {members.length}명

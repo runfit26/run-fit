@@ -73,7 +73,7 @@ export default function SessionLevelCard({
             checked && 'bg-brand-400 border-brand-400'
           )}
         >
-          {checked && <div className="size-2 rounded-full bg-gray-800" />}
+          {checked ? <div className="size-2 rounded-full bg-gray-800" /> : null}
         </div>
       </div>
     </RadioGroupItem>

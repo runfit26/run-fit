@@ -138,14 +138,14 @@ export default function CrewForm({
           className="bg-gray-750"
           placeholder="크루에 대한 상세 설명을 작성해주세요"
         />
-        {errors.description && (
+        {errors.description ? (
           <p
             className="text-error-100 tablet:text-body3-semibold text-caption-semibold"
             id="crew-description-error"
           >
             {errors.description.message}
           </p>
-        )}
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -163,7 +163,9 @@ export default function CrewForm({
             </Chip>
           ))}
         </div>
-        {errors.city && <p className="text-error-100">{errors.city.message}</p>}
+        {errors.city ? (
+          <p className="text-error-100">{errors.city.message}</p>
+        ) : null}
       </div>
 
       <Button type="submit">

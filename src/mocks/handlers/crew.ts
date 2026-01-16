@@ -72,11 +72,15 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
       }
 
       if (sort === 'nameAsc') {
-        filteredCrews.sort((a, b) => a.name.localeCompare(b.name));
+        filteredCrews = filteredCrews.toSorted((a, b) =>
+          a.name.localeCompare(b.name)
+        );
       }
 
       if (sort === 'nameDesc') {
-        filteredCrews.sort((a, b) => b.name.localeCompare(a.name));
+        filteredCrews = filteredCrews.toSorted((a, b) =>
+          b.name.localeCompare(a.name)
+        );
       }
 
       // 무한스크롤

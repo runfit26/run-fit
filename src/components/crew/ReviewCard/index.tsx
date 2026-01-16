@@ -53,7 +53,7 @@ export default function ReviewCard({
         )}
         <div>{createdAtText}</div>
       </div>
-      {userSession && <SessionInfo data={userSession} />}
+      {userSession ? <SessionInfo data={userSession} /> : null}
     </li>
   );
 }

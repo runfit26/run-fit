@@ -115,18 +115,18 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
 
       // 정렬
       if (sort === 'createdAtDesc') {
-        filteredSessions.sort(
+        filteredSessions = filteredSessions.toSorted(
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         );
       } else if (sort === 'sessionAtAsc') {
-        filteredSessions.sort(
+        filteredSessions = filteredSessions.toSorted(
           (a, b) =>
             new Date(a.sessionAt).getTime() - new Date(b.sessionAt).getTime()
         );
       } else if (sort === 'registerByAsc') {
         // 마감 임박순 (registerBy 오름차순)
-        filteredSessions.sort(
+        filteredSessions = filteredSessions.toSorted(
           (a, b) =>
             new Date(a.registerBy).getTime() - new Date(b.registerBy).getTime()
         );
