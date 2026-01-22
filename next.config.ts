@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    minimumCacheTTL: 2678400,
     remotePatterns: [
       // mock 이미지 도메인
       {
