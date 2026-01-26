@@ -15,7 +15,7 @@ export default function FixedBottomBar({
   children,
   className,
 }: FixedBottomBarProps) {
-  const barRef = useRef<HTMLElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
   const [barHeight, setBarHeight] = useState(0);
 
   useLayoutEffect(() => {
@@ -43,19 +43,18 @@ export default function FixedBottomBar({
         style={{ height: barHeight }}
       />
       {createPortal(
-        <nav
+        <div
           ref={barRef}
-          aria-label="하단 고정 메뉴"
+          aria-label="하단 액션 바"
           className={cn(
             'laptop:hidden fixed inset-x-0 bottom-0 z-10',
             'bg-gray-750 p-6',
             'pb-[calc(1.5rem+env(safe-area-inset-bottom))]',
             className
           )}
-          role="navigation"
         >
           {children}
-        </nav>,
+        </div>,
         document.getElementById(FIXED_BOTTOM_BAR_CONTAINER_ID)!
       )}
     </>
