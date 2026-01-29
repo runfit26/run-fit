@@ -49,11 +49,10 @@ export default async function request<T>(
   const { body, headers, ...rest } = options ?? {};
 
   const isJsonBody =
-    typeof body === 'object' &&
     body !== null &&
-    !(body instanceof FormData) &&
-    !(body instanceof Blob) &&
-    !(body instanceof URLSearchParams);
+    typeof body === 'object' &&
+    (Object.getPrototypeOf(body) === Object.prototype ||
+      Object.getPrototypeOf(body) === null);
 
   const mergedHeaders = new Headers(headers);
   if (isJsonBody && !mergedHeaders.has('Content-Type')) {
