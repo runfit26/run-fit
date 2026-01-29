@@ -55,11 +55,14 @@ export default async function request<T>(
     !(body instanceof Blob) &&
     !(body instanceof URLSearchParams);
 
+  const mergedHeaders = new Headers(headers);
+  if (isJsonBody && !mergedHeaders.has('Content-Type')) {
+    mergedHeaders.set('Content-Type', 'application/json');
+  }
+
   const response = await fetch(absoluteUrl, {
     ...rest,
-    headers: isJsonBody
-      ? { 'Content-Type': 'application/json', ...headers }
-      : headers,
+    headers: mergedHeaders,
     body: isJsonBody ? JSON.stringify(body) : (body as BodyInit),
   });
 
