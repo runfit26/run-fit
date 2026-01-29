@@ -21,8 +21,7 @@ export type CrewRequestBody = Pick<
 export async function createCrew(body: CrewRequestBody) {
   return request<Crew>('/api/crews', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   });
 }
 
@@ -35,16 +34,13 @@ type JoinCrewResponse = {
 export async function joinCrew(crewId: number) {
   return request<JoinCrewResponse>(`/api/crews/${crewId}/join`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
   });
 }
 
 export type GetCrewsResponse = SliceData<Crew>;
 export async function getCrews(queryParams?: CrewListFilters) {
-  const searchParams = buildQueryParams<CrewListFilters>(queryParams);
-  const queryString = searchParams.toString();
-
-  return request<GetCrewsResponse>(`/api/crews?${queryString}`);
+  const query = buildQueryParams(queryParams);
+  return request<GetCrewsResponse>(`/api/crews?${query}`);
 }
 
 export type GetCrewDetailResponse = Crew;
@@ -57,9 +53,7 @@ export async function getCrewMembers(
   crewId: number,
   queryParams?: MemberRoleFilters
 ) {
-  const query = new URLSearchParams(
-    queryParams as Record<string, string>
-  ).toString();
+  const query = buildQueryParams(queryParams);
   return request<GetCrewMembersResponse>(
     `/api/crews/${crewId}/members?${query}`
   );
@@ -98,8 +92,7 @@ export async function delegateCrewLeader(
 ) {
   return request<DelegateCrewLeaderResponse>(`/api/crews/${crewId}/leader`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   });
 }
 
@@ -130,8 +123,7 @@ export async function updateMemberRole(
     `/api/crews/${crewId}/members/${userId}/role`,
     {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
+      body,
     }
   );
 }
@@ -165,8 +157,7 @@ export async function updateCrewDetail(
 ) {
   return request<UpdateCrewDetailResponse>(`/api/crews/${crewId}`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
+    body,
   });
 }
 
@@ -183,10 +174,7 @@ export async function getCrewReviews(
   crewId: number,
   queryParams?: PaginationQueryParams
 ) {
-  const query = new URLSearchParams(
-    queryParams as Record<string, string>
-  ).toString();
-
+  const query = buildQueryParams(queryParams);
   return request<GetCrewReviewsResponse>(
     `/api/crews/${crewId}/reviews?${query}`
   );

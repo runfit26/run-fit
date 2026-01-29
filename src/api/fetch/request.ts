@@ -27,9 +27,13 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return resData.data;
 }
 
+interface RequestOptions extends Omit<RequestInit, 'body'> {
+  body?: BodyInit | Record<string, unknown> | null;
+}
+
 export default async function request<T>(
   url: string | URL,
-  options?: RequestInit
+  options?: RequestOptions
 ): Promise<T> {
   // 서버 환경에서만 상대 경로를 절대 경로로 변환
   let absoluteUrl = url;
@@ -42,6 +46,24 @@ export default async function request<T>(
     absoluteUrl = new URL(url, baseUrl).toString();
   }
 
-  const response = await fetch(absoluteUrl, options);
+  const { body, headers, ...rest } = options ?? {};
+
+  const isJsonBody =
+    body !== null &&
+    typeof body === 'object' &&
+    (Object.getPrototypeOf(body) === Object.prototype ||
+      Object.getPrototypeOf(body) === null);
+
+  const mergedHeaders = new Headers(headers);
+  if (isJsonBody && !mergedHeaders.has('Content-Type')) {
+    mergedHeaders.set('Content-Type', 'application/json');
+  }
+
+  const response = await fetch(absoluteUrl, {
+    ...rest,
+    headers: mergedHeaders,
+    body: isJsonBody ? JSON.stringify(body) : (body as BodyInit),
+  });
+
   return handleResponse<T>(response);
 }

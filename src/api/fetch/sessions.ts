@@ -1,3 +1,4 @@
+import { buildQueryParams } from '@/lib/utils';
 import {
   CrewMember,
   MemberRoleFilters,
@@ -9,22 +10,7 @@ import request from './request';
 
 type GetSessionsResponse = SliceData<Session>;
 export async function getSessions(queryParams?: SessionListFilters) {
-  const searchParams = new URLSearchParams();
-
-  if (queryParams) {
-    Object.entries(queryParams).forEach(([key, value]) => {
-      if (value === undefined || value === null) return;
-
-      if (Array.isArray(value)) {
-        value.forEach((item) => searchParams.append(key, item));
-      } else {
-        searchParams.append(key, String(value));
-      }
-    });
-  }
-
-  const query = searchParams.toString();
-
+  const query = buildQueryParams(queryParams);
   return request<GetSessionsResponse>(`/api/sessions?${query}`);
 }
 
@@ -48,10 +34,7 @@ export type CreateSessionResponse = Omit<Session, 'liked'>;
 export async function createSession(body: CreateSessionRequestBody) {
   return request<CreateSessionResponse>('/api/sessions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
+    body,
   });
 }
 
@@ -95,10 +78,7 @@ export async function getSessionParticipants(
   sessionId: number,
   queryParams?: MemberRoleFilters
 ) {
-  const query = new URLSearchParams(
-    queryParams as Record<string, string>
-  ).toString();
-
+  const query = buildQueryParams(queryParams);
   return request<GetSessionParticipantsResponse>(
     `/api/sessions/${sessionId}/participants?${query}`
   );
@@ -115,10 +95,7 @@ export async function updateSessionDetail(
 ) {
   return request<UpdateSessionDetailResponse>(`/api/sessions/${sessionId}`, {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
+    body,
   });
 }
 
